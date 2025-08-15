@@ -11,3 +11,7 @@ Key target features include:
 - **Lightweight & framework-agnostic:** No dependencies, easy to integrate.
 
 This library is intended for integration with MarkBind but hopefully can also be used as a standalone widget in any static site.
+
+
+Name of Library:
+* CustomViews.js (?)

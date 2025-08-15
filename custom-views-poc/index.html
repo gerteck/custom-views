@@ -1,31 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Custom Views POC</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>CustomViews Demo</title>
 </head>
 <body>
-  <div id="view-toggle">
-    <button data-view="all">All</button>
-    <button data-view="linux">Linux</button>
-    <button data-view="vscode">VSCode</button>
-  </div>
-
-  <div class="content">
-    <div data-view="linux">Linux-specific content</div>
-    <div data-view="vscode">VSCode-specific content</div>
-    <div data-view="all">Common content for all</div>
-  </div>
-
-  <button id="back-btn">Back</button>
+  <h1>CustomViews URL Tracking</h1>
+  <p>Try changing the hash (#test) or navigating in history to see logs.</p>
 
 
-  <script src="custom-views.js"></script>
+  <script src="./customViews.js"></script>
   <script>
-    CustomViews.init({ target: '.content', toggleContainer: '#view-toggle',
-      backButtonSelector: '#back-btn'
-     });
+    const views = new CustomViews();
+    views.init();
   </script>
-  
+
 </body>
 </html>
