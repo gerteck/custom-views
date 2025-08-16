@@ -1,5 +1,9 @@
 # Custom Views
 
+v0.1.0 
+
+Just does hello world.
+
 Custom Views is meant to be a lightweight, standalone JavaScript library for dynamic content filtering and contextual rendering in static sites. It is meant to allow authors to tag content blocks with “views” (e.g., Windows, Linux) or some other way to do so, and provides interactive controls for readers to toggle between them. 
 
 Key target features include:
@@ -14,5 +18,5 @@ This library is intended for integration with MarkBind but hopefully can also be
 
 
 Name of Library:
-* CustomViews.js (?)
+* CustomViews.js
 
