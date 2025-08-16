@@ -5,13 +5,13 @@
     "a": {
       "title": "View A",
       "assets": [
-        { "type": "image", "src": "a.png" }
+        { "type": "image", "src": "a.jpg" }
       ]
     },
     "b": {
       "title": "View B",
       "assets": [
-        { "type": "image", "src": "b.png" }
+        { "type": "image", "src": "b.jpg" }
       ]
     }
   }

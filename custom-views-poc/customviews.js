@@ -55,6 +55,7 @@ class CustomViews {
    */
   renderFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams);
     const viewId = urlParams.get("view") || this.config.defaultView;
 
     console.log("[CustomViews] Rendering view:", viewId);
