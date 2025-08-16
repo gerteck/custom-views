@@ -1,0 +1,46 @@
+{
+  "name": "custom-views",
+  "version": "0.1.0",
+  "description": "A JavaScript dynamic custom views Library.",
+  "type": "module",
+  "main": "dist/custom-views.cjs.js",
+  "module": "dist/custom-views.esm.js",
+  "browser": "dist/custom-views.umd.js",
+  "unpkg": "dist/custom-views.umd.min.js",
+  "jsdelivr": "dist/custom-views.umd.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gerteck/custom-views.git"
+  },
+  "files": [
+    "dist/"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/custom-views.esm.js",
+      "require": "./dist/custom-views.cjs.js",
+      "browser": "./dist/custom-views.umd.js"
+    }
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "clean": "rm -rf dist/*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "library",
+    "custom views"
+  ],
+  "author": "Chan Ger Teck",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.46.2"
+  },
+  "bugs": {
+    "url": "https://github.com/gerteck/custom-views/issues"
+  },
+  "homepage": "https://github.com/gerteck/custom-views#readme"
+}
