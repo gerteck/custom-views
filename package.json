@@ -26,7 +26,8 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "clean": "rm -rf dist/*",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "live-server . --open=test/index.html"
   },
   "keywords": [
     "javascript",
@@ -37,6 +38,7 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "live-server": "^1.2.2",
     "rollup": "^4.46.2"
   },
   "bugs": {
