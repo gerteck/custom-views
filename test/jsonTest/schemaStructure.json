@@ -1,0 +1,34 @@
+{
+  "placeholders": {
+    "logo": ["default", "nus", "ntu"],
+    "heroText": ["welcome", "student", "teacher"]
+  },
+  "toggles": [
+    "showAdvancedExplanation",
+    "showDiagram",
+    "enableDarkMode"
+  ],
+  "states": {
+    "default": {
+      "placeholders": {
+        "logo": "default",
+        "heroText": "welcome"
+      },
+      "toggles": []
+    },
+    "student": {
+      "placeholders": {
+        "logo": "nus",
+        "heroText": "student"
+      },
+      "toggles": ["showDiagram"]
+    },
+    "teacher": {
+      "placeholders": {
+        "logo": "ntu",
+        "heroText": "teacher"
+      },
+      "toggles": ["showDiagram", "showAdvancedExplanation"]
+    }
+  }
+}

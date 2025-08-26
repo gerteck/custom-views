@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i18next Static Site Implementation</title>
+    <script src="https://unpkg.com/i18next/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend/i18nextHttpBackend.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .explanation {
+            background: #e8f4fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .explanation h2 {
+            color: #2980b9;
+            margin-bottom: 15px;
+        }
+        
+        .explanation ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .explanation li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .method-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .method-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        
+        .method-tab.active {
+            background: #fff;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+        
+        .method-content {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        
+        .method-content.active {
+            display: block;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .language-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .language-btn.active {
+            background: #2c3e50;
+        }
+        
+        .content-section {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .content-section h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        
+        .content-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .request-demo {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .request-demo button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .network-panel {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #f8f9fa;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .network-panel h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .network-request {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .success {
+            color: #27ae60;
+        }
+        
+        .error {
+            color: #e74c3c;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>i18next in Static Sites</h1>
+            <p>How i18next works without a backend server</p>
+        </header>
+        
+        <div class="explanation">
+            <h2>How i18next Works Architecturally</h2>
+            <p>i18next can work in static sites in two different ways:</p>
+            <ul>
+                <li><strong>Bundled Translations</strong>: All translation data is included in your JavaScript bundle</li>
+                <li><strong>Dynamic Loading</strong>: Translation files are loaded on-demand from external JSON files</li>
+            </ul>
+            <p>In the dynamic approach, i18next makes HTTP requests to fetch translation files when needed.</p>
+        </div>
+        
+        <div class="method-tabs">
+            <div class="method-tab active" onclick="showMethod(0)">Bundled Translations</div>
+            <div class="method-tab" onclick="showMethod(1)">Dynamic Loading</div>
+        </div>
+        
+        <div class="method-content active">
+            <h3>All translations included in JavaScript</h3>
+            <p>In this approach, all translation data is bundled with your JavaScript code. No network requests are made for translations.</p>
+            
+            <div class="language-selector">
+                <button class="language-btn active" onclick="changeLanguage('en')">English</button>
+                <button class="language-btn" onclick="changeLanguage('es')">Español</button>
+                <button class="language-btn" onclick="changeLanguage('fr')">Français</button>
+            </div>
+            
+            <div class="content-section">
+                <h2 data-i18n="welcomeHeader"></h2>
+                <p data-i18n="welcomeText"></p>
+            </div>
+            
+            <div class="content-section">
+                <h2 data-i18n="featuresHeader"></h2>
+                <p data-i18n="featuresText"></p>
+            </div>
+        </div>
+        
+        <div class="method-content">
+            <h3>Translations loaded from external files</h3>
+            <p>In this approach, i18next makes HTTP requests to load translation files when needed.</p>
+            
+            <div class="request-demo">
+                <p>Click the button below to simulate loading a translation file</p>
+                <button onclick="loadTranslationDynamically()">Load French Translation</button>
+            </div>
+            
+            <div class="network-panel">
+                <h3>Network Requests</h3>
+                <div id="network-requests">
+                    <!-- Network requests will be shown here -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>This is a static HTML page with no backend server. All i18next functionality works entirely in the browser.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Track active method tab
+        function showMethod(index) {
+            document.querySelectorAll('.method-tab').forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.method-content').forEach((content, i) => {
+                if (i === index) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+        }
+        
+        // Initialize i18next with bundled translations
+        i18next.init({
+            lng: 'en',
+            debug: false,
+            resources: {
+                en: {
+                    translation: {
+                        welcomeHeader: "Welcome to Our Website",
+                        welcomeText: "This is a demonstration of how i18next works in a static site with bundled translations.",
+                        featuresHeader: "Key Features",
+                        featuresText: "i18next provides a complete solution for internationalization of your web application."
+                    }
+                },
+                es: {
+                    translation: {
+                        welcomeHeader: "Bienvenido a Nuestro Sitio Web",
+                        welcomeText: "Esta es una demostración de cómo funciona i18next en un sitio estático con traducciones integradas.",
+                        featuresHeader: "Características Principales",
+                        featuresText: "i18next proporciona una solución completa para la internacionalización de su aplicación web."
+                    }
+                },
+                fr: {
+                    translation: {
+                        welcomeHeader: "Bienvenue sur Notre Site Web",
+                        welcomeText: "Ceci est une démonstration du fonctionnement d'i18next dans un site statique avec des traductions groupées.",
+                        featuresHeader: "Principales Fonctionnalités",
+                        featuresText: "i18next fournit une solution complète pour l'internationalisation de votre application web."
+                    }
+                }
+            }
+        }, function(err, t) {
+            // Initialization complete
+            updateContent();
+        });
+        
+        function changeLanguage(lng) {
+            // Update button states
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Change language
+            i18next.changeLanguage(lng, () => {
+                updateContent();
+            });
+        }
+        
+        function updateContent() {
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                element.textContent = i18next.t(key);
+            });
+        }
+        
+        // Dynamic loading demonstration
+        function loadTranslationDynamically() {
+            const networkRequests = document.getElementById('network-requests');
+            
+            // Simulate loading a translation file
+            const requestElement = document.createElement('div');
+            requestElement.className = 'network-request';
+            requestElement.innerHTML = `GET /locales/de/translation.json <span class="success">200 OK</span>`;
+            networkRequests.appendChild(requestElement);
+            
+            // Scroll to bottom
+            networkRequests.scrollTop = networkRequests.scrollHeight;
+            
+            // Show a notification that in a real scenario, the translation would be loaded
+            setTimeout(() => {
+                const notification = document.createElement('div');
+                notification.className = 'network-request';
+                notification.innerHTML = 'German translation loaded and applied';
+                networkRequests.appendChild(notification);
+                networkRequests.scrollTop = networkRequests.scrollHeight;
+            }, 800);
+        }
+    </script>
+</body>
+</html>

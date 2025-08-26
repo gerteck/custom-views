@@ -6,39 +6,47 @@
 </frontmatter>
 
 
-## Custom Views Library 
+## Introduction
+
+Custom Views Library is a lightweight JavaScript library for managing dynamic content views based on data attributes.
+
+Custom Views allows you to define placeholder elements in your HTML and dynamically populate them with content based on configuration.
+
+### Basic Usage
+1. Define placeholders and toggles in HTML
+2. Configure your views
+3. Sample configuration (views.json)
+
+### Features
+* Placeholder-based - Use data attributes to define content slots
+* Config-driven - External JSON configuration for easy updates
+* Dynamic - Content changes based on state/conditions
+* Modular - Support for both placeholder values and toggle views
+* Lightweight - No dependencies, minimal footprint
 
 
+### State Management
+The library supports two types of state:
+* Placeholder Values - Mutually exclusive content (0 or 1 active)
+* Toggle Values - Multiple can be active simultaneously (0 or more)
 
-Use the existence of an data attribute to see where to insert the data. e.g.
-* `<div data-customviews-viewA/>`  -> we should pump stuff here.
+### Use Cases Ideal For
+* A/B testing different UI variants
+* Regional content customization
+* User preference-based views
+* Multi-tenant applications
+* Dynamic content switching
 
-We must define:
-* Set of placeholder values
-* Set of toggles
+### Getting Started
+```bash
+npm install custom-views
+```
 
-
-A state can have:
-* At most ONE placeholder value 
-* A set of toggle values.
-
-Hence, the master JSON must support:
-* A set of placeholder values (where 0 or 1 is selected at a time)
-* A set of toggle views (where 0 or more selected at one time.)
-
-
-## Placeholders
-
-Placeholders are for content that is mutually exclusive — i.e., only one variant can exist at a time. These are slots where you can swap in different content depending on the selected “view” or profile. This can be used for e.g.
-* Branding / Logos (Show different logo depending on region, partner)
-* Welcome text
-* Main banner images
-* Language or Locale Variants
-
+[GitHub repository](https://github.com/gerteck/custom-views)
 
 
 ## References
-* i18n library
-* mixitup
+* i18n library [link](https://www.i18next.com/)
+* mixitup [link](https://github.com/patrickkunka/mixitup)
 
 

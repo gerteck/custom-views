@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CustomViews.js Core functions testing Page</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    .box {
+      padding: 1rem;
+      border: 1px dashed #aaa;
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>CustomViews.js Test Page</h1>
+
+  <h2>Placeholders</h2>
+  <!-- Placeholder examples -->
+  <div class="box" data-customviews-placeholder="logo"></div>
+  <div class="box" data-customviews-placeholder="welcome-text"></div>
+
+  <h2>Toggles</h2>
+  <!-- Toggle examples -->
+  <div class="box" data-customviews-toggle="student">Student-only content</div>
+  <div class="box" data-customviews-toggle="teacher">Teacher-only content</div>
+  <div class="box" data-customviews-toggle="advanced">Advanced-level content</div>
+
+  <h2>Dynamic Asset Loading</h2>
+  <!-- Placeholder for dynamically fetched image -->
+  <div class="box" data-customviews-placeholder="promo-image"></div>
+
+  <h2>Controls</h2>
+  <button id="btn-default">Load Default Profile</button>
+  <button id="btn-student">Load Student Profile</button>
+  <button id="btn-teacher">Load Teacher Profile</button>
+
+  <script type="module">
+    import CustomViews from '../../src/customviews.js';
+
+    // Init library with JSON (for testing, you can load from a file later)
+    const config = {
+      "views": {
+        "placeholders": {
+          "logo": {
+            "default": "<strong>[Default Logo]</strong>",
+            "nus": "<img src='assets/nus-logo.png' alt='NUS Logo' width='100'>",
+            "ntu": "<img src='assets/ntu-logo.png' alt='NTU Logo' width='100'>"
+          },
+          "welcome-text": {
+            "default": "Welcome to our site!",
+            "student": "Hello students, glad you're here!",
+            "teacher": "Welcome teachers, thanks for joining us!"
+          },
+          "promo-image": {
+            "default": "<img src='assets/promo-default.jpg' width='200'>",
+            "student": "<img src='assets/promo-student.jpg' width='200'>",
+            "teacher": "<img src='assets/promo-teacher.jpg' width='200'>"
+          }
+        },
+        "toggles": {
+          "student": true,
+          "teacher": true,
+          "advanced": true
+        }
+      },
+      "profiles": {
+        "default": {
+          "placeholders": {
+            "logo": "default",
+            "welcome-text": "default",
+            "promo-image": "default"
+          },
+          "toggles": []
+        },
+        "student": {
+          "placeholders": {
+            "logo": "nus",
+            "welcome-text": "student",
+            "promo-image": "student"
+          },
+          "toggles": ["student"]
+        },
+        "teacher": {
+          "placeholders": {
+            "logo": "ntu",
+            "welcome-text": "teacher",
+            "promo-image": "teacher"
+          },
+          "toggles": ["teacher", "advanced"]
+        }
+      }
+    };
+
+    const cv = new CustomViews(config);
+
+    // Control buttons
+    document.getElementById('btn-default').addEventListener('click', () => {
+      cv.applyProfile('default');
+    });
+
+    document.getElementById('btn-student').addEventListener('click', () => {
+      cv.applyProfile('student');
+    });
+
+    document.getElementById('btn-teacher').addEventListener('click', () => {
+      cv.applyProfile('teacher');
+    });
+
+    // Apply default profile on load
+    cv.applyProfile('default');
+  </script>
+</body>
+</html>

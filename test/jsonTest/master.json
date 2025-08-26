@@ -1,0 +1,35 @@
+{
+  "views": {
+    "placeholders": {
+      "logo": ["default", "nus", "ntu"],
+      "theme": ["light", "dark"]
+    },
+    "toggles": {
+      "contentLevel": ["beginner", "intermediate", "advanced"],
+      "audience": ["student", "teacher"]
+    }
+  },
+  "profiles": {
+    "default": {
+      "placeholders": {
+        "logo": "default",
+        "theme": "light"
+      },
+      "toggles": []
+    },
+    "teacher": {
+      "placeholders": {
+        "logo": "nus",
+        "theme": "light"
+      },
+      "toggles": ["teacher"]
+    },
+    "student": {
+      "placeholders": {
+        "logo": "ntu",
+        "theme": "dark"
+      },
+      "toggles": ["student", "beginner"]
+    }
+  }
+}
