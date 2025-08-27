@@ -17,10 +17,7 @@ class CustomViews {
   }
 
   /**
-   * Initialize the system:
-   * 1. Load the config JSON
-   * 2. Render initial state from URL
-   * 3. Listen for history/navigation changes
+   * Inits: Loads config json, render initial state and listen for URL change
    */
   async init() {
     await this.loadConfig();
@@ -29,8 +26,7 @@ class CustomViews {
   }
 
   /**
-   * Load the JSON config file from configUrl
-   * Stores config internally in this.config
+   * Load the JSON config file from configUrl, stores in this.config
    */
   async loadConfig() {
     try {
@@ -77,9 +73,7 @@ class CustomViews {
   }
 
   /**
-   * Render the current state:
-   * - Updates only placeholder and toggle elements
-   * - Does NOT clear the whole root
+   * Render the current state: Update placeholder and toggle elements
    */
   renderState() {
     if (!this.currentState) return;
@@ -109,15 +103,10 @@ class CustomViews {
         // Pass both category and id to the renderer
         renderers.toggle(el, toggleCategory, toggleId, this.config, idx);
       });
-
-
     });
-
-
 
     console.log("State Rendered!");
   }
-
 
   /**
    * Handle browser back/forward navigation
