@@ -2,116 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CustomViews.js Core functions testing Page</title>
+  <title>CustomViews Test</title>
   <style>
     body {
       font-family: sans-serif;
-      padding: 2rem;
-    }
-    .box {
       padding: 1rem;
-      border: 1px dashed #aaa;
-      margin: 0.5rem 0;
+    }
+
+    [data-customviews-toggle].hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <h1>CustomViews.js Test Page</h1>
 
-  <h2>Placeholders</h2>
-  <!-- Placeholder examples -->
-  <div class="box" data-customviews-placeholder="logo"></div>
-  <div class="box" data-customviews-placeholder="welcome-text"></div>
+  <!-- Placeholders -->
+  <div>
+    <h2>Logo Placeholder</h2>
+    <div data-customviews-placeholder="logo" style="width:150px; height:150px;"></div>
+  </div>
 
-  <h2>Toggles</h2>
-  <!-- Toggle examples -->
-  <div class="box" data-customviews-toggle="student">Student-only content</div>
-  <div class="box" data-customviews-toggle="teacher">Teacher-only content</div>
-  <div class="box" data-customviews-toggle="advanced">Advanced-level content</div>
+  <div>
+    <h2>Hero Text Placeholder</h2>
+    <div data-customviews-placeholder="heroText"></div>
+  </div>
 
-  <h2>Dynamic Asset Loading</h2>
-  <!-- Placeholder for dynamically fetched image -->
-  <div class="box" data-customviews-placeholder="promo-image"></div>
+  <!-- Toggles -->
+  <div>
+    <h2>Toggle Views</h2>
+    
+    <!-- Beginner toggle -->
+    <div data-customviews-toggle="beginner" data-customviews-id="intro"></div>
 
-  <h2>Controls</h2>
-  <button id="btn-default">Load Default Profile</button>
-  <button id="btn-student">Load Student Profile</button>
-  <button id="btn-teacher">Load Teacher Profile</button>
+    <!-- Intermediate toggle -->
+    <div data-customviews-toggle="intermediate" data-customviews-id="diagram"></div>
+
+    <!-- Advanced toggle -->
+    <div data-customviews-toggle="advanced" data-customviews-id="details"></div>
+  </div>
+
+  <hr>
+
+  <!-- Controls -->
+  <div>
+    <h2>Controls (for testing)</h2>
+    <button onclick="customviews.selectState('default')">Default</button>
+    <button onclick="customviews.selectState('student')">Student</button>
+    <button onclick="customviews.selectState('teacher')">Teacher</button>
+  </div>
 
   <script type="module">
-    import CustomViews from '../../src/customviews.js';
+    import CustomViews from "../../src/customviews.js";
 
-    // Init library with JSON (for testing, you can load from a file later)
-    const config = {
-      "views": {
-        "placeholders": {
-          "logo": {
-            "default": "<strong>[Default Logo]</strong>",
-            "nus": "<img src='assets/nus-logo.png' alt='NUS Logo' width='100'>",
-            "ntu": "<img src='assets/ntu-logo.png' alt='NTU Logo' width='100'>"
-          },
-          "welcome-text": {
-            "default": "Welcome to our site!",
-            "student": "Hello students, glad you're here!",
-            "teacher": "Welcome teachers, thanks for joining us!"
-          },
-          "promo-image": {
-            "default": "<img src='assets/promo-default.jpg' width='200'>",
-            "student": "<img src='assets/promo-student.jpg' width='200'>",
-            "teacher": "<img src='assets/promo-teacher.jpg' width='200'>"
-          }
-        },
-        "toggles": {
-          "student": true,
-          "teacher": true,
-          "advanced": true
-        }
-      },
-      "profiles": {
-        "default": {
-          "placeholders": {
-            "logo": "default",
-            "welcome-text": "default",
-            "promo-image": "default"
-          },
-          "toggles": []
-        },
-        "student": {
-          "placeholders": {
-            "logo": "nus",
-            "welcome-text": "student",
-            "promo-image": "student"
-          },
-          "toggles": ["student"]
-        },
-        "teacher": {
-          "placeholders": {
-            "logo": "ntu",
-            "welcome-text": "teacher",
-            "promo-image": "teacher"
-          },
-          "toggles": ["teacher", "advanced"]
-        }
-      }
-    };
-
-    const cv = new CustomViews(config);
-
-    // Control buttons
-    document.getElementById('btn-default').addEventListener('click', () => {
-      cv.applyProfile('default');
-    });
-
-    document.getElementById('btn-student').addEventListener('click', () => {
-      cv.applyProfile('student');
-    });
-
-    document.getElementById('btn-teacher').addEventListener('click', () => {
-      cv.applyProfile('teacher');
-    });
-
-    // Apply default profile on load
-    cv.applyProfile('default');
+    const customviews = new CustomViews("./master.json");
+    window.customviews = customviews; // expose for buttons
+    customviews.init();
   </script>
 </body>
 </html>

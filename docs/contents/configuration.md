@@ -27,9 +27,9 @@ The `customviews.init(options, callback)` function accepts a configuration objec
     "heroText": ["welcome", "student", "teacher"]
   },
   "toggles": [
-    "showAdvancedExplanation",
-    "showDiagram",
-    "enableDarkMode"
+    "beginner",
+    "intermediate",
+    "advanced"
   ],
   "states": {
     "default": {
@@ -44,17 +44,74 @@ The `customviews.init(options, callback)` function accepts a configuration objec
         "logo": "nus",
         "heroText": "student"
       },
-      "toggles": ["showDiagram"]
+      "toggles": ["beginner", "intermediate"]
     },
     "teacher": {
       "placeholders": {
-        "logo": "ntu",
+        "logo": "nus",
         "heroText": "teacher"
       },
-      "toggles": ["showDiagram", "showAdvancedExplanation"]
+      "toggles": ["beginner", "intermediate", "advanced"]
+    }
+  },
+  "data": {
+    "placeholders": {
+      "logo": {
+        "default": {
+          "type": "image",
+          "src": "/assets/logo-default.png",
+          "alt": "Default Logo"
+        },
+        "nus": {
+          "type": "image",
+          "src": "/assets/logo-nus.png",
+          "alt": "NUS Logo"
+        },
+        "ntu": {
+          "type": "image",
+          "src": "/assets/logo-ntu.png",
+          "alt": "NTU Logo"
+        }
+      },
+      "heroText": {
+        "welcome": {
+          "type": "text",
+          "content": "Welcome to CustomViews!"
+        },
+        "student": {
+          "type": "text",
+          "content": "Hello Students, explore your learning journey."
+        },
+        "teacher": {
+          "type": "text",
+          "content": "Welcome Teachers, inspire the next generation."
+        }
+      }
+    },
+    "toggles": {
+      "beginner": {
+        "intro": {
+          "type": "text",
+          "content": "This is the beginner-friendly explanation."
+        }
+      },
+      "intermediate": {
+        "diagram": {
+          "type": "image",
+          "src": "/assets/intermediate-diagram.png",
+          "alt": "Intermediate Diagram"
+        }
+      },
+      "advanced": {
+        "details": {
+          "type": "html",
+          "content": "<p>Advanced details with <strong>deep dive</strong> into the topic.</p>"
+        }
+      }
     }
   }
 }
+
 ```
 
 
