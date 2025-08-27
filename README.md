@@ -1,22 +1,47 @@
 # Custom Views
 
-v0.1.0 
+v0.1.1
 
-Just does hello world.
+**Status:**  
+Custom Views is prototype JavaScript library for dynamic content filtering and contextual rendering in static sites.  
+- Core features are implemented: view-based filtering, author-friendly syntax, persistent selections via URL, and toggle rendering.
+- Supports placeholders and toggles with image, text, and HTML content types.
+- Easily integrates with static sites and MarkBind.
+- No external dependencies.
+- Bundled for npm (ESM, CJS, UMD builds).
 
-Custom Views is meant to be a lightweight, standalone JavaScript library for dynamic content filtering and contextual rendering in static sites. It is meant to allow authors to tag content blocks with “views” (e.g., Windows, Linux) or some other way to do so, and provides interactive controls for readers to toggle between them. 
-
-Key target features include:
+## Features
 - **View-based filtering:** Show/hide content based on selected views or roles.
-- **Author-friendly syntax:** Use HTML attributes like `<div view="linux">`.
+- **Author-friendly syntax:** Use HTML attributes like `<div data-customviews-toggle="linux">`.
 - **Persistent selections:** Encode selected views in URL hashes or local storage.
 - **Composable logic:** Support multiple views per element with AND/OR logic.
 - **URL sync & shareability:** Share links that preserve view state.
 - **Lightweight & framework-agnostic:** No dependencies, easy to integrate.
+- **Toggle and placeholder support:** Render images, text, or HTML blocks dynamically.
 
-This library is intended for integration with MarkBind but hopefully can also be used as a standalone widget in any static site.
+## Usage
+Install via npm:
 
+```sh
+npm install custom-views
+```
 
-Name of Library:
-* CustomViews.js
+Import and initialize:
 
+```js
+import CustomViews from 'custom-views';
+
+const customviews = new CustomViews({ configUrl: './master.json' });
+customviews.init();
+```
+
+## Integration
+- Works with MarkBind and any static site.
+- See `/test/jsonTest/index.html` for example usage.
+
+## Roadmap
+- More advanced logic for multi-view elements
+- Improved documentation and examples
+- Additional renderer types
+
+---

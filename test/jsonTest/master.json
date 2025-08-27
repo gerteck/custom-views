@@ -1,0 +1,90 @@
+{
+  "placeholders": {
+    "logo": ["default", "nus", "ntu"],
+    "heroText": ["welcome", "student", "teacher"]
+  },
+  "toggles": [
+    "beginner",
+    "intermediate",
+    "advanced"
+  ],
+  "states": {
+    "default": {
+      "placeholders": {
+        "logo": "default",
+        "heroText": "welcome"
+      },
+      "toggles": []
+    },
+    "student": {
+      "placeholders": {
+        "logo": "nus",
+        "heroText": "student"
+      },
+      "toggles": ["beginner"]
+    },
+    "teacher": {
+      "placeholders": {
+        "logo": "ntu",
+        "heroText": "teacher"
+      },
+      "toggles": ["beginner", "intermediate", "advanced"]
+    }
+  },
+  "data": {
+    "placeholders": {
+      "logo": {
+        "default": {
+          "type": "image",
+          "src": "./assets/logo-1.png",
+          "alt": "Default Logo"
+        },
+        "nus": {
+          "type": "image",
+          "src": "./assets/logo-2.png",
+          "alt": "NUS Logo"
+        },
+        "ntu": {
+          "type": "image",
+          "src": "./assets/logo-3.png",
+          "alt": "NTU Logo"
+        }
+      },
+      "heroText": {
+        "welcome": {
+          "type": "text",
+          "content": "Welcome to CustomViews!"
+        },
+        "student": {
+          "type": "text",
+          "content": "Hello Students, explore your learning journey."
+        },
+        "teacher": {
+          "type": "text",
+          "content": "Welcome Teachers, inspire the next generation."
+        }
+      }
+    },
+    "toggles": {
+      "beginner": {
+        "intro": {
+          "type": "text",
+          "content": "This is the beginner-friendly explanation."
+        }
+      },
+      "intermediate": {
+        "diagram": {
+          "type": "image",
+          "src": "./assets/toggle-image.png",
+          "alt": "Intermediate Diagram"
+        }
+      },
+      "advanced": {
+        "details": {
+          "type": "html",
+          "content": "<p>Advanced details with <strong>deep dive</strong> into the topic.</p>"
+        }
+      }
+    }
+  }
+}
