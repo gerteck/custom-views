@@ -17,7 +17,7 @@ export default [
     output: {
       file: 'dist/custom-views.esm.js',
       format: 'esm',
-      banner
+      banner,
     }
   },
   
@@ -28,7 +28,7 @@ export default [
       file: 'dist/custom-views.cjs.js',
       format: 'cjs',
       banner,
-      exports: 'auto'
+      exports: 'named'
     }
   },
   
@@ -40,7 +40,7 @@ export default [
       format: 'umd',
       name: 'CustomViews',
       banner,
-      exports: 'auto'
+      exports: 'named'
     }
   },
   
@@ -52,7 +52,7 @@ export default [
       format: 'umd',
       name: 'CustomViews',
       banner,
-      exports: 'auto'
+      exports: 'named'
     },
     plugins: [terser()]
   }
