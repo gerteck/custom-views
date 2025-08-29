@@ -2,6 +2,11 @@
 
 v0.1.1
 
+Next: Implementing
+* Add logic for hiding of static elements (toggle / placeholder)
+* Persistence across pages
+* ++
+
 **Status:**  
 Custom Views is prototype JavaScript library for dynamic content filtering and contextual rendering in static sites.  
 - Core features are implemented: view-based filtering, author-friendly syntax, persistent selections via URL, and toggle rendering.
