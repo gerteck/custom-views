@@ -8,9 +8,23 @@
 
 ## Introduction
 
-Custom Views Library is a lightweight JavaScript library for managing dynamic content views based on data attributes.
+Custom Views Library is a lightweight JavaScript library for managing both static and dynamic content views using data attributes.  
 
-Custom Views allows you to define placeholder elements in your HTML and dynamically populate them with content based on configuration.
+It allows you to define static placeholders in your HTML while dynamically populating or toggling content based on configuration and state, providing a flexible way to manage content that can change based on user interactions, preferences, or URL parameters.
+
+### Why Use Custom Views?
+
+The concept behind Custom Views is very simple — showing or hiding elements, or swapping content based on state, can be done with just plain JavaScript manipulating the DOM. However, this library provides several benefits that make it more robust, maintainable, and scalable:
+
+* **Config-driven:** Define all your view states and content externally in JSON instead of hardcoding logic in JS.
+* **Placeholder-based:** Use intuitive `data-` attributes to mark dynamic content slots directly in your HTML.
+* **State management:** Built-in support for mutually exclusive placeholders or toggleable views, without writing extra JS logic.
+* **Modularity:** Easily integrate into existing projects with minimal footprint, no dependencies required.
+* **Consistency:** Standardized way to manage dynamic content, reducing the risk of bugs and repetitive code.
+* **Use-case flexibility:** Ideal for A/B testing, regional customization, user preference-based content, and multi-tenant applications.
+
+In short, while a few lines of JavaScript could achieve similar effects, Custom Views provides structure, scalability, and convenience, making it suitable for projects that need maintainable and dynamic content management.
+
 
 ### Basic Usage
 1. Define placeholders and toggles in HTML
