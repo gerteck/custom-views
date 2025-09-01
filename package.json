@@ -38,8 +38,10 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
     "live-server": "^1.2.2",
-    "rollup": "^4.46.2"
+    "rollup": "^4.46.2",
+    "typescript": "^5.9.2"
   },
   "bugs": {
     "url": "https://github.com/gerteck/custom-views/issues"
