@@ -1,13 +1,15 @@
 import renderers from "./renderer/index.js";
+import type { CustomViewsOptions, CustomViewsConfig, CustomViewsState } from "./types/types";
 
 class CustomViews {
-  /**
-   * @param {Object} options - Configuration options
-   * @param {string} options.configUrl - Path to the JSON config (default: master.json)
-   * @param {HTMLElement} options.rootEl - Root element where views will be rendered
-   * @param {Function} options.onViewChange - Optional callback triggered when view changes
-   */
-  constructor(options = {}) {
+  configUrl: string;
+  rootEl: HTMLElement;
+  config: CustomViewsConfig | null;
+  currentStateId: string | null;
+  currentState: CustomViewsState | null;
+  onViewChange: ((stateId: string, state: CustomViewsState) => void) | null;
+
+  constructor(options: CustomViewsOptions = {}) {
     this.configUrl = options.configUrl || 'master.json';
     this.rootEl = options.rootEl || document.getElementById('view-container') || document.body;
     this.config = null;
@@ -15,6 +17,7 @@ class CustomViews {
     this.currentState = null;
     this.onViewChange = options.onViewChange || null;
   }
+
 
   /**
    * Inits: Loads config json, render initial state and listen for URL change
