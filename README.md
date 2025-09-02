@@ -2,11 +2,6 @@
 
 v0.1.1
 
-Next: Implementing
-* Add logic for hiding of static elements (toggle / placeholder)
-* Persistence across pages
-* ++
-
 **Status:**  
 Custom Views is prototype JavaScript library for dynamic content filtering and contextual rendering in static sites.  
 - Core features are implemented: view-based filtering, author-friendly syntax, persistent selections via URL, and toggle rendering.
@@ -31,22 +26,4 @@ Install via npm:
 npm install custom-views
 ```
 
-Import and initialize:
-
-```js
-import CustomViews from 'custom-views';
-
-const customviews = new CustomViews({ configUrl: './master.json' });
-customviews.init();
-```
-
-## Integration
-- Works with MarkBind and any static site.
-- See `/test/jsonTest/index.html` for example usage.
-
-## Roadmap
-- More advanced logic for multi-view elements
-- Improved documentation and examples
-- Additional renderer types
-
----
+Import and initialize.
