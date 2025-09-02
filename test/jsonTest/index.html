@@ -18,23 +18,26 @@
   <h1>CustomViews.js Test Page</h1>
 
   <!-- Placeholders -->
-  <div>
-    <h2>Logo Placeholder</h2>
-    <div data-customviews-placeholder="logo" style="width:150px; height:150px;"></div>
-  </div>
 
-  <div>
-    <h2>Hero Text Placeholder</h2>
-    <div data-customviews-placeholder="heroText"></div>
-  </div>
+  <h2>Logo Placeholder</h2>
+  <div data-customviews-placeholder="logo" style="width:150px; height:150px;"></div>
+
+
+  <h2>Hero Text Placeholder</h2>
+  <div data-customviews-placeholder="heroText"></div>
 
 <!-- Toggles -->
-<div>
   <h2>Toggle Views</h2>
   
   <!-- Beginner toggle -->
   <p>Beginner toggle with id of intro</p>
-  <div data-customviews-toggle="beginner" data-customviews-id="intro"></div>
+  <div data-customviews-toggle="beginner" data-customviews-id="intro">
+
+  </div>
+
+  <div data-customviews-toggle="beginner">
+    This is a beginner toggle with some static content inside
+  </div>
 
   <!-- Intermediate toggle -->
   <p>Intermediate toggle with id of diagram</p>
@@ -43,7 +46,6 @@
   <!-- Advanced toggle -->
   <p>Advanced toggle with id of details</p>
   <div data-customviews-toggle="advanced" data-customviews-id="details"></div>
-</div>
 
 
   <hr>
