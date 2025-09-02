@@ -1,6 +1,6 @@
 import { CustomViewsCore } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
-import { GlobalConfig } from "models/globalConfig";
+import { GlobalConfig } from "models/GlobalConfig";
 import { LocalConfig } from "models/LocalConfig";
 import type { CustomViewAsset, State } from "types/types";
 

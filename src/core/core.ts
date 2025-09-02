@@ -2,7 +2,7 @@ import type { State } from "../types/types";
 import type { AssetsManager } from "../models/AssetsManager";
 import { renderAssetInto } from "./render";
 import type { LocalConfig } from "models/LocalConfig";
-import type { GlobalConfig } from "models/globalConfig";
+import type { GlobalConfig } from "models/GlobalConfig";
 
 // TO DO: UPDATE CORE
 
