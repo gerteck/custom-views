@@ -1,4 +1,4 @@
-import type { CustomViewAsset, State } from "types/types";
+import type { CustomViewAsset } from "types/types";
 
 export class AssetsManager {
   assets: Record<string, CustomViewAsset>;
@@ -22,15 +22,5 @@ export class AssetsManager {
   validate(): boolean {
     // optional: check each asset has type, id, etc.
     return Object.values(this.assets).every(a => a.type);
-  }
-}
-
-export class GlobalConfig {
-  assets: AssetsManager;
-  defaultState: State;
-
-  constructor(assets: AssetsManager, defaultState: State) {
-    this.assets = assets;
-    this.defaultState = defaultState;
   }
 }
