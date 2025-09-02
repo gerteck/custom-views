@@ -1,54 +1,47 @@
-import type { AssetsManager } from "assets/AssetsManager";
-
+/**
+ * Represents an individual asset that can be rendered in a custom view.
+ * Could be used as a placeholder or a toggle.
+ */
 export interface CustomViewAsset {
+  /** Unique identifier for this asset. Used in States to reference it. */
   id: string;
+
+  /** Type of asset. Determines which renderer is used. */
   type: 'image' | 'text' | 'html' | string;
+
+  /** URL for an image asset. Required if type is 'image'. */
   src?: string;
+
+  /** Alt text for image assets. Optional, defaults to empty string. */
   alt?: string;
+
+  /** Content for text or HTML assets. Optional. */
   content?: string;
-  [key: string]: any; // allow extra fields
+
+  /** Any additional custom properties that a specific asset might need. */
+  [key: string]: any;
 }
 
-
-// ============================================
-// Configurations
-// ============================================
-
+/**
+ * Represents a specific state of a custom view.
+ * States contain mapping of placeholder names  to asset IDs,
+ * and contain the list of toggle categories that should be displayed in this state. 
+ */
 export interface State {
-  placeholders?: Record<string, string>; // placeholderName -> assetId
-  toggles?: string[];    // toggleCategory
+  /**
+   * Mapping of placeholder names to asset IDs.
+   * Example:
+   * {
+   *   "logo": "asset-logo",
+   *   "introText": "asset-intro-text"
+   * }
+   */
+  placeholders?: Record<string, string>;
+
+  /**
+   * List of toggle categories that should be displayed in this state.
+   * Example:
+   * ["advancedOptions", "extraInfo"]
+   */
+  toggles?: string[];
 }
-
-
-// Holds all assets and a default State to show if no localConfig Profile specified in URL.
-export class GlobalConfig {
-  assetManager: AssetsManager;
-  defaultState: State;
-
-  constructor(assetManager: AssetsManager, defaultState: State) {
-    this.assetManager = assetManager;
-    this.defaultState = defaultState;
-  }
-}
-
-// A Local Config is a Profile with constraints on placeholders & toggles, and 
-// predefined states and a default State
-export class LocalConfig {
-  allowedPlaceholders?: string[] | undefined;
-  allowedToggles?: string[] | undefined; // category -> allowed toggleIds
-  states: Record<string, State>;
-  defaultState: string;
-
-  constructor(opts: {
-    allowedPlaceholders?: string[];
-    allowedToggles?: string[];
-    states: Record<string, State>;
-    defaultState: string;
-  }) {
-    this.allowedPlaceholders = opts.allowedPlaceholders;
-    this.allowedToggles = opts.allowedToggles;
-    this.states = opts.states;
-    this.defaultState = opts.defaultState;
-  }
-}
-
