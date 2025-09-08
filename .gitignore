@@ -4,8 +4,17 @@ dist/
 .DS_Store
 .env
 
+# Ignore type declarations generated in src
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+
 # NPM Publishing
 *.tgz
 
 # VSCode settings
 .vscode/
+
+# Others
+references/
+
