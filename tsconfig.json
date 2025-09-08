@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
     // Project structure
-    "rootDir": "./src",                // Source files location
-    "outDir": "./dist/types",          // Output directory for type declarations
-    "module": "esnext",                // Use latest module system
-    "target": "esnext",                // Compile to latest JS
+    "rootDir": "./src",     
+    "outDir": "./dist",           
+    "module": "esnext",                
+    "target": "esnext",              
 
-    // Type declaration output
     "declaration": true,               // Generate .d.ts files
-    "declarationMap": true,            // Generate source maps for .d.ts files
-    "sourceMap": true,                 // Generate source maps for JS
+    "declarationDir": "./dist/types",
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
 
     // Type safety & strictness
     "strict": true,                    // Enable all strict type checks
@@ -23,10 +23,7 @@
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "removeComments": true,
 
-    // Build performance & safety
-    "isolatedModules": true,           // Ensure each file can be safely transpiled
     "noUncheckedSideEffectImports": true, // Warn on imports with side effects
     "skipLibCheck": true,              // Skip type checking of declaration files
 

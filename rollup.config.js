@@ -19,6 +19,7 @@ export default [
       file: 'dist/custom-views.esm.js',
       format: 'esm',
       banner,
+      sourcemap: true
     },
     plugins: [typescript()]
   },
@@ -30,7 +31,8 @@ export default [
       file: 'dist/custom-views.cjs.js',
       format: 'cjs',
       banner,
-      exports: 'named'
+      sourcemap: true,
+      exports: 'named',
     },
     plugins: [typescript()]
   },
@@ -43,7 +45,8 @@ export default [
       format: 'umd',
       name: 'CustomViews',
       banner,
-      exports: 'named'
+      sourcemap: true,
+      exports: 'named',
     },
     plugins: [typescript()]
   },
@@ -56,7 +59,8 @@ export default [
       format: 'umd',
       name: 'CustomViews',
       banner,
-      exports: 'named'
+      sourcemap: true,
+      exports: 'named',
     },
     plugins: [typescript(), terser()]
   }

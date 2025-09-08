@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "A JavaScript dynamic custom views Library.",
   "type": "module",
+  "types": "dist/index.d.ts",
   "main": "dist/custom-views.cjs.js",
   "module": "dist/custom-views.esm.js",
   "browser": "dist/custom-views.umd.js",
@@ -17,16 +18,19 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/custom-views.esm.js",
       "require": "./dist/custom-views.cjs.js",
       "browser": "./dist/custom-views.umd.js"
     }
   },
   "scripts": {
-    "build": "rollup -c",
+    "clean": "rimraf dist",
+    "build:types": "tsc --project tsconfig.json",
+    "build:js": "rollup -c",
+    "build": "npm run clean && npm run build:types && npm run build:js",
     "dev": "rollup -c -w",
-    "clean": "rm -rf dist/*",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "live-server": "live-server ."
   },
   "keywords": [
@@ -39,9 +43,12 @@
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.3.1",
     "live-server": "^1.2.2",
+    "rimraf": "^6.0.1",
     "rollup": "^4.46.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "bugs": {
     "url": "https://github.com/gerteck/custom-views/issues"
