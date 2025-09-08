@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CustomViews Test</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+    }
+
+    [data-customviews-toggle].hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>CustomViews.js Test Page</h1>
+
+  <!-- Placeholders -->
+
+  <h2>Placeholder</h2>
+  <div data-customviews-placeholder="logo" style="width:150px; height:150px;"></div>
+
+  <div data-customviews-placeholder="logo" data-customviews-id="staticAsset">
+    This is a logo that has the value itself. not dynamically rendered.
+  </div>
+
+
+  <div data-customviews-toggle="beginner" data-customviews-id="intro">    
+
+  </div>
+
+  <script type="module">
+    import { CustomViews }  from "../../dist/custom-views.esm.js";
+
+    const customviews = await CustomViews.initFromJson({
+      assetsJsonPath: './configs/assets.json',
+      defaultStateJsonPath: './configs/defaultState.json',
+      rootEl: document.body
+    });
+    await customviews.init();
+  </script>
+</body>
+</html>
