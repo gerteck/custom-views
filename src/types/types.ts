@@ -36,12 +36,12 @@ export interface State {
    *   "introText": "asset-intro-text"
    * }
    */
-  placeholders?: Record<string, string>;
+  placeholders: Record<string, string>;
 
   /**
    * List of toggle categories that should be displayed in this state.
    * Example:
    * ["advancedOptions", "extraInfo"]
    */
-  toggles?: string[];
+  toggles: string[];
 }
