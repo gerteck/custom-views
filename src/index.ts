@@ -36,3 +36,8 @@ export class CustomViews {
   }
 }
 
+if (typeof window !== "undefined") {
+  // @ts-ignore
+  window.CustomViews = CustomViews;
+}
+
