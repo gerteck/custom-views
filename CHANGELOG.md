@@ -1,18 +1,29 @@
 # Changelog
 
+Changelog for custom-views package that will bring greater customizability to authors of websites!
+
 ## Next Ver - 2025-09-03
 
+* Test usage on markbind site
+
+---
+
 To-do: Implement:
-* Add logic for handling static elements vs dynamic elements (toggle / placeholder)
 * Persistence across pages
+* We can make this extendible to include multiple JSONs of assets as needed.
 
 Ideas:
-* ALL ASSETS WILL LIVE TOGETHER (MASTER ASSET)
-  * Can support multiple JSON files -> Can simply add more JSON if needed.
+  * Aggregate the assets into a singular assets json file that will point to all 
+  dynamically loaded content, with unique keys.
+  * Can support multiple JSON files -> Can simply add more JSON if needed. (Will need to check )
 
 
-Custom views is supposed to be a web package library, so it should give a good way to init by giving url to the Assets JSON, some mapping to profiles etc.
+---
 
+
+* Added logic for handling static elements vs dynamic elements (toggle / placeholder)
+* Added master asset JSON where all assets live together (MASTER ASSET)
+  * Custom views is supposed to be a web package library, so it should give a good way to init by giving url to the Assets JSON, some mapping to profiles etc.
 
 - Change project to TypeScript.
 - Add models for config, assets.
