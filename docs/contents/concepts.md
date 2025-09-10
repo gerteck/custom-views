@@ -72,7 +72,7 @@ Another way to understand a view is that one view is essentially a snapshot of t
 
 ### 5.Profile / ViewScope / Local Config
 
-A Profile is the set of placeholders and toggles that an Adopter exposes to Viewers.
+A Profile/ LocalConfig is the set of placeholders and toggles that an Adopter exposes to Viewers.
 * While a View is a single predefined configuration (a snapshot of placeholder values + toggles), a Profile defines the universe of options a Viewer can choose from.
 * This allows the Adopter to constrain the viewer experience, e.g.,
   * lock a placeholder to a single option,
@@ -85,7 +85,6 @@ A viewer can only select placeholder mappings and toggles as allowed by the View
 E.g. A sample Profile JSON / `LocalConfig`
 ```json
 {
-  "allowedPlaceholders": ["logo", "introText", "heroImage"],
   "modifiablePlaceholderAssets": {
     "logo": ["asset-logo-v1", "asset-logo-v2"],
     "introText": ["asset-intro-v1", "asset-intro-beta"],
