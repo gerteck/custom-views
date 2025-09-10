@@ -66,7 +66,7 @@ export class CustomViewsCore {
     // Can .get("param"), .has, .set(), .append()
     const urlParams = new URLSearchParams(window.location.search);
     this.profileFromUrl = urlParams.get("profile") || null;
-    this.stateIdFromUrl = urlParams.get("stateId") || null;
+    this.stateIdFromUrl = urlParams.get("state") || null;
 
     if (this.profileFromUrl &&
         this.localConfigPaths &&

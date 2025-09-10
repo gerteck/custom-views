@@ -1,0 +1,24 @@
+{
+  "id": "profileB",
+  "modifiablePlaceholderAssets": {
+    "logo": ["asset1", "asset2", "asset3"]
+  },
+  "allowedToggles": ["beginner", "advanced", "expert"],
+  "states": {
+    
+    "default": {
+      "placeholders": {
+        "logo": "asset1"
+      },
+      "toggles": ["expert"]
+    },
+
+    "all": {
+      "placeholders": {
+        "logo": "asset3"
+      },
+      "toggles": ["beginner", "advanced", "expert"]
+    }
+  },
+  "defaultState": "default"
+}

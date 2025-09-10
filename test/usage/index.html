@@ -27,16 +27,46 @@
   </div>
 
 
-  <div data-customviews-toggle="beginner" data-customviews-id="intro">    
+  <div data-customviews-toggle="beginner" data-customviews-id="intro">  
+  </div>  
+
+  <div data-customviews-toggle="beginner">    
+    <h2>Beginner View</h2>
+    <p>This content is only visible in the "beginner" view.</p>
+
+  </div>
+
+  <div data-customviews-toggle="advanced" data-customviews-id="advancedIntro">    
+  </div>
+
+  <div data-customviews-toggle="advanced">    
+    <h2>Advanced View</h2>
+    <p>This content is only visible in the "advanced" view.</p>
+    Hello Hello
+
+  </div>
+
+  <div data-customviews-toggle="expert" data-customviews-id="expertIntro">    
+  </div>
+
+  <div data-customviews-toggle="expert">    
+    <h2>Expert View</h2>
+    <p>This content is only visible in the "expert" view.</p>
 
   </div>
 
   <script type="module">
     import { CustomViews }  from "../../dist/custom-views.esm.js";
 
+    const localConfigPaths = {
+      profileA: "./configs/profileA.json",
+      profileB: "./configs/profileB.json"
+    };
+
     const customviews = await CustomViews.initFromJson({
       assetsJsonPath: './configs/assets.json',
       defaultStateJsonPath: './configs/defaultState.json',
+      localConfigPaths,
       rootEl: document.body
     });
     await customviews.init();
