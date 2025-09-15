@@ -1,5 +1,6 @@
 import { CustomViewsCore } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
+import { CustomViewsWidget } from "core/widget";
 import type { CustomViewAsset, State } from "types/types";
 
 export type InitFromJsonOptions = {
@@ -36,8 +37,14 @@ export class CustomViews {
   }
 }
 
+// Export the widget class
+export { CustomViewsWidget } from "core/widget";
+export type { WidgetOptions } from "core/widget";
+
 if (typeof window !== "undefined") {
   // @ts-ignore
   window.CustomViews = CustomViews;
+  // @ts-ignore
+  window.CustomViewsWidget = CustomViewsWidget;
 }
 
