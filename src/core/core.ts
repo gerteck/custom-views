@@ -25,6 +25,13 @@ export class CustomViewsCore {
   private stateIdFromUrl: string | null = null;
 
   private localConfig: LocalConfig | null = null;
+  
+  // Persistence keys for localStorage
+  private static readonly STORAGE_KEYS = {
+    PROFILE: 'customviews-profile',
+    STATE: 'customviews-state',
+    CUSTOM_STATE: 'customviews-custom-state'
+  } as const;
 
   constructor(options: CustomViewsOptions) {
     this.assetsManager = options.assetsManager;
@@ -45,6 +52,17 @@ export class CustomViewsCore {
 
   private async renderFromUrl() {
     this.parseUrlForProfileState();
+
+    // If no URL params, try to load from persistence
+    if (!this.profileFromUrl && !this.stateIdFromUrl) {
+      const persistedProfile = this.getPersistedProfile();
+      const persistedState = this.getPersistedState();
+      
+      if (persistedProfile) {
+        this.profileFromUrl = persistedProfile;
+        this.stateIdFromUrl = persistedState;
+      }
+    }
 
     if (this.profileFromUrl) {
       const localConfig = await this.loadLocalConfig(this.profileFromUrl);
@@ -207,6 +225,198 @@ export class CustomViewsCore {
       } else {
         this.onViewChange("default state", state);
       }
+    }
+  }
+
+  // === PERSISTENCE METHODS ===
+
+  /**
+   * Persists the current profile to localStorage
+   */
+  private persistProfile(profile: string | null) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      if (profile) {
+        localStorage.setItem(CustomViewsCore.STORAGE_KEYS.PROFILE, profile);
+      } else {
+        localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
+      }
+    }
+  }
+
+  /**
+   * Persists the current state to localStorage
+   */
+  private persistState(state: string | null) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      if (state) {
+        localStorage.setItem(CustomViewsCore.STORAGE_KEYS.STATE, state);
+      } else {
+        localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.STATE);
+      }
+    }
+  }
+
+  /**
+   * Retrieves the persisted profile from localStorage
+   */
+  private getPersistedProfile(): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
+    }
+    return null;
+  }
+
+  /**
+   * Retrieves the persisted state from localStorage
+   */
+  private getPersistedState(): string | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return localStorage.getItem(CustomViewsCore.STORAGE_KEYS.STATE);
+    }
+    return null;
+  }
+
+  /**
+   * Persists a custom state configuration to localStorage
+   * @internal Reserved for future use
+   */
+  // @ts-ignore - Reserved for future use
+  private persistCustomState(customState: State) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE, JSON.stringify(customState));
+    }
+  }
+
+  /**
+   * Retrieves a custom state configuration from localStorage
+   * @internal Reserved for future use
+   */
+  // @ts-ignore - Reserved for future use
+  private getPersistedCustomState(): State | null {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const stored = localStorage.getItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE);
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.warn('Failed to parse persisted custom state:', e);
+        }
+      }
+    }
+    return null;
+  }
+
+  // === PUBLIC API METHODS ===
+
+  /**
+   * Programmatically switch to a different profile and state
+   */
+  public async switchToProfile(profileId: string, stateId?: string) {
+    if (!this.localConfigPaths || !(profileId in this.localConfigPaths)) {
+      console.warn('Profile not found:', profileId);
+      return;
+    }
+
+    this.profileFromUrl = profileId;
+    this.stateIdFromUrl = stateId || null;
+    
+    // Persist the selection
+    this.persistProfile(profileId);
+    this.persistState(stateId || null);
+
+    // Load and render
+    const localConfig = await this.loadLocalConfig(profileId);
+    this.localConfig = localConfig;
+    
+    if (this.localConfig) {
+      this.renderLocalConfigState(this.stateIdFromUrl, this.localConfig);
+    }
+
+    // Update URL without triggering navigation
+    this.updateUrlWithoutNavigation(profileId, stateId || null);
+  }
+
+  /**
+   * Switch to a specific state within the current profile
+   */
+  public switchToState(stateId: string) {
+    if (!this.localConfig) {
+      console.warn('No profile loaded, cannot switch state');
+      return;
+    }
+
+    if (!(stateId in this.localConfig.states)) {
+      console.warn('State not found in current profile:', stateId);
+      return;
+    }
+
+    this.stateIdFromUrl = stateId;
+    this.persistState(stateId);
+    this.renderLocalConfigState(stateId, this.localConfig);
+    this.updateUrlWithoutNavigation(this.profileFromUrl, stateId);
+  }
+
+  /**
+   * Get available profiles
+   */
+  public getAvailableProfiles(): string[] {
+    return this.localConfigPaths ? Object.keys(this.localConfigPaths) : [];
+  }
+
+  /**
+   * Get available states for current profile
+   */
+  public getAvailableStates(): string[] {
+    return this.localConfig ? Object.keys(this.localConfig.states) : [];
+  }
+
+  /**
+   * Get current profile and state
+   */
+  public getCurrentView(): { profile: string | null; state: string | null } {
+    return {
+      profile: this.profileFromUrl,
+      state: this.stateIdFromUrl
+    };
+  }
+
+  /**
+   * Clear all persistence and reset to default
+   */
+  public clearPersistence() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
+      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.STATE);
+      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE);
+    }
+    
+    this.profileFromUrl = null;
+    this.stateIdFromUrl = null;
+    this.localConfig = null;
+    this.renderState(this.defaultState);
+    this.updateUrlWithoutNavigation(null, null);
+  }
+
+  /**
+   * Update URL without triggering navigation
+   */
+  private updateUrlWithoutNavigation(profile: string | null, state: string | null) {
+    if (typeof window !== 'undefined' && window.history) {
+      const url = new URL(window.location.href);
+      
+      if (profile) {
+        url.searchParams.set('profile', profile);
+      } else {
+        url.searchParams.delete('profile');
+      }
+      
+      if (state) {
+        url.searchParams.set('state', state);
+      } else {
+        url.searchParams.delete('state');
+      }
+      
+      window.history.replaceState({}, '', url.toString());
     }
   }
   
