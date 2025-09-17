@@ -6,6 +6,8 @@
 
 This page demonstrates various features and usage patterns of the Custom Views library with live, interactive examples.
 
+We will use different OSes to show the different states!
+
 ## Demo Controls
 
 **Use the "Custom Views" widget in the top-right corner** to interact with all examples on this page in real-time!
@@ -13,15 +15,24 @@ This page demonstrates various features and usage patterns of the Custom Views l
 ### Available Profiles
 
 - **Profile A** - Basic user profile with beginner and advanced modes
-- **Profile B** - Advanced user profile with expert features
+- **Profile B** - Advanced user profile with expert features  
+- **Profile OS** - Operating system specific profile with Mac, Linux, and Windows toggles
 
-### URL Demo
+### OS-Specific Demos
 
-Try these direct links to see URL parameter handling:
-- [Profile A Default](./demo.html?profile=profileA)
-- [Profile A Advanced](./demo.html?profile=profileA&state=alt)
-- [Profile B All Features](./demo.html?profile=profileB&state=all)
-- [Profile B Minimal](./demo.html?profile=profileB&state=minimal)
+Explore cross-platform development with our new operating system demos:
+
+<box type="info">
+
+#### :fas-terminal: [Git CLI Mastery](cliMastery.html)
+Learn Git commands across **macOS**, **Linux**, and **Windows**. See platform-specific installation methods, command syntax variations, and OS-specific tools.
+
+#### :fas-folder-tree: [File System Structures](fileStructure.html)  
+Understand how different operating systems organize files, install applications, and manage configurations. Perfect for developers working across multiple platforms.
+
+</box>
+
+
 
 ## Live Examples
 
@@ -312,6 +323,33 @@ The demo shows how the library handles:
 - **Caching** - Assets are cached after first load
 - **Smooth transitions** - Content changes without page reloads
 - **Memory efficiency** - Only active content is in the DOM
+
+## Operating System Toggle Demos
+
+See the OS-specific toggles in action! These examples show how content can be tailored for different operating systems:
+
+### OS Image Placeholder
+This image changes based on the selected operating system:
+
+<div data-customviews-placeholder="osImage" style="width: 100px; height: 100px; margin: 20px auto; text-align: center; border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: #f8f9fa;"></div>
+
+### OS-Specific Content
+
+<div data-customviews-toggle="mac" style="border: 2px solid #007aff; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e3f2fd;">
+<strong>🍎 macOS Active</strong> - This content is only visible when the Mac toggle is active. Perfect for macOS-specific instructions, Homebrew commands, or .app bundle information.
+</div>
+
+<div data-customviews-toggle="linux" style="border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; background: #fff8e1;">
+<strong>🐧 Linux Active</strong> - This content appears for Linux users. Great for package manager commands (apt, yum, pacman), filesystem hierarchy explanations, or distribution-specific notes.
+</div>
+
+<div data-customviews-toggle="windows" style="border: 2px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e8f5e8;">
+<strong>🪟 Windows Active</strong> - Windows-specific content appears here. Perfect for PowerShell commands, registry information, or Windows-specific file paths.
+</div>
+
+**Try switching between OS profiles** using the Custom Views widget to see how content adapts!
+
+---
 
 ## Browser DevTools Exploration
 

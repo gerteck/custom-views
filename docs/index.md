@@ -153,7 +153,6 @@ widget.render();
 * **[Concepts](/contents/concepts.html)** - Detailed explanation of library concepts and terminology
 * **[Configuration](/contents/configuration.html)** - How to set up and configure the library
 * **[Syntax](/contents/syntax.html)** - HTML data attributes and JavaScript API reference
-* **[Demo](/contents/demo.html)** - Interactive examples and use cases
 * **[Architecture](/contents/architecture.html)** - Developer guide and library internals
 
 ## References

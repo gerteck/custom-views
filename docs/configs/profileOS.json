@@ -1,0 +1,52 @@
+{
+  "id": "profileOS",
+  "modifiablePlaceholderAssets": {
+    "osImage": ["macOSImage", "linuxImage", "windowsImage"],
+    "gitCommands": ["gitInitMac", "gitInitLinux", "gitInitWindows"],
+    "fileStructure": ["fileStructureMac", "fileStructureLinux", "fileStructureWindows"]
+  },
+  "allowedToggles": ["mac", "linux", "windows"],
+  "states": {
+    "default": {
+      "placeholders": {
+        "osImage": "macOSImage",
+        "gitCommands": "gitInitMac", 
+        "fileStructure": "fileStructureMac"
+      },
+      "toggles": ["mac"]
+    },
+    "macOS": {
+      "placeholders": {
+        "osImage": "macOSImage",
+        "gitCommands": "gitInitMac",
+        "fileStructure": "fileStructureMac"
+      },
+      "toggles": ["mac"]
+    },
+    "linux": {
+      "placeholders": {
+        "osImage": "linuxImage", 
+        "gitCommands": "gitInitLinux",
+        "fileStructure": "fileStructureLinux"
+      },
+      "toggles": ["linux"]
+    },
+    "windows": {
+      "placeholders": {
+        "osImage": "windowsImage",
+        "gitCommands": "gitInitWindows", 
+        "fileStructure": "fileStructureWindows"
+      },
+      "toggles": ["windows"]
+    },
+    "all": {
+        "placeholders": {
+          "osImage": "windowsImage",
+          "gitCommands": "gitInitWindows", 
+          "fileStructure": "fileStructureWindows"
+        },
+        "toggles": ["windows", "linux", "mac"]
+      }
+  },
+  "defaultState": "default"
+}
