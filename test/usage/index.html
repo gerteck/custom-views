@@ -98,48 +98,6 @@
     });
     inlineWidget.render();
 
-    // Demo buttons for programmatic control
-    const demoControls = document.createElement('div');
-    demoControls.style.cssText = 'margin: 20px 0; padding: 20px; background: #f0f0f0; border-radius: 8px;';
-    demoControls.innerHTML = `
-      <h3>Programmatic Control Demo</h3>
-      <button id="switch-profile-a">Switch to Profile A</button>
-      <button id="switch-profile-b">Switch to Profile B</button>
-      <button id="switch-state-alt">Switch to Alt State</button>
-      <button id="reset-views">Reset to Default</button>
-      <button id="toggle-floating">Toggle Floating Widget</button>
-    `;
-    document.body.appendChild(demoControls);
-
-    // Add event listeners for demo buttons
-    document.getElementById('switch-profile-a').addEventListener('click', () => {
-      customviews.switchToProfile('profileA');
-      floatingWidget.updateWidgetState();
-      inlineWidget.updateWidgetState();
-    });
-
-    document.getElementById('switch-profile-b').addEventListener('click', () => {
-      customviews.switchToProfile('profileB');
-      floatingWidget.updateWidgetState();
-      inlineWidget.updateWidgetState();
-    });
-
-    document.getElementById('switch-state-alt').addEventListener('click', () => {
-      customviews.switchToState('alt');
-      floatingWidget.updateWidgetState();
-      inlineWidget.updateWidgetState();
-    });
-
-    document.getElementById('reset-views').addEventListener('click', () => {
-      customviews.clearPersistence();
-      floatingWidget.updateWidgetState();
-      inlineWidget.updateWidgetState();
-    });
-
-    document.getElementById('toggle-floating').addEventListener('click', () => {
-      floatingWidget.toggle();
-    });
-
     // Log current view changes
     customviews.onViewChange = (stateId, state) => {
       console.log('View changed:', { stateId, state });

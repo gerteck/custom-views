@@ -33,9 +33,9 @@
     },
     "all": {
         "placeholders": {
-          "osImage": "windowsImage",
-          "gitCommands": "gitInitWindows", 
-          "fileStructure": "fileStructureWindows"
+          "osImage": null,
+          "gitCommands": null, 
+          "fileStructure": null
         },
         "toggles": ["windows", "linux", "mac"]
       }
