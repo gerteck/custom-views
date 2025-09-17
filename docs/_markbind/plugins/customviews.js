@@ -10,7 +10,6 @@ export function getScripts() {
         window.addEventListener('DOMContentLoaded', async () => {
           const localConfigPaths = {
             "profileA": "/configs/profileA.json",
-            "profileB": "/configs/profileB.json",
             "profileOS": "/configs/profileOS.json"
           };
 
