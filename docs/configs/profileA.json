@@ -3,32 +3,26 @@
   "modifiablePlaceholderAssets": {
     "logo": ["asset1", "asset2"]
   },
-  "allowedToggles": ["beginner", "advanced"],
+  "allowedToggles": ["beginner", "advanced", "expert"],
   "states": {
-    "default": {
+    "all": {
       "placeholders": {
         "logo": "asset1"
       },
       "toggles": ["beginner", "advanced", "expert"]
     },
-    "alt": {
-      "placeholders": {
-        "logo": "asset2"
-      },
-      "toggles": ["advanced"]
-    },
-    "beginnerFriendly": {
+    "beginnerOnly": {
       "placeholders": {
         "logo": "asset1"
       },
       "toggles": ["beginner"]
     },
-    "advancedMode": {
+    "advancedOnly": {
       "placeholders": {
         "logo": "asset2"
       },
-      "toggles": ["advanced", "expert"]
+      "toggles": ["advanced"]
     }
   },
-  "defaultState": "default"
+  "defaultState": "all"
 }

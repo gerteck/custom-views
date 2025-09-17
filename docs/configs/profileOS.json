@@ -7,14 +7,6 @@
   },
   "allowedToggles": ["mac", "linux", "windows"],
   "states": {
-    "default": {
-      "placeholders": {
-        "osImage": "macOSImage",
-        "gitCommands": "gitInitMac", 
-        "fileStructure": "fileStructureMac"
-      },
-      "toggles": ["mac"]
-    },
     "macOS": {
       "placeholders": {
         "osImage": "macOSImage",
@@ -48,5 +40,5 @@
         "toggles": ["windows", "linux", "mac"]
       }
   },
-  "defaultState": "default"
+  "defaultState": "windows"
 }
