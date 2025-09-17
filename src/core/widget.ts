@@ -1,4 +1,7 @@
+import { injectWidgetStyles } from "./widget-styles";
+import { CustomStateManager, type ProfileConstraints } from "./custom-state-manager";
 import type { CustomViewsCore } from "./core";
+import type { CustomState } from "./url-state-manager";
 
 export interface WidgetOptions {
   /** The CustomViews core instance to control */
@@ -7,8 +10,8 @@ export interface WidgetOptions {
   /** Container element where the widget should be rendered */
   container?: HTMLElement;
   
-  /** Widget position: 'top-right', 'top-left', 'bottom-right', 'bottom-left', 'inline' */
-  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'inline';
+  /** Widget position: 'top-right', 'top-left', 'bottom-right', 'bottom-left', 'middle-left', 'middle-right' */
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'middle-left' | 'middle-right';
   
   /** Widget theme: 'light', 'dark', 'auto' */
   theme?: 'light' | 'dark' | 'auto';
@@ -22,9 +25,6 @@ export interface WidgetOptions {
   /** Whether to show reset button */
   showReset?: boolean;
   
-  /** Custom CSS classes to add to the widget */
-  customClasses?: string[];
-  
   /** Widget title */
   title?: string;
 }
@@ -32,9 +32,15 @@ export interface WidgetOptions {
 export class CustomViewsWidget {
   private core: CustomViewsCore;
   private container: HTMLElement;
-  private widgetElement: HTMLElement | null = null;
+  private widgetIcon: HTMLElement | null = null;
   private options: Required<WidgetOptions>;
   private stateChangeListener: (() => void) | null = null;
+  
+  // Modal state
+  private modal: HTMLElement | null = null;
+  
+  // Custom state manager
+  private customStateManager: CustomStateManager;
 
   constructor(options: WidgetOptions) {
     this.core = options.core;
@@ -44,81 +50,46 @@ export class CustomViewsWidget {
     this.options = {
       core: options.core,
       container: this.container,
-      position: options.position || 'top-right',
+      position: options.position || 'bottom-right',
       theme: options.theme || 'auto',
-      showProfiles: options.showProfiles ?? true,
+      showProfiles: options.showProfiles ?? false,
       showStates: options.showStates ?? true,
       showReset: options.showReset ?? true,
-      customClasses: options.customClasses || [],
       title: options.title || 'Custom Views'
     };
+    
+    // Initialize custom state manager
+    this.customStateManager = new CustomStateManager(this.core);
   }
 
   /**
    * Render the widget
    */
   public render(): HTMLElement {
-    this.widgetElement = this.createWidgetElement();
+    this.widgetIcon = this.createWidgetIcon();
     this.attachEventListeners();
     this.setupStateChangeListener();
     
-    if (this.options.position === 'inline') {
-      this.container.appendChild(this.widgetElement);
-    } else {
-      // For positioned widgets, append to body and position absolutely
-      document.body.appendChild(this.widgetElement);
-    }
+    // Always append to body since it's a floating icon
+    document.body.appendChild(this.widgetIcon);
     
-    this.updateWidgetState();
-    return this.widgetElement;
+    return this.widgetIcon;
   }
 
   /**
-   * Update widget to reflect current state
+   * Create the simple widget icon
    */
-  public updateWidgetState(): void {
-    if (!this.widgetElement) return;
-
-    const currentView = this.core.getCurrentView();
-    const availableProfiles = this.core.getAvailableProfiles();
-    const availableStates = this.core.getAvailableStates();
-
-    // Update profile selector
-    const profileSelect = this.widgetElement.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
-    if (profileSelect) {
-      profileSelect.innerHTML = '<option value="">Default</option>';
-      availableProfiles.forEach(profile => {
-        const option = document.createElement('option');
-        option.value = profile;
-        option.textContent = this.formatProfileName(profile);
-        option.selected = profile === currentView.profile;
-        profileSelect.appendChild(option);
-      });
-    }
-
-    // Update state selector
-    const stateSelect = this.widgetElement.querySelector('.cv-widget-state-select') as HTMLSelectElement;
-    if (stateSelect) {
-      stateSelect.innerHTML = '<option value="">Default</option>';
-      availableStates.forEach(state => {
-        const option = document.createElement('option');
-        option.value = state;
-        option.textContent = this.formatStateName(state);
-        option.selected = state === currentView.state;
-        stateSelect.appendChild(option);
-      });
-      
-      // Disable state selector if no profile is selected
-      stateSelect.disabled = !currentView.profile;
-    }
-
-    // Update current view display
-    const currentViewDisplay = this.widgetElement.querySelector('.cv-widget-current-view');
-    if (currentViewDisplay) {
-      const profileText = currentView.profile ? this.formatProfileName(currentView.profile) : 'Default';
-      const stateText = currentView.state ? this.formatStateName(currentView.state) : 'Default';
-      currentViewDisplay.textContent = `${profileText} → ${stateText}`;
-    }
+  private createWidgetIcon(): HTMLElement {
+    const icon = document.createElement('div');
+    icon.className = `cv-widget-icon cv-widget-${this.options.position}`;
+    icon.innerHTML = '?';
+    icon.title = this.options.title;
+    icon.setAttribute('aria-label', 'Open Custom Views');
+    
+    // Add styles
+    injectWidgetStyles();
+    
+    return icon;
   }
 
   /**
@@ -131,55 +102,229 @@ export class CustomViewsWidget {
       this.stateChangeListener = null;
     }
 
-    if (this.widgetElement) {
-      this.widgetElement.remove();
-      this.widgetElement = null;
+    if (this.widgetIcon) {
+      this.widgetIcon.remove();
+      this.widgetIcon = null;
+    }
+
+    // Clean up modal
+    if (this.modal) {
+      this.modal.remove();
+      this.modal = null;
+    }
+  }
+
+  private attachEventListeners(): void {
+    if (!this.widgetIcon) return;
+
+    // Click to open modal
+    this.widgetIcon.addEventListener('click', () => this.openModal());
+  }
+
+  private setupStateChangeListener(): void {
+    this.stateChangeListener = () => {
+      // Icon doesn't need updates, but modal should be updated if open
+      if (this.modal) {
+        this.updateModalState();
+      }
+    };
+    
+    this.core.addStateChangeListener(this.stateChangeListener);
+  }
+
+  /**
+   * Open the modal with widget controls
+   */
+  private openModal(): void {
+    if (this.modal) return;
+    
+    this.modal = document.createElement('div');
+    this.modal.className = 'cv-widget-modal-overlay';
+    
+    this.modal.innerHTML = `
+      <div class="cv-widget-modal">
+        <div class="cv-widget-modal-header">
+          <h3>${this.options.title}</h3>
+          <button class="cv-widget-modal-close" aria-label="Close modal">x</button>
+        </div>
+        <div class="cv-widget-modal-content">
+          ${this.options.showProfiles ? this.createProfileSelector() : ''}
+          ${this.options.showStates ? this.createStateSelector() : ''}
+          <div class="cv-widget-current">
+            <label>Current View:</label>
+            <div class="cv-widget-current-view">Default → Default</div>
+          </div>
+          ${this.options.showReset ? '<button class="cv-widget-reset">Reset to Default</button>' : ''}
+          <div class="cv-widget-modal-actions">
+            <button class="cv-widget-create-state" id="cv-create-state-btn">Customize View</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(this.modal);
+    
+    // Add event listeners for modal
+    this.attachModalEventListeners();
+    
+    // Update the modal state
+    this.updateModalState();
+    
+    // Focus trap
+    const closeBtn = this.modal.querySelector('.cv-widget-modal-close') as HTMLElement;
+    if (closeBtn) closeBtn.focus();
+  }
+
+  /**
+   * Close the modal
+   */
+  private closeModal(): void {
+    if (this.modal) {
+      this.modal.remove();
+      this.modal = null;
     }
   }
 
   /**
-   * Toggle widget visibility
+   * Attach event listeners to modal elements
    */
-  public toggle(): void {
-    if (!this.widgetElement) return;
-    
-    const content = this.widgetElement.querySelector('.cv-widget-content') as HTMLElement;
-    if (content) {
-      const isHidden = content.style.display === 'none';
-      content.style.display = isHidden ? 'block' : 'none';
-      
-      const toggleBtn = this.widgetElement.querySelector('.cv-widget-toggle') as HTMLElement;
-      if (toggleBtn) {
-        toggleBtn.textContent = isHidden ? '−' : '+';
-        toggleBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  private attachModalEventListeners(): void {
+    if (!this.modal) return;
+
+    // Close button
+    const closeBtn = this.modal.querySelector('.cv-widget-modal-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeModal());
+    }
+
+    // Overlay click to close
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) {
+        this.closeModal();
       }
+    });
+
+    // Escape key to close
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        this.closeModal();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+
+    // Profile selector
+    const profileSelect = this.modal.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
+    if (profileSelect) {
+      profileSelect.addEventListener('change', async (e) => {
+        const target = e.target as HTMLSelectElement;
+        const profileId = target.value;
+        
+        if (profileId) {
+          await this.core.switchToProfile(profileId);
+    } else {
+          this.core.clearPersistence();
+        }
+        
+        this.updateModalState();
+      });
+    }
+
+    // State selector
+    const stateSelect = this.modal.querySelector('.cv-widget-state-select') as HTMLSelectElement;
+    if (stateSelect) {
+      stateSelect.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement;
+        const stateId = target.value;
+        
+        if (stateId) {
+          this.core.switchToState(stateId);
+        }
+        
+        this.updateModalState();
+      });
+    }
+
+    // Reset button
+    const resetBtn = this.modal.querySelector('.cv-widget-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.core.clearPersistence();
+        this.updateModalState();
+      });
+    }
+
+    // Create state button
+    const createStateBtn = this.modal.querySelector('.cv-widget-create-state');
+    if (createStateBtn) {
+      createStateBtn.addEventListener('click', () => {
+        this.openCustomStateCreator();
+      });
     }
   }
 
-  private createWidgetElement(): HTMLElement {
-    const widget = document.createElement('div');
-    widget.className = this.getWidgetClasses().join(' ');
-    
-    widget.innerHTML = `
-      <div class="cv-widget-header">
-        <span class="cv-widget-title">${this.options.title}</span>
-        <button class="cv-widget-toggle" aria-label="Toggle widget" aria-expanded="true">−</button>
-      </div>
-      <div class="cv-widget-content">
-        ${this.options.showProfiles ? this.createProfileSelector() : ''}
-        ${this.options.showStates ? this.createStateSelector() : ''}
-        <div class="cv-widget-current">
-          <label>Current View:</label>
-          <div class="cv-widget-current-view">Default → Default</div>
-        </div>
-        ${this.options.showReset ? '<button class="cv-widget-reset">Reset to Default</button>' : ''}
-      </div>
-    `;
+  /**
+   * Update modal state to reflect current view
+   */
+  private updateModalState(): void {
+    if (!this.modal) return;
 
-    // Add styles
-    this.injectStyles();
-    
-    return widget;
+    const currentView = this.core.getCurrentView();
+    const availableProfiles = this.core.getAvailableProfiles();
+    const availableStates = this.core.getAvailableStates();
+
+    // Update profile selector
+    const profileSelect = this.modal.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
+    if (profileSelect) {
+      profileSelect.innerHTML = '<option value="">Default</option>';
+      availableProfiles.forEach(profile => {
+        const option = document.createElement('option');
+        option.value = profile;
+        option.textContent = this.formatProfileName(profile);
+        option.selected = profile === currentView.profile;
+        profileSelect.appendChild(option);
+      });
+    }
+
+    // Update state selector
+    const stateSelect = this.modal.querySelector('.cv-widget-state-select') as HTMLSelectElement;
+    if (stateSelect) {
+      stateSelect.innerHTML = '';
+      
+      // Only show global "Default" option if no profile is selected
+      if (!currentView.profile) {
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Default';
+        defaultOption.selected = !currentView.state;
+        stateSelect.appendChild(defaultOption);
+      }
+      
+      // Add profile-specific states
+      availableStates.forEach(state => {
+        const option = document.createElement('option');
+        option.value = state;
+        option.textContent = this.formatStateName(state);
+        option.selected = state === currentView.state;
+        stateSelect.appendChild(option);
+      });
+      
+      stateSelect.disabled = !currentView.profile;
+    }
+
+    // Update current view display
+    const currentViewDisplay = this.modal.querySelector('.cv-widget-current-view');
+    if (currentViewDisplay) {
+      const profileText = currentView.profile ? this.formatProfileName(currentView.profile) : 'Default';
+      const stateText = currentView.state ? this.formatStateName(currentView.state) : 'Default';
+      currentViewDisplay.textContent = `${profileText} → ${stateText}`;
+    }
+
+    // Show/hide create state button based on profile selection
+    const createStateBtn = this.modal.querySelector('.cv-widget-create-state') as HTMLElement;
+    if (createStateBtn) {
+      createStateBtn.style.display = currentView.profile ? 'block' : 'none';
+    }
   }
 
   private createProfileSelector(): string {
@@ -204,76 +349,278 @@ export class CustomViewsWidget {
     `;
   }
 
-  private getWidgetClasses(): string[] {
-    const classes = [
-      'cv-widget',
-      `cv-widget-${this.options.position}`,
-      `cv-widget-theme-${this.options.theme}`,
-      ...this.options.customClasses
-    ];
-    return classes;
-  }
-
-  private attachEventListeners(): void {
-    if (!this.widgetElement) return;
-
-    // Toggle button
-    const toggleBtn = this.widgetElement.querySelector('.cv-widget-toggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', () => this.toggle());
+  /**
+   * Open the custom state creator
+   */
+  private openCustomStateCreator(): void {
+    const currentView = this.core.getCurrentView();
+    if (!currentView.profile) {
+      alert('Please select a profile first to customize the view.');
+      return;
     }
 
-    // Profile selector
-    const profileSelect = this.widgetElement.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
-    if (profileSelect) {
-      profileSelect.addEventListener('change', async (e) => {
-        const target = e.target as HTMLSelectElement;
-        const profileId = target.value;
-        
-        if (profileId) {
-          await this.core.switchToProfile(profileId);
-        } else {
-          this.core.clearPersistence();
-        }
-        
-        // Widget will update automatically via state change listener
-      });
+    // Get profile constraints
+    const constraints = this.customStateManager.getProfileConstraints();
+    if (!constraints) {
+      alert('Unable to load profile constraints.');
+      return;
     }
 
-    // State selector
-    const stateSelect = this.widgetElement.querySelector('.cv-widget-state-select') as HTMLSelectElement;
-    if (stateSelect) {
-      stateSelect.addEventListener('change', (e) => {
-        const target = e.target as HTMLSelectElement;
-        const stateId = target.value;
-        
-        if (stateId) {
-          this.core.switchToState(stateId);
-        }
-        
-        // Widget will update automatically via state change listener
-      });
-    }
-
-    // Reset button
-    const resetBtn = this.widgetElement.querySelector('.cv-widget-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        this.core.clearPersistence();
-        // Widget will update automatically via state change listener
-      });
-    }
+    // Create custom state creator modal
+    this.createCustomStateModal(constraints);
   }
 
   /**
-   * Setup listener for state changes from the core
+   * Create the custom state creator modal
    */
-  private setupStateChangeListener(): void {
-    this.stateChangeListener = () => {
-      this.updateWidgetState();
-    };
+  private createCustomStateModal(constraints: ProfileConstraints): void {
+    // Close existing modal
+    this.closeModal();
+
+    this.modal = document.createElement('div');
+    this.modal.className = 'cv-widget-modal-overlay';
     
-    this.core.addStateChangeListener(this.stateChangeListener);
+    const placeholderControls = Object.entries(constraints.modifiablePlaceholders)
+      .map(([placeholder, assets]) => `
+        <div class="cv-custom-state-section">
+          <label for="cv-placeholder-${placeholder}">${this.formatPlaceholderName(placeholder)}:</label>
+          <select id="cv-placeholder-${placeholder}" class="cv-custom-placeholder-select" data-placeholder="${placeholder}">
+            <option value="">None</option>
+            ${assets.map(asset => `<option value="${asset}">${this.formatAssetName(asset)}</option>`).join('')}
+          </select>
+        </div>
+      `).join('');
+
+    const toggleControls = constraints.allowedToggles
+      .map(toggle => `
+        <div class="cv-custom-state-toggle">
+          <label>
+            <input type="checkbox" class="cv-custom-toggle-checkbox" data-toggle="${toggle}" />
+            ${this.formatToggleName(toggle)}
+          </label>
+        </div>
+      `).join('');
+
+    this.modal.innerHTML = `
+      <div class="cv-widget-modal cv-custom-state-modal">
+        <div class="cv-widget-modal-header">
+          <h3>Customize View</h3>
+          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
+        </div>
+        <div class="cv-widget-modal-content">
+          <div class="cv-custom-state-form">
+            <p>Customize your view by selecting different assets and toggles. Changes are applied instantly and the URL will be updated for sharing.</p>
+            
+            <h4>Placeholders</h4>
+            ${placeholderControls}
+            
+            <h4>Toggles</h4>
+            <div class="cv-custom-toggles">
+              ${toggleControls}
+            </div>
+            
+            <div class="cv-custom-state-actions">
+              <button class="cv-custom-state-cancel">Back to Main</button>
+              <button class="cv-custom-state-copy-url">Copy Shareable URL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(this.modal);
+    this.attachCustomStateEventListeners();
+
+    // Load current state into form if we're already in a custom state
+    this.loadCurrentStateIntoForm();
+  }
+
+  /**
+   * Attach event listeners for custom state creator
+   */
+  private attachCustomStateEventListeners(): void {
+    if (!this.modal) return;
+
+    // Close button
+    const closeBtn = this.modal.querySelector('.cv-widget-modal-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeModal();
+        this.openModal(); // Reopen main modal
+      });
+    }
+
+    // Cancel button
+    const cancelBtn = this.modal.querySelector('.cv-custom-state-cancel');
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        this.closeModal();
+        this.openModal(); // Reopen main modal
+      });
+    }
+
+    // Copy URL button
+    const copyUrlBtn = this.modal.querySelector('.cv-custom-state-copy-url');
+    if (copyUrlBtn) {
+      copyUrlBtn.addEventListener('click', () => {
+        this.copyShareableURL();
+      });
+    }
+
+    // Add change listeners for instant preview
+    this.addInstantPreviewListeners();
+
+    // Overlay click to close
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) {
+        this.closeModal();
+        this.openModal(); // Reopen main modal
+      }
+    });
+
+    // Escape key to close
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        this.closeModal();
+        this.openModal(); // Reopen main modal
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  }
+
+  /**
+   * Add instant preview listeners to form controls
+   */
+  private addInstantPreviewListeners(): void {
+    if (!this.modal) return;
+
+    // Listen to placeholder selects
+    const placeholderSelects = this.modal.querySelectorAll('.cv-custom-placeholder-select') as NodeListOf<HTMLSelectElement>;
+    placeholderSelects.forEach(select => {
+      select.addEventListener('change', () => {
+        this.applyCurrentCustomState();
+      });
+    });
+
+    // Listen to toggle checkboxes
+    const toggleCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
+    toggleCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        this.applyCurrentCustomState();
+      });
+    });
+  }
+
+  /**
+   * Apply the current custom state from form values
+   */
+  private applyCurrentCustomState(): void {
+    if (!this.modal) return;
+
+    const customState = this.getCurrentCustomStateFromForm();
+    this.core.applyCustomState(customState);
+  }
+
+  /**
+   * Get current custom state from form values
+   */
+  private getCurrentCustomStateFromForm(): CustomState {
+    if (!this.modal) {
+      return { placeholders: {}, toggles: [] };
+    }
+
+    // Collect placeholder values
+    const placeholders: Record<string, string> = {};
+    const placeholderSelects = this.modal.querySelectorAll('.cv-custom-placeholder-select') as NodeListOf<HTMLSelectElement>;
+    placeholderSelects.forEach(select => {
+      const placeholder = select.dataset.placeholder;
+      const value = select.value;
+      if (placeholder) {
+        // Always include the placeholder, even if value is empty (None selected)
+        placeholders[placeholder] = value || '';
+      }
+    });
+
+    // Collect toggle values
+    const toggles: string[] = [];
+    const toggleCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
+    toggleCheckboxes.forEach(checkbox => {
+      const toggle = checkbox.dataset.toggle;
+      if (toggle && checkbox.checked) {
+        toggles.push(toggle);
+      }
+    });
+
+    return { placeholders, toggles };
+  }
+
+  /**
+   * Copy shareable URL to clipboard
+   */
+  private copyShareableURL(): void {
+    const customState = this.getCurrentCustomStateFromForm();
+    const url = this.customStateManager.getShareableURL(customState);
+    
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Shareable URL copied to clipboard!');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Shareable URL copied to clipboard!');
+    });
+  }
+
+  /**
+   * Load current state into form if we're viewing a custom state
+   */
+  private loadCurrentStateIntoForm(): void {
+    if (!this.modal) return;
+
+    const currentView = this.core.getCurrentView();
+    if (!currentView.customState) return;
+
+    // Load placeholder values
+    Object.entries(currentView.customState.placeholders).forEach(([placeholder, asset]) => {
+      const select = this.modal?.querySelector(`[data-placeholder="${placeholder}"]`) as HTMLSelectElement;
+      if (select) {
+        select.value = asset;
+      }
+    });
+
+    // Load toggle values
+    currentView.customState.toggles.forEach(toggle => {
+      const checkbox = this.modal?.querySelector(`[data-toggle="${toggle}"]`) as HTMLInputElement;
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+  }
+
+  /**
+   * Format placeholder name for display
+   */
+  private formatPlaceholderName(placeholder: string): string {
+    return this.customStateManager.formatPlaceholderName(placeholder);
+  }
+
+  /**
+   * Format asset name for display
+   */
+  private formatAssetName(asset: string): string {
+    return this.customStateManager.formatAssetName(asset);
+  }
+
+  /**
+   * Format toggle name for display
+   */
+  private formatToggleName(toggle: string): string {
+    return this.customStateManager.formatToggleName(toggle);
   }
 
   private formatProfileName(profile: string): string {
@@ -292,277 +639,5 @@ export class CustomViewsWidget {
       .replace(/_/g, ' ')
       .replace(/^\w/, c => c.toUpperCase())
       .trim();
-  }
-
-  private injectStyles(): void {
-    // Check if styles are already injected
-    if (document.querySelector('#cv-widget-styles')) return;
-
-    const style = document.createElement('style');
-    style.id = 'cv-widget-styles';
-    style.textContent = `
-      .cv-widget {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        z-index: 9999;
-        min-width: 250px;
-        max-width: 300px;
-      }
-
-      .cv-widget-top-right {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-      }
-
-      .cv-widget-top-left {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-      }
-
-      .cv-widget-bottom-right {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-      }
-
-      .cv-widget-bottom-left {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-      }
-
-      .cv-widget-inline {
-        position: relative;
-        margin: 16px 0;
-      }
-
-      .cv-widget-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 16px;
-        background: #f8f9fa;
-        border-bottom: 1px solid #e9ecef;
-        border-radius: 8px 8px 0 0;
-      }
-
-      .cv-widget-title {
-        font-weight: 600;
-        color: #333;
-      }
-
-      .cv-widget-toggle {
-        background: none;
-        border: none;
-        font-size: 18px;
-        cursor: pointer;
-        padding: 0;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        color: #666;
-      }
-
-      .cv-widget-toggle:hover {
-        background: #e9ecef;
-      }
-
-      .cv-widget-content {
-        padding: 16px;
-      }
-
-      .cv-widget-section {
-        margin-bottom: 16px;
-      }
-
-      .cv-widget-section:last-child {
-        margin-bottom: 0;
-      }
-
-      .cv-widget-section label {
-        display: block;
-        margin-bottom: 4px;
-        font-weight: 500;
-        color: #555;
-      }
-
-      .cv-widget-profile-select,
-      .cv-widget-state-select {
-        width: 100%;
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        background: white;
-        font-size: 14px;
-      }
-
-      .cv-widget-profile-select:focus,
-      .cv-widget-state-select:focus {
-        outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-      }
-
-      .cv-widget-profile-select:disabled,
-      .cv-widget-state-select:disabled {
-        background: #f8f9fa;
-        color: #6c757d;
-        cursor: not-allowed;
-      }
-
-      .cv-widget-current {
-        margin: 16px 0;
-        padding: 12px;
-        background: #f8f9fa;
-        border-radius: 4px;
-        border-left: 4px solid #007bff;
-      }
-
-      .cv-widget-current label {
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #666;
-        margin-bottom: 4px;
-      }
-
-      .cv-widget-current-view {
-        font-weight: 500;
-        color: #333;
-      }
-
-      .cv-widget-reset {
-        width: 100%;
-        padding: 8px 16px;
-        background: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-      }
-
-      .cv-widget-reset:hover {
-        background: #c82333;
-      }
-
-      .cv-widget-reset:active {
-        background: #bd2130;
-      }
-
-      /* Dark theme */
-      .cv-widget-theme-dark {
-        background: #2d3748;
-        border-color: #4a5568;
-        color: #e2e8f0;
-      }
-
-      .cv-widget-theme-dark .cv-widget-header {
-        background: #1a202c;
-        border-color: #4a5568;
-      }
-
-      .cv-widget-theme-dark .cv-widget-title {
-        color: #e2e8f0;
-      }
-
-      .cv-widget-theme-dark .cv-widget-toggle {
-        color: #a0aec0;
-      }
-
-      .cv-widget-theme-dark .cv-widget-toggle:hover {
-        background: #4a5568;
-      }
-
-      .cv-widget-theme-dark .cv-widget-profile-select,
-      .cv-widget-theme-dark .cv-widget-state-select {
-        background: #1a202c;
-        border-color: #4a5568;
-        color: #e2e8f0;
-      }
-
-      .cv-widget-theme-dark .cv-widget-current {
-        background: #1a202c;
-        border-color: #3182ce;
-      }
-
-      /* Auto theme - uses system preference */
-      @media (prefers-color-scheme: dark) {
-        .cv-widget-theme-auto {
-          background: #2d3748;
-          border-color: #4a5568;
-          color: #e2e8f0;
-        }
-
-        .cv-widget-theme-auto .cv-widget-header {
-          background: #1a202c;
-          border-color: #4a5568;
-        }
-
-        .cv-widget-theme-auto .cv-widget-title {
-          color: #e2e8f0;
-        }
-
-        .cv-widget-theme-auto .cv-widget-toggle {
-          color: #a0aec0;
-        }
-
-        .cv-widget-theme-auto .cv-widget-toggle:hover {
-          background: #4a5568;
-        }
-
-        .cv-widget-theme-auto .cv-widget-profile-select,
-        .cv-widget-theme-auto .cv-widget-state-select {
-          background: #1a202c;
-          border-color: #4a5568;
-          color: #e2e8f0;
-        }
-
-        .cv-widget-theme-auto .cv-widget-current {
-          background: #1a202c;
-          border-color: #3182ce;
-        }
-      }
-
-      /* Responsive design */
-      @media (max-width: 768px) {
-        .cv-widget-top-right,
-        .cv-widget-top-left {
-          top: 10px;
-        }
-
-        .cv-widget-top-right,
-        .cv-widget-bottom-right {
-          right: 10px;
-        }
-
-        .cv-widget-top-left,
-        .cv-widget-bottom-left {
-          left: 10px;
-        }
-
-        .cv-widget-bottom-right,
-        .cv-widget-bottom-left {
-          bottom: 10px;
-        }
-
-        .cv-widget {
-          min-width: 200px;
-          max-width: calc(100vw - 20px);
-        }
-      }
-    `;
-
-    document.head.appendChild(style);
   }
 }
