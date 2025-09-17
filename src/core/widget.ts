@@ -34,6 +34,7 @@ export class CustomViewsWidget {
   private container: HTMLElement;
   private widgetElement: HTMLElement | null = null;
   private options: Required<WidgetOptions>;
+  private stateChangeListener: (() => void) | null = null;
 
   constructor(options: WidgetOptions) {
     this.core = options.core;
@@ -59,6 +60,7 @@ export class CustomViewsWidget {
   public render(): HTMLElement {
     this.widgetElement = this.createWidgetElement();
     this.attachEventListeners();
+    this.setupStateChangeListener();
     
     if (this.options.position === 'inline') {
       this.container.appendChild(this.widgetElement);
@@ -123,6 +125,12 @@ export class CustomViewsWidget {
    * Remove the widget from DOM
    */
   public destroy(): void {
+    // Remove state change listener
+    if (this.stateChangeListener) {
+      this.core.removeStateChangeListener(this.stateChangeListener);
+      this.stateChangeListener = null;
+    }
+
     if (this.widgetElement) {
       this.widgetElement.remove();
       this.widgetElement = null;
@@ -228,7 +236,7 @@ export class CustomViewsWidget {
           this.core.clearPersistence();
         }
         
-        this.updateWidgetState();
+        // Widget will update automatically via state change listener
       });
     }
 
@@ -243,7 +251,7 @@ export class CustomViewsWidget {
           this.core.switchToState(stateId);
         }
         
-        this.updateWidgetState();
+        // Widget will update automatically via state change listener
       });
     }
 
@@ -252,9 +260,20 @@ export class CustomViewsWidget {
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         this.core.clearPersistence();
-        this.updateWidgetState();
+        // Widget will update automatically via state change listener
       });
     }
+  }
+
+  /**
+   * Setup listener for state changes from the core
+   */
+  private setupStateChangeListener(): void {
+    this.stateChangeListener = () => {
+      this.updateWidgetState();
+    };
+    
+    this.core.addStateChangeListener(this.stateChangeListener);
   }
 
   private formatProfileName(profile: string): string {

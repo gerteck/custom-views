@@ -2,7 +2,17 @@
 
 Changelog for custom-views package that will bring greater customizability to authors of websites!
 
-## Next Ver - 2025-09-03
+## Next Ver 
+
+* Added state change listener mechanism to core for better component synchronization
+* Widget now automatically updates when core state changes from any source (URL, persistence, API calls)
+* Cleaner event handling in widget with automatic updates via listeners instead of manual calls
+* URL parameters now take precedence over persistence and automatically update saved state
+* Better separation between URL-driven state and persisted state management
+
+---
+
+## Previous - 2025-09-03
 
 * Test usage on markbind site
 

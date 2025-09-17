@@ -2,6 +2,7 @@ import type { State } from "../types/types";
 import type { AssetsManager } from "../models/AssetsManager";
 import { renderAssetInto } from "./render";
 import { LocalConfig } from "models/LocalConfig";
+import { PersistenceManager } from "./persistence";
 
 // TO DO: UPDATE CORE
 
@@ -16,6 +17,7 @@ export interface CustomViewsOptions {
 export class CustomViewsCore {
   private rootEl: HTMLElement;
   private assetsManager: AssetsManager;
+  private persistenceManager: PersistenceManager;
 
   private localConfigPaths?: Record<string, string> | undefined;
   private defaultState: State;
@@ -26,12 +28,8 @@ export class CustomViewsCore {
 
   private localConfig: LocalConfig | null = null;
   
-  // Persistence keys for localStorage
-  private static readonly STORAGE_KEYS = {
-    PROFILE: 'customviews-profile',
-    STATE: 'customviews-state',
-    CUSTOM_STATE: 'customviews-custom-state'
-  } as const;
+  // Event listeners for state changes
+  private stateChangeListeners: Array<() => void> = [];
 
   constructor(options: CustomViewsOptions) {
     this.assetsManager = options.assetsManager;
@@ -39,6 +37,7 @@ export class CustomViewsCore {
     this.defaultState = options.defaultState;
     this.rootEl = options.rootEl || document.body;
     this.onViewChange = options.onViewChange;
+    this.persistenceManager = new PersistenceManager();
   }
 
   /** Initialize: render default or URL-specified state */
@@ -53,15 +52,25 @@ export class CustomViewsCore {
   private async renderFromUrl() {
     this.parseUrlForProfileState();
 
-    // If no URL params, try to load from persistence
-    if (!this.profileFromUrl && !this.stateIdFromUrl) {
-      const persistedProfile = this.getPersistedProfile();
-      const persistedState = this.getPersistedState();
-      
-      if (persistedProfile) {
-        this.profileFromUrl = persistedProfile;
-        this.stateIdFromUrl = persistedState;
-      }
+    // Get persisted view for fallback
+    const persistedView = this.persistenceManager.getPersistedView();
+    
+    // Determine if URL params are present
+    const hasUrlProfile = this.profileFromUrl !== null;
+    const hasUrlState = this.stateIdFromUrl !== null;
+    
+    // Use URL params if available, otherwise use persistence
+    if (!hasUrlProfile && persistedView.profile) {
+      this.profileFromUrl = persistedView.profile;
+    }
+    
+    if (!hasUrlState && persistedView.state) {
+      this.stateIdFromUrl = persistedView.state;
+    }
+
+    // If URL params are present, persist them (URL takes precedence and should be saved)
+    if (hasUrlProfile || hasUrlState) {
+      this.persistenceManager.persistView(this.profileFromUrl, this.stateIdFromUrl);
     }
 
     if (this.profileFromUrl) {
@@ -226,85 +235,11 @@ export class CustomViewsCore {
         this.onViewChange("default state", state);
       }
     }
+
+    // Notify state change listeners (like widgets)
+    this.notifyStateChangeListeners();
   }
 
-  // === PERSISTENCE METHODS ===
-
-  /**
-   * Persists the current profile to localStorage
-   */
-  private persistProfile(profile: string | null) {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      if (profile) {
-        localStorage.setItem(CustomViewsCore.STORAGE_KEYS.PROFILE, profile);
-      } else {
-        localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
-      }
-    }
-  }
-
-  /**
-   * Persists the current state to localStorage
-   */
-  private persistState(state: string | null) {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      if (state) {
-        localStorage.setItem(CustomViewsCore.STORAGE_KEYS.STATE, state);
-      } else {
-        localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.STATE);
-      }
-    }
-  }
-
-  /**
-   * Retrieves the persisted profile from localStorage
-   */
-  private getPersistedProfile(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
-    }
-    return null;
-  }
-
-  /**
-   * Retrieves the persisted state from localStorage
-   */
-  private getPersistedState(): string | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return localStorage.getItem(CustomViewsCore.STORAGE_KEYS.STATE);
-    }
-    return null;
-  }
-
-  /**
-   * Persists a custom state configuration to localStorage
-   * @internal Reserved for future use
-   */
-  // @ts-ignore - Reserved for future use
-  private persistCustomState(customState: State) {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE, JSON.stringify(customState));
-    }
-  }
-
-  /**
-   * Retrieves a custom state configuration from localStorage
-   * @internal Reserved for future use
-   */
-  // @ts-ignore - Reserved for future use
-  private getPersistedCustomState(): State | null {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const stored = localStorage.getItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE);
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch (e) {
-          console.warn('Failed to parse persisted custom state:', e);
-        }
-      }
-    }
-    return null;
-  }
 
   // === PUBLIC API METHODS ===
 
@@ -321,8 +256,7 @@ export class CustomViewsCore {
     this.stateIdFromUrl = stateId || null;
     
     // Persist the selection
-    this.persistProfile(profileId);
-    this.persistState(stateId || null);
+    this.persistenceManager.persistView(profileId, stateId || null);
 
     // Load and render
     const localConfig = await this.loadLocalConfig(profileId);
@@ -351,7 +285,7 @@ export class CustomViewsCore {
     }
 
     this.stateIdFromUrl = stateId;
-    this.persistState(stateId);
+    this.persistenceManager.persistState(stateId);
     this.renderLocalConfigState(stateId, this.localConfig);
     this.updateUrlWithoutNavigation(this.profileFromUrl, stateId);
   }
@@ -384,17 +318,34 @@ export class CustomViewsCore {
    * Clear all persistence and reset to default
    */
   public clearPersistence() {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.PROFILE);
-      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.STATE);
-      localStorage.removeItem(CustomViewsCore.STORAGE_KEYS.CUSTOM_STATE);
-    }
+    this.persistenceManager.clearAll();
     
     this.profileFromUrl = null;
     this.stateIdFromUrl = null;
     this.localConfig = null;
     this.renderState(this.defaultState);
     this.updateUrlWithoutNavigation(null, null);
+  }
+
+  /**
+   * Get the persistence manager instance for advanced operations
+   */
+  public getPersistenceManager(): PersistenceManager {
+    return this.persistenceManager;
+  }
+
+  /**
+   * Check if any persistence data exists
+   */
+  public hasPersistedData(): boolean {
+    return this.persistenceManager.hasPersistedData();
+  }
+
+  /**
+   * Get the currently persisted view without changing the current state
+   */
+  public getPersistedView(): { profile: string | null; state: string | null } {
+    return this.persistenceManager.getPersistedView();
   }
 
   /**
@@ -418,6 +369,38 @@ export class CustomViewsCore {
       
       window.history.replaceState({}, '', url.toString());
     }
+  }
+
+  // === STATE CHANGE LISTENER METHODS ===
+
+  /**
+   * Add a listener that will be called whenever the state changes
+   */
+  public addStateChangeListener(listener: () => void): void {
+    this.stateChangeListeners.push(listener);
+  }
+
+  /**
+   * Remove a state change listener
+   */
+  public removeStateChangeListener(listener: () => void): void {
+    const index = this.stateChangeListeners.indexOf(listener);
+    if (index > -1) {
+      this.stateChangeListeners.splice(index, 1);
+    }
+  }
+
+  /**
+   * Notify all state change listeners
+   */
+  private notifyStateChangeListeners(): void {
+    this.stateChangeListeners.forEach(listener => {
+      try {
+        listener();
+      } catch (error) {
+        console.warn('Error in state change listener:', error);
+      }
+    });
   }
   
 }

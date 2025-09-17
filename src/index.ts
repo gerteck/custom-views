@@ -1,6 +1,7 @@
 import { CustomViewsCore } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
 import { CustomViewsWidget } from "core/widget";
+import { PersistenceManager } from "core/persistence";
 import type { CustomViewAsset, State } from "types/types";
 
 export type InitFromJsonOptions = {
@@ -41,10 +42,15 @@ export class CustomViews {
 export { CustomViewsWidget } from "core/widget";
 export type { WidgetOptions } from "core/widget";
 
+// Export the persistence manager
+export { PersistenceManager } from "core/persistence";
+
 if (typeof window !== "undefined") {
   // @ts-ignore
   window.CustomViews = CustomViews;
   // @ts-ignore
   window.CustomViewsWidget = CustomViewsWidget;
+  // @ts-ignore
+  window.PersistenceManager = PersistenceManager;
 }
 
