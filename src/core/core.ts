@@ -3,6 +3,7 @@ import type { AssetsManager } from "../models/AssetsManager";
 import { renderAssetInto } from "./render";
 import { LocalConfig } from "models/LocalConfig";
 import { PersistenceManager } from "./persistence";
+import { URLStateManager, type CustomState } from "./url-state-manager";
 
 // TO DO: UPDATE CORE
 
@@ -25,6 +26,7 @@ export class CustomViewsCore {
 
   private profileFromUrl: string | null = null;
   private stateIdFromUrl: string | null = null;
+  private customStateFromUrl: CustomState | null = null;
 
   private localConfig: LocalConfig | null = null;
   
@@ -78,7 +80,11 @@ export class CustomViewsCore {
       this.localConfig = localConfig;
     }
 
-    if (this.localConfig) {
+    // Handle custom state
+    if (this.customStateFromUrl) {
+      const customState = URLStateManager.customStateToState(this.customStateFromUrl);
+      this.renderState(customState);
+    } else if (this.localConfig) {
       this.renderLocalConfigState(this.stateIdFromUrl, this.localConfig);
     } else {
       this.renderState(this.defaultState);
@@ -86,15 +92,16 @@ export class CustomViewsCore {
   }
   
   /**
-   * Retrieves profile and state if any, based on the current URL's query string.
+   * Retrieves profile, state, and custom state from the current URL's query string.
    */
   private parseUrlForProfileState() {
-    // Just the query string part of the URL (everything after ? but before #).
-    // Can .get("param"), .has, .set(), .append()
-    const urlParams = new URLSearchParams(window.location.search);
-    this.profileFromUrl = urlParams.get("profile") || null;
-    this.stateIdFromUrl = urlParams.get("state") || null;
+    const urlState = URLStateManager.parseURL();
+    
+    this.profileFromUrl = urlState.profile || null;
+    this.stateIdFromUrl = urlState.state || null;
+    this.customStateFromUrl = urlState.customState || null;
 
+    // Validate profile
     if (this.profileFromUrl &&
         this.localConfigPaths &&
       !(this.profileFromUrl in this.localConfigPaths)) {
@@ -102,9 +109,13 @@ export class CustomViewsCore {
       console.warn("Profile in URL not recognized");
       this.profileFromUrl = null;
       this.stateIdFromUrl = null;
+      this.customStateFromUrl = null;
     }
 
-    // ToDo: Later extension: Custom State
+    // If we have a custom state, clear the regular state
+    if (this.customStateFromUrl) {
+      this.stateIdFromUrl = null;
+    }
   }
 
   /**
@@ -210,12 +221,15 @@ export class CustomViewsCore {
         return;
       }
       
+      // If we have an assetId, ensure the element is visible
+      el.removeAttribute("hidden");
+      
       // check if there is a customviewsId
       const placeholderId = (el as HTMLElement).dataset.customviewsId;
       if (placeholderId) {
         // check if placeholderId matches assetId, if it is then we should show it.
         if (placeholderId === assetId) {
-          el.removeAttribute("hidden");
+          // Element is already visible (hidden attribute removed above)
         } else {
           el.setAttribute("hidden", "");
         }
@@ -254,6 +268,7 @@ export class CustomViewsCore {
 
     this.profileFromUrl = profileId;
     this.stateIdFromUrl = stateId || null;
+    this.customStateFromUrl = null; // Clear custom state when switching profiles
     
     // Persist the selection
     this.persistenceManager.persistView(profileId, stateId || null);
@@ -267,7 +282,10 @@ export class CustomViewsCore {
     }
 
     // Update URL without triggering navigation
-    this.updateUrlWithoutNavigation(profileId, stateId || null);
+    URLStateManager.updateURL({
+      profile: profileId,
+      state: stateId
+    });
   }
 
   /**
@@ -285,9 +303,15 @@ export class CustomViewsCore {
     }
 
     this.stateIdFromUrl = stateId;
+    this.customStateFromUrl = null; // Clear custom state when switching to predefined state
     this.persistenceManager.persistState(stateId);
     this.renderLocalConfigState(stateId, this.localConfig);
-    this.updateUrlWithoutNavigation(this.profileFromUrl, stateId);
+    
+    // Update URL
+    URLStateManager.updateURL({
+      profile: this.profileFromUrl,
+      state: stateId
+    });
   }
 
   /**
@@ -307,10 +331,11 @@ export class CustomViewsCore {
   /**
    * Get current profile and state
    */
-  public getCurrentView(): { profile: string | null; state: string | null } {
+  public getCurrentView(): { profile: string | null; state: string | null; customState: CustomState | null } {
     return {
       profile: this.profileFromUrl,
-      state: this.stateIdFromUrl
+      state: this.stateIdFromUrl,
+      customState: this.customStateFromUrl
     };
   }
 
@@ -322,9 +347,10 @@ export class CustomViewsCore {
     
     this.profileFromUrl = null;
     this.stateIdFromUrl = null;
+    this.customStateFromUrl = null;
     this.localConfig = null;
     this.renderState(this.defaultState);
-    this.updateUrlWithoutNavigation(null, null);
+    URLStateManager.clearURL();
   }
 
   /**
@@ -349,26 +375,27 @@ export class CustomViewsCore {
   }
 
   /**
-   * Update URL without triggering navigation
+   * Apply a custom state
    */
-  private updateUrlWithoutNavigation(profile: string | null, state: string | null) {
-    if (typeof window !== 'undefined' && window.history) {
-      const url = new URL(window.location.href);
-      
-      if (profile) {
-        url.searchParams.set('profile', profile);
-      } else {
-        url.searchParams.delete('profile');
-      }
-      
-      if (state) {
-        url.searchParams.set('state', state);
-      } else {
-        url.searchParams.delete('state');
-      }
-      
-      window.history.replaceState({}, '', url.toString());
-    }
+  public applyCustomState(customState: CustomState) {
+    this.customStateFromUrl = customState;
+    this.stateIdFromUrl = null; // Clear predefined state when applying custom state
+    
+    const state = URLStateManager.customStateToState(customState);
+    this.renderState(state);
+    
+    // Update URL
+    URLStateManager.updateURL({
+      profile: this.profileFromUrl,
+      customState: customState
+    });
+  }
+
+  /**
+   * Get the current LocalConfig for profile constraints
+   */
+  public getCurrentLocalConfig(): LocalConfig | null {
+    return this.localConfig || null;
   }
 
   // === STATE CHANGE LISTENER METHODS ===
