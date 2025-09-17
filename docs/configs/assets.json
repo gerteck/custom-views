@@ -1,0 +1,37 @@
+{
+  "asset1": {
+    "id": "asset1",
+    "type": "image",
+    "src": "/assets/logo-1.png"
+  },
+  "asset2": {
+    "id": "asset2",
+    "type": "image",
+    "src": "/assets/logo-2.png"
+  },
+  "asset3": {
+    "id": "asset3",
+    "type": "image",
+    "src": "/assets/logo-3.png"
+  },
+  "toggleAsset": {
+    "id": "toggleAsset",
+    "type": "image",
+    "src": "/assets/toggle-image.png"
+  },
+  "intro": {
+    "id": "intro",
+    "type": "html",
+    "content": "<h1>Welcome to Custom Views</h1><p>This is a simple demo of the Custom Views library.</p>"
+  },
+  "advancedIntro": {
+    "id": "advancedIntro",
+    "type": "html",
+    "content": "<h1>Welcome to the Advanced View</h1><p>This view contains more advanced features.</p>"
+  },
+  "expertIntro": {
+    "id": "expertIntro",
+    "type": "html",
+    "content": "<h1>Welcome to the Expert View</h1><p>This view is for expert users only.</p>"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "profileA",
+  "modifiablePlaceholderAssets": {
+    "logo": ["asset1", "asset2"]
+  },
+  "allowedToggles": ["beginner", "advanced"],
+  "states": {
+    "default": {
+      "placeholders": {
+        "logo": "asset1"
+      },
+      "toggles": ["beginner", "advanced", "expert"]
+    },
+    "alt": {
+      "placeholders": {
+        "logo": "asset2"
+      },
+      "toggles": ["advanced"]
+    },
+    "beginnerFriendly": {
+      "placeholders": {
+        "logo": "asset1"
+      },
+      "toggles": ["beginner"]
+    },
+    "advancedMode": {
+      "placeholders": {
+        "logo": "asset2"
+      },
+      "toggles": ["advanced", "expert"]
+    }
+  },
+  "defaultState": "default"
+}

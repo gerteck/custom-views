@@ -22,6 +22,9 @@
       "glob": ["**/index.md", "**/*.md"]
     }
   ],
+  "plugins": [
+    "customviews"
+  ],
   "deploy": {
     "message": "Site Update."
   }
