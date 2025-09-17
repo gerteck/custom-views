@@ -220,22 +220,18 @@ export class CustomViewsCore {
         el.setAttribute("hidden", "");
         return;
       }
-      
-      // If we have an assetId, ensure the element is visible
-      el.removeAttribute("hidden");
-      
-      // check if there is a customviewsId
+           
+      // Only show the element if placeholderId matches assetId, otherwise hide it
       const placeholderId = (el as HTMLElement).dataset.customviewsId;
       if (placeholderId) {
-        // check if placeholderId matches assetId, if it is then we should show it.
         if (placeholderId === assetId) {
-          // Element is already visible (hidden attribute removed above)
+          el.removeAttribute("hidden");
         } else {
           el.setAttribute("hidden", "");
         }
       }
       else {
-        // if not placeholderId, it means it is positional, so we render the asset into it
+        // if not placeholderId, means is positional, show and render asset
         renderAssetInto(el as HTMLElement, assetId, this.assetsManager);
       }
 
