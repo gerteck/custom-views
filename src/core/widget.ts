@@ -272,6 +272,7 @@ export class CustomViewsWidget {
     const currentView = this.core.getCurrentView();
     const availableProfiles = this.core.getAvailableProfiles();
     const availableStates = this.core.getAvailableStates();
+    const localConfig = this.core.getCurrentLocalConfig();
 
     // Update profile selector
     const profileSelect = this.modal.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
@@ -305,7 +306,18 @@ export class CustomViewsWidget {
         const option = document.createElement('option');
         option.value = state;
         option.textContent = this.formatStateName(state);
-        option.selected = state === currentView.state;
+        
+        // Determine if this state should be selected
+        let isSelected = false;
+        if (currentView.state) {
+          // If there's a current state, select it
+          isSelected = state === currentView.state;
+        } else if (localConfig && !currentView.state) {
+          // If no current state but we have a profile, select the profile's default state
+          isSelected = state === localConfig.defaultState;
+        }
+        
+        option.selected = isSelected;
         stateSelect.appendChild(option);
       });
       
@@ -316,7 +328,22 @@ export class CustomViewsWidget {
     const currentViewDisplay = this.modal.querySelector('.cv-widget-current-view');
     if (currentViewDisplay) {
       const profileText = currentView.profile ? this.formatProfileName(currentView.profile) : 'Default';
-      const stateText = currentView.state ? this.formatStateName(currentView.state) : 'Default';
+      
+      // Determine the actual state text
+      let stateText = 'Default';
+      if (currentView.state) {
+        stateText = this.formatStateName(currentView.state);
+      } else if (localConfig) {
+        // If no current state but we have a profile, show the profile's default state
+        const defaultStateId = localConfig.defaultState;
+        if (defaultStateId && availableStates.includes(defaultStateId)) {
+          stateText = this.formatStateName(defaultStateId);
+        } else if (availableStates.length > 0 && availableStates[0]) {
+          // Fallback to first available state if default is not found
+          stateText = this.formatStateName(availableStates[0]);
+        }
+      }
+      
       currentViewDisplay.textContent = `${profileText} → ${stateText}`;
     }
 
