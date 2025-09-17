@@ -25,6 +25,7 @@
 * [Introduction]({{ baseUrl }}/index.html)
 * [Concepts]({{baseUrl}}/contents/concepts.html)
 * [Configuration]({{baseUrl}}/contents/configuration.html)
+* [Demo]({{baseUrl}}/contents/demo.html)
       </site-nav>
     </div>
   </nav>
