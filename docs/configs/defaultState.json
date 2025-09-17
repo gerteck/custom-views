@@ -1,7 +1,11 @@
 {
   "placeholders": {
-    "logo": "toggleAsset"
+    "logo": "toggleAsset",
+    "osImage": "macOSImage",
+    "gitCommands": "gitInitMac",
+    "fileStructure": "fileStructureMac"
   },
   "toggles": [
+    "mac"
   ]
 }

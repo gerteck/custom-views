@@ -10,7 +10,8 @@ export function getScripts() {
         window.addEventListener('DOMContentLoaded', async () => {
           const localConfigPaths = {
             "profileA": "/configs/profileA.json",
-            "profileB": "/configs/profileB.json"
+            "profileB": "/configs/profileB.json",
+            "profileOS": "/configs/profileOS.json"
           };
 
           // Initialize the core CustomViews functionality
@@ -21,10 +22,10 @@ export function getScripts() {
             rootEl: document.body
           });
 
-          // Create and render the widget with persistence features
+          // Create and render the simplified widget
           const widget = new window.CustomViewsWidget({
             core: customviewsCore,
-            position: 'top-right',
+            position: 'middle-left',
             theme: 'auto',
             showProfiles: true,
             showStates: true,

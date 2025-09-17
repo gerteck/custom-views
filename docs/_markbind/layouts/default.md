@@ -23,9 +23,12 @@
     <div class="nav-component slim-scroll">
       <site-nav>
 * [Introduction]({{ baseUrl }}/index.html)
-* [Concepts]({{baseUrl}}/contents/concepts.html)
+  * [Architecture]({{baseUrl}}/contents/architecture.html)
+  * [Concepts]({{baseUrl}}/contents/concepts.html)
 * [Configuration]({{baseUrl}}/contents/configuration.html)
-* [Demo]({{baseUrl}}/contents/demo.html)
+* [Demo]({{baseUrl}}/contents/demo/demo.html)
+  * [CLI Mastery]({{baseUrl}}/contents/demo/cliMastery.html)
+  * [File Structures]({{baseUrl}}/contents/demo/fileStructure.html) 
       </site-nav>
     </div>
   </nav>
