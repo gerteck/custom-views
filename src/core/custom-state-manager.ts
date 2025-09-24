@@ -7,7 +7,7 @@ import type { CustomViewsCore } from "./core";
 import type { CustomState } from "./url-state-manager";
 import { URLStateManager } from "./url-state-manager";
 
-export interface ProfileConstraints {
+export interface ConfigConstraints {
   allowedToggles: string[];
   modifiablePlaceholders: Record<string, string[]>;
 }
@@ -20,13 +20,10 @@ export class CustomStateManager {
   }
 
   /**
-   * Get constraints for the current profile
+   * Get constraints for the current configuration
    */
-  public getProfileConstraints(): ProfileConstraints | null {
-    const currentView = this.core.getCurrentView();
-    if (!currentView.profile) return null;
-
-    // Get the actual LocalConfig for the current profile
+  public getConfigConstraints(): ConfigConstraints | null {
+    // Get the actual LocalConfig for the current configuration
     const localConfig = this.core.getCurrentLocalConfig();
     if (!localConfig) return null;
 
@@ -48,9 +45,7 @@ export class CustomStateManager {
     console.log('Applying custom state:', state);
     
     // For now, we'll trigger a re-render by updating the URL and letting the core handle it
-    const currentView = this.core.getCurrentView();
     URLStateManager.updateURL({
-      profile: currentView.profile,
       customState: customState
     });
     
@@ -74,12 +69,12 @@ export class CustomStateManager {
   }
 
   /**
-   * Validate custom state against profile constraints
+   * Validate custom state against configuration constraints
    */
   public validateCustomState(customState: CustomState): { valid: boolean; errors: string[] } {
-    const constraints = this.getProfileConstraints();
+    const constraints = this.getConfigConstraints();
     if (!constraints) {
-      return { valid: false, errors: ['No profile selected'] };
+      return { valid: false, errors: ['No configuration loaded'] };
     }
 
     const errors: string[] = [];
@@ -87,7 +82,7 @@ export class CustomStateManager {
     // Validate toggles
     for (const toggle of customState.toggles) {
       if (!constraints.allowedToggles.includes(toggle)) {
-        errors.push(`Toggle '${toggle}' is not allowed in this profile`);
+        errors.push(`Toggle '${toggle}' is not allowed in this configuration`);
       }
     }
 
@@ -95,7 +90,7 @@ export class CustomStateManager {
     for (const [placeholder, asset] of Object.entries(customState.placeholders)) {
       const allowedAssets = constraints.modifiablePlaceholders[placeholder];
       if (!allowedAssets) {
-        errors.push(`Placeholder '${placeholder}' is not modifiable in this profile`);
+        errors.push(`Placeholder '${placeholder}' is not modifiable in this configuration`);
       } else if (!allowedAssets.includes(asset)) {
         errors.push(`Asset '${asset}' is not allowed for placeholder '${placeholder}'`);
       }
@@ -121,9 +116,7 @@ export class CustomStateManager {
    * Get a shareable URL for a custom state
    */
   public getShareableURL(customState: CustomState): string {
-    const currentView = this.core.getCurrentView();
     return URLStateManager.generateShareableURL({
-      profile: currentView.profile,
       customState: customState
     });
   }

@@ -1,5 +1,5 @@
 import { injectWidgetStyles } from "./widget-styles";
-import { CustomStateManager, type ProfileConstraints } from "./custom-state-manager";
+import { CustomStateManager, type ConfigConstraints } from "./custom-state-manager";
 import type { CustomViewsCore } from "./core";
 import type { CustomState } from "./url-state-manager";
 
@@ -15,12 +15,6 @@ export interface WidgetOptions {
   
   /** Widget theme: 'light', 'dark', 'auto' */
   theme?: 'light' | 'dark' | 'auto';
-  
-  /** Whether to show profile selector */
-  showProfiles?: boolean;
-  
-  /** Whether to show state selector */
-  showStates?: boolean;
   
   /** Whether to show reset button */
   showReset?: boolean;
@@ -52,8 +46,6 @@ export class CustomViewsWidget {
       container: this.container,
       position: options.position || 'bottom-right',
       theme: options.theme || 'auto',
-      showProfiles: options.showProfiles ?? false,
-      showStates: options.showStates ?? true,
       showReset: options.showReset ?? true,
       title: options.title || 'Custom Views'
     };
@@ -117,63 +109,19 @@ export class CustomViewsWidget {
   private attachEventListeners(): void {
     if (!this.widgetIcon) return;
 
-    // Click to open modal
-    this.widgetIcon.addEventListener('click', () => this.openModal());
+    // Click to open customization modal directly
+    this.widgetIcon.addEventListener('click', () => this.openCustomStateCreator());
   }
 
   private setupStateChangeListener(): void {
     this.stateChangeListener = () => {
-      // Icon doesn't need updates, but modal should be updated if open
-      if (this.modal) {
-        this.updateModalState();
-      }
+      // Icon doesn't need updates for simplified version
+      // Modal updates are handled within the custom state creator
     };
     
     this.core.addStateChangeListener(this.stateChangeListener);
   }
 
-  /**
-   * Open the modal with widget controls
-   */
-  private openModal(): void {
-    if (this.modal) return;
-    
-    this.modal = document.createElement('div');
-    this.modal.className = 'cv-widget-modal-overlay';
-    
-    this.modal.innerHTML = `
-      <div class="cv-widget-modal">
-        <div class="cv-widget-modal-header">
-          <h3>${this.options.title}</h3>
-          <button class="cv-widget-modal-close" aria-label="Close modal">x</button>
-        </div>
-        <div class="cv-widget-modal-content">
-          ${this.options.showProfiles ? this.createProfileSelector() : ''}
-          ${this.options.showStates ? this.createStateSelector() : ''}
-          <div class="cv-widget-current">
-            <label>Current View:</label>
-            <div class="cv-widget-current-view">Default → Default</div>
-          </div>
-          ${this.options.showReset ? '<button class="cv-widget-reset">Reset to Default</button>' : ''}
-          <div class="cv-widget-modal-actions">
-            <button class="cv-widget-create-state" id="cv-create-state-btn">Customize View</button>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(this.modal);
-    
-    // Add event listeners for modal
-    this.attachModalEventListeners();
-    
-    // Update the modal state
-    this.updateModalState();
-    
-    // Focus trap
-    const closeBtn = this.modal.querySelector('.cv-widget-modal-close') as HTMLElement;
-    if (closeBtn) closeBtn.focus();
-  }
 
   /**
    * Close the modal
@@ -185,211 +133,18 @@ export class CustomViewsWidget {
     }
   }
 
-  /**
-   * Attach event listeners to modal elements
-   */
-  private attachModalEventListeners(): void {
-    if (!this.modal) return;
 
-    // Close button
-    const closeBtn = this.modal.querySelector('.cv-widget-modal-close');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeModal());
-    }
 
-    // Overlay click to close
-    this.modal.addEventListener('click', (e) => {
-      if (e.target === this.modal) {
-        this.closeModal();
-      }
-    });
-
-    // Escape key to close
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        this.closeModal();
-        document.removeEventListener('keydown', handleEscape);
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-
-    // Profile selector
-    const profileSelect = this.modal.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
-    if (profileSelect) {
-      profileSelect.addEventListener('change', async (e) => {
-        const target = e.target as HTMLSelectElement;
-        const profileId = target.value;
-        
-        if (profileId) {
-          await this.core.switchToProfile(profileId);
-    } else {
-          this.core.clearPersistence();
-        }
-        
-        this.updateModalState();
-      });
-    }
-
-    // State selector
-    const stateSelect = this.modal.querySelector('.cv-widget-state-select') as HTMLSelectElement;
-    if (stateSelect) {
-      stateSelect.addEventListener('change', (e) => {
-        const target = e.target as HTMLSelectElement;
-        const stateId = target.value;
-        
-        if (stateId) {
-          this.core.switchToState(stateId);
-        }
-        
-        this.updateModalState();
-      });
-    }
-
-    // Reset button
-    const resetBtn = this.modal.querySelector('.cv-widget-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        this.core.clearPersistence();
-        this.updateModalState();
-      });
-    }
-
-    // Create state button
-    const createStateBtn = this.modal.querySelector('.cv-widget-create-state');
-    if (createStateBtn) {
-      createStateBtn.addEventListener('click', () => {
-        this.openCustomStateCreator();
-      });
-    }
-  }
-
-  /**
-   * Update modal state to reflect current view
-   */
-  private updateModalState(): void {
-    if (!this.modal) return;
-
-    const currentView = this.core.getCurrentView();
-    const availableProfiles = this.core.getAvailableProfiles();
-    const availableStates = this.core.getAvailableStates();
-    const localConfig = this.core.getCurrentLocalConfig();
-
-    // Update profile selector
-    const profileSelect = this.modal.querySelector('.cv-widget-profile-select') as HTMLSelectElement;
-    if (profileSelect) {
-      profileSelect.innerHTML = '<option value="">Default</option>';
-      availableProfiles.forEach(profile => {
-        const option = document.createElement('option');
-        option.value = profile;
-        option.textContent = this.formatProfileName(profile);
-        option.selected = profile === currentView.profile;
-        profileSelect.appendChild(option);
-      });
-    }
-
-    // Update state selector
-    const stateSelect = this.modal.querySelector('.cv-widget-state-select') as HTMLSelectElement;
-    if (stateSelect) {
-      stateSelect.innerHTML = '';
-      
-      // Only show global "Default" option if no profile is selected
-      if (!currentView.profile) {
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Default';
-        defaultOption.selected = !currentView.state;
-        stateSelect.appendChild(defaultOption);
-      }
-      
-      // Add profile-specific states
-      availableStates.forEach(state => {
-        const option = document.createElement('option');
-        option.value = state;
-        option.textContent = this.formatStateName(state);
-        
-        // Determine if this state should be selected
-        let isSelected = false;
-        if (currentView.state) {
-          // If there's a current state, select it
-          isSelected = state === currentView.state;
-        } else if (localConfig && !currentView.state) {
-          // If no current state but we have a profile, select the profile's default state
-          isSelected = state === localConfig.defaultState;
-        }
-        
-        option.selected = isSelected;
-        stateSelect.appendChild(option);
-      });
-      
-      stateSelect.disabled = !currentView.profile;
-    }
-
-    // Update current view display
-    const currentViewDisplay = this.modal.querySelector('.cv-widget-current-view');
-    if (currentViewDisplay) {
-      const profileText = currentView.profile ? this.formatProfileName(currentView.profile) : 'Default';
-      
-      // Determine the actual state text
-      let stateText = 'Default';
-      if (currentView.state) {
-        stateText = this.formatStateName(currentView.state);
-      } else if (localConfig) {
-        // If no current state but we have a profile, show the profile's default state
-        const defaultStateId = localConfig.defaultState;
-        if (defaultStateId && availableStates.includes(defaultStateId)) {
-          stateText = this.formatStateName(defaultStateId);
-        } else if (availableStates.length > 0 && availableStates[0]) {
-          // Fallback to first available state if default is not found
-          stateText = this.formatStateName(availableStates[0]);
-        }
-      }
-      
-      currentViewDisplay.textContent = `${profileText} → ${stateText}`;
-    }
-
-    // Show/hide create state button based on profile selection
-    const createStateBtn = this.modal.querySelector('.cv-widget-create-state') as HTMLElement;
-    if (createStateBtn) {
-      createStateBtn.style.display = currentView.profile ? 'block' : 'none';
-    }
-  }
-
-  private createProfileSelector(): string {
-    return `
-      <div class="cv-widget-section">
-        <label for="cv-profile-select">Profile:</label>
-        <select id="cv-profile-select" class="cv-widget-profile-select">
-          <option value="">Default</option>
-        </select>
-      </div>
-    `;
-  }
-
-  private createStateSelector(): string {
-    return `
-      <div class="cv-widget-section">
-        <label for="cv-state-select">State:</label>
-        <select id="cv-state-select" class="cv-widget-state-select">
-          <option value="">Default</option>
-        </select>
-      </div>
-    `;
-  }
 
   /**
    * Open the custom state creator
    */
   private openCustomStateCreator(): void {
-    const currentView = this.core.getCurrentView();
-    if (!currentView.profile) {
-      alert('Please select a profile first to customize the view.');
-      return;
-    }
-
-    // Get profile constraints
-    const constraints = this.customStateManager.getProfileConstraints();
+    // Get configuration constraints
+    const constraints = this.customStateManager.getConfigConstraints();
     if (!constraints) {
-      alert('Unable to load profile constraints.');
+      // If no configuration, create a basic modal with just reset option
+      this.createBasicModal();
       return;
     }
 
@@ -398,9 +153,68 @@ export class CustomViewsWidget {
   }
 
   /**
+   * Create a basic modal when no configuration is available
+   */
+  private createBasicModal(): void {
+    if (this.modal) return;
+    
+    this.modal = document.createElement('div');
+    this.modal.className = 'cv-widget-modal-overlay';
+    
+    this.modal.innerHTML = `
+      <div class="cv-widget-modal">
+        <div class="cv-widget-modal-header">
+          <h3>${this.options.title}</h3>
+          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
+        </div>
+        <div class="cv-widget-modal-content">
+          <p>No configuration loaded. Only default state is available.</p>
+          <div class="cv-widget-current">
+            <label>Current View:</label>
+            <div class="cv-widget-current-view">Default</div>
+          </div>
+          <button class="cv-widget-reset">Reset to Default</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(this.modal);
+    
+    // Add basic event listeners
+    const closeBtn = this.modal.querySelector('.cv-widget-modal-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeModal());
+    }
+    
+    const resetBtn = this.modal.querySelector('.cv-widget-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.core.resetToDefault();
+        this.closeModal();
+      });
+    }
+    
+    // Overlay click to close
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) {
+        this.closeModal();
+      }
+    });
+    
+    // Escape key to close
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        this.closeModal();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  }
+
+  /**
    * Create the custom state creator modal
    */
-  private createCustomStateModal(constraints: ProfileConstraints): void {
+  private createCustomStateModal(constraints: ConfigConstraints): void {
     // Close existing modal
     this.closeModal();
 
@@ -428,6 +242,11 @@ export class CustomViewsWidget {
         </div>
       `).join('');
 
+    const placeholderSection = placeholderControls ? `
+      <h4>Placeholders</h4>
+      ${placeholderControls}
+    ` : '';
+
     this.modal.innerHTML = `
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
@@ -436,12 +255,11 @@ export class CustomViewsWidget {
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
-            <p>Customize your view by selecting different assets and toggles. Changes are applied instantly and the URL will be updated for sharing.</p>
+            <p>Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.</p>
             
-            <h4>Placeholders</h4>
-            ${placeholderControls}
+            ${placeholderSection}
             
-            <h4>Toggles</h4>
+            <h4>Content Sections</h4>
             <div class="cv-custom-toggles">
               ${toggleControls}
             </div>
@@ -473,7 +291,6 @@ export class CustomViewsWidget {
     if (closeBtn) {
       closeBtn.addEventListener('click', () => {
         this.closeModal();
-        this.openModal(); // Reopen main modal
       });
     }
 
@@ -482,7 +299,6 @@ export class CustomViewsWidget {
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => {
         this.closeModal();
-        this.openModal(); // Reopen main modal
       });
     }
 
@@ -501,7 +317,6 @@ export class CustomViewsWidget {
     this.modal.addEventListener('click', (e) => {
       if (e.target === this.modal) {
         this.closeModal();
-        this.openModal(); // Reopen main modal
       }
     });
 
@@ -509,7 +324,6 @@ export class CustomViewsWidget {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         this.closeModal();
-        this.openModal(); // Reopen main modal
         document.removeEventListener('keydown', handleEscape);
       }
     };
@@ -650,21 +464,4 @@ export class CustomViewsWidget {
     return this.customStateManager.formatToggleName(toggle);
   }
 
-  private formatProfileName(profile: string): string {
-    // Convert camelCase or snake_case to Title Case
-    return profile
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/_/g, ' ')
-      .replace(/^\w/, c => c.toUpperCase())
-      .trim();
-  }
-
-  private formatStateName(state: string): string {
-    // Convert camelCase or snake_case to Title Case
-    return state
-      .replace(/([A-Z])/g, ' $1')
-      .replace(/_/g, ' ')
-      .replace(/^\w/, c => c.toUpperCase())
-      .trim();
-  }
 }

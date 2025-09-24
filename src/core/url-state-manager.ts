@@ -11,7 +11,6 @@ export interface CustomState {
 }
 
 export interface URLState {
-  profile?: string | null | undefined;
   state?: string | null | undefined;
   customState?: CustomState | undefined;
 }
@@ -24,12 +23,6 @@ export class URLStateManager {
     const urlParams = new URLSearchParams(window.location.search);
     
     const result: URLState = {};
-    
-    // Get profile
-    const profile = urlParams.get('profile');
-    if (profile) {
-      result.profile = profile;
-    }
     
     // Get predefined state
     const state = urlParams.get('state');
@@ -62,14 +55,8 @@ export class URLStateManager {
     const url = new URL(window.location.href);
     
     // Clear existing parameters
-    url.searchParams.delete('profile');
     url.searchParams.delete('state');
     url.searchParams.delete('custom');
-    
-    // Set profile
-    if (urlState.profile) {
-      url.searchParams.set('profile', urlState.profile);
-    }
     
     // Set predefined state (only if no custom state)
     if (urlState.state && !urlState.customState) {
@@ -184,15 +171,10 @@ export class URLStateManager {
     const url = new URL(window.location.href);
     
     // Clear existing parameters
-    url.searchParams.delete('profile');
     url.searchParams.delete('state');
     url.searchParams.delete('custom');
     
     // Set new parameters
-    if (urlState.profile) {
-      url.searchParams.set('profile', urlState.profile);
-    }
-    
     if (urlState.state && !urlState.customState) {
       url.searchParams.set('state', urlState.state);
     }

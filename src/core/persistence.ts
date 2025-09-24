@@ -6,7 +6,6 @@ import type { State } from "../types/types";
 export class PersistenceManager {
   // Storage keys for localStorage
   private static readonly STORAGE_KEYS = {
-    PROFILE: 'customviews-profile',
     STATE: 'customviews-state',
     CUSTOM_STATE: 'customviews-custom-state'
   } as const;
@@ -16,30 +15,6 @@ export class PersistenceManager {
    */
   private isStorageAvailable(): boolean {
     return typeof window !== 'undefined' && window.localStorage !== undefined;
-  }
-
-  // === PROFILE PERSISTENCE ===
-
-  /**
-   * Persists the current profile to localStorage
-   */
-  public persistProfile(profile: string | null): void {
-    if (!this.isStorageAvailable()) return;
-
-    if (profile) {
-      localStorage.setItem(PersistenceManager.STORAGE_KEYS.PROFILE, profile);
-    } else {
-      localStorage.removeItem(PersistenceManager.STORAGE_KEYS.PROFILE);
-    }
-  }
-
-  /**
-   * Retrieves the persisted profile from localStorage
-   */
-  public getPersistedProfile(): string | null {
-    if (!this.isStorageAvailable()) return null;
-    
-    return localStorage.getItem(PersistenceManager.STORAGE_KEYS.PROFILE);
   }
 
   // === STATE PERSISTENCE ===
@@ -103,23 +78,6 @@ export class PersistenceManager {
 
   // === UTILITY METHODS ===
 
-  /**
-   * Get both persisted profile and state in one call
-   */
-  public getPersistedView(): { profile: string | null; state: string | null } {
-    return {
-      profile: this.getPersistedProfile(),
-      state: this.getPersistedState()
-    };
-  }
-
-  /**
-   * Persist both profile and state in one call
-   */
-  public persistView(profile: string | null, state: string | null): void {
-    this.persistProfile(profile);
-    this.persistState(state);
-  }
 
   /**
    * Clear all persisted data and reset to defaults
@@ -127,7 +85,6 @@ export class PersistenceManager {
   public clearAll(): void {
     if (!this.isStorageAvailable()) return;
 
-    localStorage.removeItem(PersistenceManager.STORAGE_KEYS.PROFILE);
     localStorage.removeItem(PersistenceManager.STORAGE_KEYS.STATE);
     localStorage.removeItem(PersistenceManager.STORAGE_KEYS.CUSTOM_STATE);
   }
@@ -139,7 +96,6 @@ export class PersistenceManager {
     if (!this.isStorageAvailable()) return false;
 
     return !!(
-      this.getPersistedProfile() || 
       this.getPersistedState() || 
       this.getPersistedCustomState()
     );
@@ -162,7 +118,6 @@ export class PersistenceManager {
     }
 
     console.group('CustomViews Persistence State');
-    console.log('Profile:', this.getPersistedProfile());
     console.log('State:', this.getPersistedState());
     console.log('Custom State:', this.getPersistedCustomState());
     console.log('Has Data:', this.hasPersistedData());

@@ -16,24 +16,18 @@ export class LocalConfig {
   /** Toggles visible to the viewer */
   allowedToggles?: string[] | undefined;
 
-  /** Predefined states (snapshots of placeholder values + toggles) */
-  states: Record<string, State>;
-
   /** Default state to render on load */
-  defaultState: string;
+  defaultState: State;
 
   constructor(opts: {
     id: string;
-    allowedPlaceholders?: string[];
     modifiablePlaceholderAssets?: Record<string, string[]>;
     allowedToggles?: string[];
-    states: Record<string, State>;
-    defaultState: string;
+    defaultState: State;
   }) {
     this.id = opts.id;
     this.modifiablePlaceholderAssets = opts.modifiablePlaceholderAssets;
     this.allowedToggles = opts.allowedToggles;
-    this.states = opts.states;
     this.defaultState = opts.defaultState;
   }
 }

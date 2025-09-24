@@ -1,0 +1,17 @@
+{
+  "id": "simpleConfig",
+  "allowedToggles": ["mac", "linux", "windows"],
+  "modifiablePlaceholderAssets": {
+    "osImage": ["macOSImage", "linuxImage", "windowsImage"],
+    "gitCommands": ["gitInitMac", "gitInitLinux", "gitInitWindows"],
+    "fileStructure": ["fileStructureMac", "fileStructureLinux", "fileStructureWindows"]
+  },
+  "defaultState": {
+    "placeholders": {
+      "osImage": "macOSImage",
+      "gitCommands": "gitInitMac",
+      "fileStructure": "fileStructureMac"
+    },
+    "toggles": ["mac"]
+  }
+}

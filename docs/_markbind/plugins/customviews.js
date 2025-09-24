@@ -8,26 +8,19 @@ export function getScripts() {
     '<script type="module" src="../../../dist/custom-views.esm.js"></script>',
     `<script>
         window.addEventListener('DOMContentLoaded', async () => {
-          const localConfigPaths = {
-            "profileA": "/configs/profileA.json",
-            "profileOS": "/configs/profileOS.json"
-          };
-
-          // Initialize the core CustomViews functionality
+          // Initialize CustomViews with simplified configuration
           const customviewsCore = await window.CustomViews.initFromJson({
             assetsJsonPath: '/configs/assets.json',
             defaultStateJsonPath: '/configs/defaultState.json',
-            localConfigPaths,
+            profilePath: '/configs/simpleConfig.json',  // Use simplified config file
             rootEl: document.body
           });
 
-          // Create and render the simplified widget
+          // Create and render the widget
           const widget = new window.CustomViewsWidget({
             core: customviewsCore,
             position: 'middle-left',
             theme: 'auto',
-            showProfiles: true,
-            showStates: true,
             showReset: true,
             title: 'Custom Views'
           });

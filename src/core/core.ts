@@ -5,12 +5,17 @@ import { LocalConfig } from "models/LocalConfig";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager, type CustomState } from "./url-state-manager";
 
-// TO DO: UPDATE CORE
 
 export interface CustomViewsOptions {
   assetsManager: AssetsManager;
-  defaultState: State,
-  localConfigPaths?: Record<string, string> | undefined;
+  defaultState: State;
+  // Option 1: Direct configuration
+  config?: {
+    modifiablePlaceholderAssets?: Record<string, string[]>;
+    allowedToggles?: string[];
+  };
+  // Option 2: Single profile path
+  profilePath?: string;
   rootEl?: HTMLElement | undefined;
   onViewChange?: (stateId: string, state: State) => void | undefined;
 }
@@ -20,11 +25,14 @@ export class CustomViewsCore {
   private assetsManager: AssetsManager;
   private persistenceManager: PersistenceManager;
 
-  private localConfigPaths?: Record<string, string> | undefined;
+  private profilePath?: string | undefined;
+  private directConfig?: {
+    modifiablePlaceholderAssets?: Record<string, string[]>;
+    allowedToggles?: string[];
+  } | undefined;
   private defaultState: State;
   private onViewChange: any;
 
-  private profileFromUrl: string | null = null;
   private stateIdFromUrl: string | null = null;
   private customStateFromUrl: CustomState | null = null;
 
@@ -35,49 +43,92 @@ export class CustomViewsCore {
 
   constructor(options: CustomViewsOptions) {
     this.assetsManager = options.assetsManager;
-    this.localConfigPaths = options.localConfigPaths;
+    this.profilePath = options.profilePath || undefined;
+    this.directConfig = options.config || undefined;
     this.defaultState = options.defaultState;
     this.rootEl = options.rootEl || document.body;
     this.onViewChange = options.onViewChange;
     this.persistenceManager = new PersistenceManager();
+
+    // Validate that exactly one configuration method is provided
+    if (this.profilePath && this.directConfig) {
+      throw new Error('Cannot provide both profilePath and config. Choose one configuration method.');
+    }
+    if (!this.profilePath && !this.directConfig) {
+      console.warn('No configuration provided. Only defaultState will be available.');
+    }
   }
 
   /** Initialize: render default or URL-specified state */
   public async init() {
     console.log("CustomViewsCore init");
+    
+    // Load configuration first
+    await this.loadConfiguration();
+    
     this.renderFromUrl();
     window.addEventListener("popstate", () => {
       this.renderFromUrl();
     });
   }
 
-  private async renderFromUrl() {
-    this.parseUrlForProfileState();
+  /**
+   * Load configuration from either profilePath or directConfig
+   */
+  private async loadConfiguration(): Promise<void> {
+    if (this.profilePath) {
+      // Load from JSON file
+      try {
+        const response = await fetch(this.profilePath);
+        const configJson = await response.json();
+        this.localConfig = new LocalConfig(configJson);
+      } catch (err) {
+        console.warn("Failed to load profile configuration:", err);
+        this.localConfig = null;
+      }
+    } else if (this.directConfig) {
+      // Create LocalConfig from direct configuration
+      const configId = 'direct-config';
+      
+      const configOptions: {
+        id: string;
+        defaultState: State;
+        modifiablePlaceholderAssets?: Record<string, string[]>;
+        allowedToggles?: string[];
+      } = {
+        id: configId,
+        defaultState: this.defaultState
+      };
+      
+      if (this.directConfig.modifiablePlaceholderAssets) {
+        configOptions.modifiablePlaceholderAssets = this.directConfig.modifiablePlaceholderAssets;
+      }
+      
+      if (this.directConfig.allowedToggles) {
+        configOptions.allowedToggles = this.directConfig.allowedToggles;
+      }
+      
+      this.localConfig = new LocalConfig(configOptions);
+    }
+  }
 
-    // Get persisted view for fallback
-    const persistedView = this.persistenceManager.getPersistedView();
+  private async renderFromUrl() {
+    this.parseUrlForState();
+
+    // Get persisted state for fallback
+    const persistedState = this.persistenceManager.getPersistedState();
     
-    // Determine if URL params are present
-    const hasUrlProfile = this.profileFromUrl !== null;
+    // Determine if URL state param is present
     const hasUrlState = this.stateIdFromUrl !== null;
     
-    // Use URL params if available, otherwise use persistence
-    if (!hasUrlProfile && persistedView.profile) {
-      this.profileFromUrl = persistedView.profile;
-    }
-    
-    if (!hasUrlState && persistedView.state) {
-      this.stateIdFromUrl = persistedView.state;
+    // Use URL state if available, otherwise use persistence
+    if (!hasUrlState && persistedState) {
+      this.stateIdFromUrl = persistedState;
     }
 
-    // If URL params are present, persist them (URL takes precedence and should be saved)
-    if (hasUrlProfile || hasUrlState) {
-      this.persistenceManager.persistView(this.profileFromUrl, this.stateIdFromUrl);
-    }
-
-    if (this.profileFromUrl) {
-      const localConfig = await this.loadLocalConfig(this.profileFromUrl);
-      this.localConfig = localConfig;
+    // If URL state is present, persist it (URL takes precedence and should be saved)
+    if (hasUrlState) {
+      this.persistenceManager.persistState(this.stateIdFromUrl);
     }
 
     // Handle custom state
@@ -85,32 +136,20 @@ export class CustomViewsCore {
       const customState = URLStateManager.customStateToState(this.customStateFromUrl);
       this.renderState(customState);
     } else if (this.localConfig) {
-      this.renderLocalConfigState(this.stateIdFromUrl, this.localConfig);
+      this.renderLocalConfigState(this.localConfig);
     } else {
       this.renderState(this.defaultState);
     }
   }
   
   /**
-   * Retrieves profile, state, and custom state from the current URL's query string.
+   * Retrieves state and custom state from the current URL's query string.
    */
-  private parseUrlForProfileState() {
+  private parseUrlForState() {
     const urlState = URLStateManager.parseURL();
     
-    this.profileFromUrl = urlState.profile || null;
     this.stateIdFromUrl = urlState.state || null;
     this.customStateFromUrl = urlState.customState || null;
-
-    // Validate profile
-    if (this.profileFromUrl &&
-        this.localConfigPaths &&
-      !(this.profileFromUrl in this.localConfigPaths)) {
-
-      console.warn("Profile in URL not recognized");
-      this.profileFromUrl = null;
-      this.stateIdFromUrl = null;
-      this.customStateFromUrl = null;
-    }
 
     // If we have a custom state, clear the regular state
     if (this.customStateFromUrl) {
@@ -118,58 +157,10 @@ export class CustomViewsCore {
     }
   }
 
-  /**
-   * Loads the local configuration for a given profile ID.
-   *
-   * This method attempts to fetch and parse a local configuration file
-   * based on the provided `profileId`. If the profile ID is invalid,
-   * missing, or not present in `localConfigPaths`, the method logs a warning
-   * and returns `false`. If the configuration file is successfully fetched
-   * and parsed, it initializes `this.localConfig` with the parsed data and
-   * returns `true`. On failure, it logs the error, sets `this.localConfig`
-   * to `null`, and returns `false`.
-   *
-   * @param profileId - The identifier for the profile whose local configuration should be loaded.
-   * @returns A promise that resolves to `true` if the configuration was loaded successfully, or `false` otherwise.
-   */
-  private async loadLocalConfig(profileId: string): Promise<LocalConfig | null> {
-    // Load local config based on profileId
-    if (!profileId || !this.localConfigPaths || 
-      (!(profileId in this.localConfigPaths))
-    ) {
-      console.warn("Local Config Paths or Profile not present");
-      return null;
-    }
 
-    const localConfigPath = this.localConfigPaths[profileId];
-    if (!localConfigPath) {
-      return null;
-    }
-
-    try {
-      const response = await fetch(localConfigPath);
-      const configJson = await response.json();
-      const config = new LocalConfig(configJson);
-      return config;
-    } catch (err) {
-      console.warn("Failed to load local config:", err);
-      return null;
-    }
-  }
-
-  private async renderLocalConfigState(stateId: string | null, localConfig: LocalConfig) {
-    if (!stateId) {
-      stateId = localConfig.defaultState;
-    }
-
-    // load state
-    const state = localConfig.states[stateId];
-    if (!state) {
-      console.warn("State ID not found in local config, rendering default state");
-      await this.renderState(this.defaultState);
-    } else {
-      await this.renderState(state);
-    }
+  private async renderLocalConfigState(localConfig: LocalConfig) {
+    // With simplified LocalConfig, we always render the defaultState
+    await this.renderState(localConfig.defaultState);
   }
 
   /** Render all placeholders and toggles for the current state */
@@ -254,82 +245,30 @@ export class CustomViewsCore {
   // === PUBLIC API METHODS ===
 
   /**
-   * Programmatically switch to a different profile and state
+   * Reset to default state
    */
-  public async switchToProfile(profileId: string, stateId?: string) {
-    if (!this.localConfigPaths || !(profileId in this.localConfigPaths)) {
-      console.warn('Profile not found:', profileId);
-      return;
-    }
-
-    this.profileFromUrl = profileId;
-    this.stateIdFromUrl = stateId || null;
-    this.customStateFromUrl = null; // Clear custom state when switching profiles
+  public resetToDefault() {
+    this.stateIdFromUrl = null;
+    this.customStateFromUrl = null;
+    this.persistenceManager.persistState(null);
+    this.renderState(this.defaultState);
     
-    // Persist the selection
-    this.persistenceManager.persistView(profileId, stateId || null);
-
-    // Load and render
-    const localConfig = await this.loadLocalConfig(profileId);
-    this.localConfig = localConfig;
-    
-    if (this.localConfig) {
-      this.renderLocalConfigState(this.stateIdFromUrl, this.localConfig);
-    }
-
-    // Update URL without triggering navigation
-    URLStateManager.updateURL({
-      profile: profileId,
-      state: stateId
-    });
+    // Clear URL
+    URLStateManager.clearURL();
   }
 
   /**
-   * Switch to a specific state within the current profile
+   * Check if configuration is loaded
    */
-  public switchToState(stateId: string) {
-    if (!this.localConfig) {
-      console.warn('No profile loaded, cannot switch state');
-      return;
-    }
-
-    if (!(stateId in this.localConfig.states)) {
-      console.warn('State not found in current profile:', stateId);
-      return;
-    }
-
-    this.stateIdFromUrl = stateId;
-    this.customStateFromUrl = null; // Clear custom state when switching to predefined state
-    this.persistenceManager.persistState(stateId);
-    this.renderLocalConfigState(stateId, this.localConfig);
-    
-    // Update URL
-    URLStateManager.updateURL({
-      profile: this.profileFromUrl,
-      state: stateId
-    });
+  public hasConfiguration(): boolean {
+    return this.localConfig !== null;
   }
 
   /**
-   * Get available profiles
+   * Get current state
    */
-  public getAvailableProfiles(): string[] {
-    return this.localConfigPaths ? Object.keys(this.localConfigPaths) : [];
-  }
-
-  /**
-   * Get available states for current profile
-   */
-  public getAvailableStates(): string[] {
-    return this.localConfig ? Object.keys(this.localConfig.states) : [];
-  }
-
-  /**
-   * Get current profile and state
-   */
-  public getCurrentView(): { profile: string | null; state: string | null; customState: CustomState | null } {
+  public getCurrentView(): { state: string | null; customState: CustomState | null } {
     return {
-      profile: this.profileFromUrl,
       state: this.stateIdFromUrl,
       customState: this.customStateFromUrl
     };
@@ -341,10 +280,8 @@ export class CustomViewsCore {
   public clearPersistence() {
     this.persistenceManager.clearAll();
     
-    this.profileFromUrl = null;
     this.stateIdFromUrl = null;
     this.customStateFromUrl = null;
-    this.localConfig = null;
     this.renderState(this.defaultState);
     URLStateManager.clearURL();
   }
@@ -356,19 +293,6 @@ export class CustomViewsCore {
     return this.persistenceManager;
   }
 
-  /**
-   * Check if any persistence data exists
-   */
-  public hasPersistedData(): boolean {
-    return this.persistenceManager.hasPersistedData();
-  }
-
-  /**
-   * Get the currently persisted view without changing the current state
-   */
-  public getPersistedView(): { profile: string | null; state: string | null } {
-    return this.persistenceManager.getPersistedView();
-  }
 
   /**
    * Apply a custom state
@@ -382,13 +306,12 @@ export class CustomViewsCore {
     
     // Update URL
     URLStateManager.updateURL({
-      profile: this.profileFromUrl,
       customState: customState
     });
   }
 
   /**
-   * Get the current LocalConfig for profile constraints
+   * Get the current LocalConfig for configuration constraints
    */
   public getCurrentLocalConfig(): LocalConfig | null {
     return this.localConfig || null;
