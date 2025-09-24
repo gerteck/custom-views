@@ -1,9 +1,0 @@
-{
-  "placeholders": {
-    "logo": "asset3"
-  },
-  "toggles": [
-    "beginner",
-    "advanced"
-  ]
-}
