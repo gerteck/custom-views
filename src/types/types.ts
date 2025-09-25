@@ -1,6 +1,6 @@
 /**
  * Represents an individual asset that can be rendered in a custom view.
- * Could be used as a placeholder or a toggle.
+ * Used for toggles.
  */
 export interface CustomViewAsset {
   /** Unique identifier for this asset. Used in States to reference it. */
@@ -24,20 +24,9 @@ export interface CustomViewAsset {
 
 /**
  * Represents a specific state of a custom view.
- * States contain mapping of placeholder names  to asset IDs,
- * and contain the list of toggle categories that should be displayed in this state. 
+ * States contain the list of toggle categories that should be displayed in this state. 
  */
 export interface State {
-  /**
-   * Mapping of placeholder names to asset IDs.
-   * Example:
-   * {
-   *   "logo": "asset-logo",
-   *   "introText": "asset-intro-text"
-   * }
-   */
-  placeholders: Record<string, string>;
-
   /**
    * List of toggle categories that should be displayed in this state.
    * Example:

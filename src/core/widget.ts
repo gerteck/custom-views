@@ -221,17 +221,6 @@ export class CustomViewsWidget {
     this.modal = document.createElement('div');
     this.modal.className = 'cv-widget-modal-overlay';
     
-    const placeholderControls = Object.entries(constraints.modifiablePlaceholders)
-      .map(([placeholder, assets]) => `
-        <div class="cv-custom-state-section">
-          <label for="cv-placeholder-${placeholder}">${this.formatPlaceholderName(placeholder)}:</label>
-          <select id="cv-placeholder-${placeholder}" class="cv-custom-placeholder-select" data-placeholder="${placeholder}">
-            <option value="">None</option>
-            ${assets.map(asset => `<option value="${asset}">${this.formatAssetName(asset)}</option>`).join('')}
-          </select>
-        </div>
-      `).join('');
-
     const toggleControls = constraints.allowedToggles
       .map(toggle => `
         <div class="cv-custom-state-toggle">
@@ -242,11 +231,6 @@ export class CustomViewsWidget {
         </div>
       `).join('');
 
-    const placeholderSection = placeholderControls ? `
-      <h4>Placeholders</h4>
-      ${placeholderControls}
-    ` : '';
-
     this.modal.innerHTML = `
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
@@ -256,8 +240,6 @@ export class CustomViewsWidget {
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
             <p>Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.</p>
-            
-            ${placeholderSection}
             
             <h4>Content Sections</h4>
             <div class="cv-custom-toggles">
@@ -336,14 +318,6 @@ export class CustomViewsWidget {
   private addInstantPreviewListeners(): void {
     if (!this.modal) return;
 
-    // Listen to placeholder selects
-    const placeholderSelects = this.modal.querySelectorAll('.cv-custom-placeholder-select') as NodeListOf<HTMLSelectElement>;
-    placeholderSelects.forEach(select => {
-      select.addEventListener('change', () => {
-        this.applyCurrentCustomState();
-      });
-    });
-
     // Listen to toggle checkboxes
     const toggleCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
     toggleCheckboxes.forEach(checkbox => {
@@ -368,20 +342,8 @@ export class CustomViewsWidget {
    */
   private getCurrentCustomStateFromForm(): CustomState {
     if (!this.modal) {
-      return { placeholders: {}, toggles: [] };
+      return { toggles: [] };
     }
-
-    // Collect placeholder values
-    const placeholders: Record<string, string> = {};
-    const placeholderSelects = this.modal.querySelectorAll('.cv-custom-placeholder-select') as NodeListOf<HTMLSelectElement>;
-    placeholderSelects.forEach(select => {
-      const placeholder = select.dataset.placeholder;
-      const value = select.value;
-      if (placeholder) {
-        // Always include the placeholder, even if value is empty (None selected)
-        placeholders[placeholder] = value || '';
-      }
-    });
 
     // Collect toggle values
     const toggles: string[] = [];
@@ -393,7 +355,7 @@ export class CustomViewsWidget {
       }
     });
 
-    return { placeholders, toggles };
+    return { toggles };
   }
 
   /**
@@ -426,13 +388,6 @@ export class CustomViewsWidget {
     const currentView = this.core.getCurrentView();
     if (!currentView.customState) return;
 
-    // Load placeholder values
-    Object.entries(currentView.customState.placeholders).forEach(([placeholder, asset]) => {
-      const select = this.modal?.querySelector(`[data-placeholder="${placeholder}"]`) as HTMLSelectElement;
-      if (select) {
-        select.value = asset;
-      }
-    });
 
     // Load toggle values
     currentView.customState.toggles.forEach(toggle => {
@@ -443,19 +398,6 @@ export class CustomViewsWidget {
     });
   }
 
-  /**
-   * Format placeholder name for display
-   */
-  private formatPlaceholderName(placeholder: string): string {
-    return this.customStateManager.formatPlaceholderName(placeholder);
-  }
-
-  /**
-   * Format asset name for display
-   */
-  private formatAssetName(asset: string): string {
-    return this.customStateManager.formatAssetName(asset);
-  }
 
   /**
    * Format toggle name for display

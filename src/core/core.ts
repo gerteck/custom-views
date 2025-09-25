@@ -8,14 +8,7 @@ import { URLStateManager, type CustomState } from "./url-state-manager";
 
 export interface CustomViewsOptions {
   assetsManager: AssetsManager;
-  defaultState: State;
-  // Option 1: Direct configuration
-  config?: {
-    modifiablePlaceholderAssets?: Record<string, string[]>;
-    allowedToggles?: string[];
-  };
-  // Option 2: Single profile path
-  profilePath?: string;
+  profilePath: string;
   rootEl?: HTMLElement | undefined;
   onViewChange?: (stateId: string, state: State) => void | undefined;
 }
@@ -25,12 +18,7 @@ export class CustomViewsCore {
   private assetsManager: AssetsManager;
   private persistenceManager: PersistenceManager;
 
-  private profilePath?: string | undefined;
-  private directConfig?: {
-    modifiablePlaceholderAssets?: Record<string, string[]>;
-    allowedToggles?: string[];
-  } | undefined;
-  private defaultState: State;
+  private profilePath: string;
   private onViewChange: any;
 
   private stateIdFromUrl: string | null = null;
@@ -43,20 +31,10 @@ export class CustomViewsCore {
 
   constructor(options: CustomViewsOptions) {
     this.assetsManager = options.assetsManager;
-    this.profilePath = options.profilePath || undefined;
-    this.directConfig = options.config || undefined;
-    this.defaultState = options.defaultState;
+    this.profilePath = options.profilePath;
     this.rootEl = options.rootEl || document.body;
     this.onViewChange = options.onViewChange;
     this.persistenceManager = new PersistenceManager();
-
-    // Validate that exactly one configuration method is provided
-    if (this.profilePath && this.directConfig) {
-      throw new Error('Cannot provide both profilePath and config. Choose one configuration method.');
-    }
-    if (!this.profilePath && !this.directConfig) {
-      console.warn('No configuration provided. Only defaultState will be available.');
-    }
   }
 
   /** Initialize: render default or URL-specified state */
@@ -73,42 +51,16 @@ export class CustomViewsCore {
   }
 
   /**
-   * Load configuration from either profilePath or directConfig
+   * Load configuration from profilePath
    */
   private async loadConfiguration(): Promise<void> {
-    if (this.profilePath) {
-      // Load from JSON file
-      try {
-        const response = await fetch(this.profilePath);
-        const configJson = await response.json();
-        this.localConfig = new LocalConfig(configJson);
-      } catch (err) {
-        console.warn("Failed to load profile configuration:", err);
-        this.localConfig = null;
-      }
-    } else if (this.directConfig) {
-      // Create LocalConfig from direct configuration
-      const configId = 'direct-config';
-      
-      const configOptions: {
-        id: string;
-        defaultState: State;
-        modifiablePlaceholderAssets?: Record<string, string[]>;
-        allowedToggles?: string[];
-      } = {
-        id: configId,
-        defaultState: this.defaultState
-      };
-      
-      if (this.directConfig.modifiablePlaceholderAssets) {
-        configOptions.modifiablePlaceholderAssets = this.directConfig.modifiablePlaceholderAssets;
-      }
-      
-      if (this.directConfig.allowedToggles) {
-        configOptions.allowedToggles = this.directConfig.allowedToggles;
-      }
-      
-      this.localConfig = new LocalConfig(configOptions);
+    try {
+      const response = await fetch(this.profilePath);
+      const configJson = await response.json();
+      this.localConfig = new LocalConfig(configJson);
+    } catch (err) {
+      console.warn("Failed to load profile configuration:", err);
+      this.localConfig = null;
     }
   }
 
@@ -138,7 +90,7 @@ export class CustomViewsCore {
     } else if (this.localConfig) {
       this.renderLocalConfigState(this.localConfig);
     } else {
-      this.renderState(this.defaultState);
+      console.warn("No configuration loaded, cannot render any state");
     }
   }
   
@@ -163,11 +115,10 @@ export class CustomViewsCore {
     await this.renderState(localConfig.defaultState);
   }
 
-  /** Render all placeholders and toggles for the current state */
+  /** Render all toggles for the current state */
   private renderState(state: State) {
     if (!state) return;
 
-    const placeholders = state.placeholders || {};
     const toggles = state.toggles || [];
 
     // Toggles hide or show relevant toggles
@@ -195,39 +146,6 @@ export class CustomViewsCore {
       });
     }
 
-    // Placeholders
-    // In the html, there can be two types of placeholders:
-    // Just has the key,
-    // Has both key and id (container, asset stored directly in html)
-    this.rootEl.querySelectorAll("[data-customviews-placeholder]").forEach(el => {
-      const key = (el as HTMLElement).dataset.customviewsPlaceholder;
-      // if no key, skip
-      if (!key) return;
-
-      // check in the state, what is the mapping for the placeholder key
-      const assetId = placeholders[key];
-      if (!assetId) {
-        // If no assetId is mapped for this placeholder key, hide the element
-        el.setAttribute("hidden", "");
-        return;
-      }
-           
-      // Only show the element if placeholderId matches assetId, otherwise hide it
-      const placeholderId = (el as HTMLElement).dataset.customviewsId;
-      if (placeholderId) {
-        if (placeholderId === assetId) {
-          el.removeAttribute("hidden");
-        } else {
-          el.setAttribute("hidden", "");
-        }
-      }
-      else {
-        // if not placeholderId, means is positional, show and render asset
-        renderAssetInto(el as HTMLElement, assetId, this.assetsManager);
-      }
-
-    });
-
     // Notify consumer of state change
     if (typeof this.onViewChange === "function") {
       if (this.stateIdFromUrl) {
@@ -251,7 +169,12 @@ export class CustomViewsCore {
     this.stateIdFromUrl = null;
     this.customStateFromUrl = null;
     this.persistenceManager.persistState(null);
-    this.renderState(this.defaultState);
+    
+    if (this.localConfig) {
+      this.renderState(this.localConfig.defaultState);
+    } else {
+      console.warn("No configuration loaded, cannot reset to default state");
+    }
     
     // Clear URL
     URLStateManager.clearURL();
@@ -282,7 +205,13 @@ export class CustomViewsCore {
     
     this.stateIdFromUrl = null;
     this.customStateFromUrl = null;
-    this.renderState(this.defaultState);
+    
+    if (this.localConfig) {
+      this.renderState(this.localConfig.defaultState);
+    } else {
+      console.warn("No configuration loaded, cannot reset to default state");
+    }
+    
     URLStateManager.clearURL();
   }
 

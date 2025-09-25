@@ -6,18 +6,6 @@
 
 Explore how different operating systems organize files, install applications, and manage system resources. Use the **Custom Views widget** in the top-right corner to switch between **macOS**, **Linux**, and **Windows** to see platform-specific file structures.
 
-## Current Operating System
-
-<div data-customviews-placeholder="osImage" style="width: 120px; height: 120px; margin: 20px auto; text-align: center; border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: #f8f9fa;"></div>
-
----
-
-## Application Installation Structures
-
-Learn how applications are typically structured on different operating systems:
-
-<div data-customviews-placeholder="fileStructure" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #28a745;"></div>
-
 ---
 
 ## Platform-Specific File Organization

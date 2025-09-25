@@ -2,19 +2,11 @@ import { CustomViewsCore } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
 import { CustomViewsWidget } from "core/widget";
 import { PersistenceManager } from "core/persistence";
-import type { CustomViewAsset, State } from "types/types";
+import type { CustomViewAsset } from "types/types";
 
 export type InitFromJsonOptions = {
   assetsJsonPath: string;
-  // Option 1: Direct configuration
-  config?: {
-    modifiablePlaceholderAssets?: Record<string, string[]>;
-    allowedToggles?: string[];
-  };
-  // Option 2: Single profile path
-  profilePath?: string;
-  
-  defaultStateJsonPath: string;     
+  profilePath: string;
   rootEl?: HTMLElement;
   onViewChange?: any;
 }
@@ -27,24 +19,13 @@ export class CustomViews {
     const assetsJson : Record<string, CustomViewAsset> = await (await fetch(opts.assetsJsonPath)).json();
     const assetsManager = new AssetsManager(assetsJson);
 
-    // Load Default State
-    const defaultState: State = await (await fetch(opts.defaultStateJsonPath)).json();
-
     // Init CustomViews
     const coreOptions: any = {
       assetsManager,
-      defaultState,
+      profilePath: opts.profilePath,
       rootEl: opts.rootEl,
       onViewChange: opts.onViewChange,
     };
-    
-    if (opts.config) {
-      coreOptions.config = opts.config;
-    }
-    
-    if (opts.profilePath) {
-      coreOptions.profilePath = opts.profilePath;
-    }
     
     const core = new CustomViewsCore(coreOptions);
 

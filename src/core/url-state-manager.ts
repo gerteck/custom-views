@@ -6,7 +6,6 @@
 import type { State } from "../types/types";
 
 export interface CustomState {
-  placeholders: Record<string, string>;
   toggles: string[];
 }
 
@@ -81,7 +80,6 @@ export class URLStateManager {
     try {
       // Create a compact representation
       const compact = {
-        p: customState.placeholders, // placeholders
         t: customState.toggles       // toggles
       };
       
@@ -120,7 +118,6 @@ export class URLStateManager {
       }
       
       return {
-        placeholders: compact.p || {},
         toggles: Array.isArray(compact.t) ? compact.t : []
       };
     } catch (error) {
@@ -134,7 +131,6 @@ export class URLStateManager {
    */
   public static customStateToState(customState: CustomState): State {
     return {
-      placeholders: customState.placeholders,
       toggles: customState.toggles
     };
   }
@@ -144,7 +140,6 @@ export class URLStateManager {
    */
   public static stateToCustomState(state: State): CustomState {
     return {
-      placeholders: state.placeholders || {},
       toggles: state.toggles || []
     };
   }

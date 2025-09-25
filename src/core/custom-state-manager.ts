@@ -9,7 +9,6 @@ import { URLStateManager } from "./url-state-manager";
 
 export interface ConfigConstraints {
   allowedToggles: string[];
-  modifiablePlaceholders: Record<string, string[]>;
 }
 
 export class CustomStateManager {
@@ -28,8 +27,7 @@ export class CustomStateManager {
     if (!localConfig) return null;
 
     return {
-      allowedToggles: localConfig.allowedToggles || [],
-      modifiablePlaceholders: localConfig.modifiablePlaceholderAssets || {}
+      allowedToggles: localConfig.allowedToggles || []
     };
   }
 
@@ -86,15 +84,6 @@ export class CustomStateManager {
       }
     }
 
-    // Validate placeholders
-    for (const [placeholder, asset] of Object.entries(customState.placeholders)) {
-      const allowedAssets = constraints.modifiablePlaceholders[placeholder];
-      if (!allowedAssets) {
-        errors.push(`Placeholder '${placeholder}' is not modifiable in this configuration`);
-      } else if (!allowedAssets.includes(asset)) {
-        errors.push(`Asset '${asset}' is not allowed for placeholder '${placeholder}'`);
-      }
-    }
 
     return { valid: errors.length === 0, errors };
   }
@@ -103,11 +92,9 @@ export class CustomStateManager {
    * Create a custom state from form data
    */
   public createCustomStateFromForm(formData: {
-    placeholders: Record<string, string>;
     toggles: string[];
   }): CustomState {
     return {
-      placeholders: { ...formData.placeholders },
       toggles: [...formData.toggles]
     };
   }
@@ -124,13 +111,6 @@ export class CustomStateManager {
   /**
    * Format names for display
    */
-  public formatPlaceholderName(placeholder: string): string {
-    return placeholder.charAt(0).toUpperCase() + placeholder.slice(1);
-  }
-
-  public formatAssetName(asset: string): string {
-    return asset.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-  }
 
   public formatToggleName(toggle: string): string {
     return toggle.charAt(0).toUpperCase() + toggle.slice(1);

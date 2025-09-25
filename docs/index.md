@@ -11,9 +11,9 @@
 
 ## Introduction
 
-Custom Views Library is a lightweight JavaScript library for managing both static and dynamic content views using data attributes. This documentation serves as both a user guide and a live demo of the library's capabilities.
+Custom Views Library is a lightweight JavaScript library for managing dynamic content views using data attributes. This documentation serves as both a user guide and a live demo of the library's capabilities.
 
-It allows you to define static placeholders in your HTML while dynamically populating or toggling content based on configuration and state, providing a flexible way to manage content that can change based on user interactions, preferences, or URL parameters.
+It allows you to dynamically toggle content based on configuration and state, providing a flexible way to manage content that can change based on user interactions, preferences, or URL parameters.
 
 ### Interactive Demo
 
@@ -22,46 +22,37 @@ It allows you to define static placeholders in your HTML while dynamically popul
 ### Try It Out
 
 1. **Use the Widget**: Look for the "Custom Views" widget in the corner
-2. **Switch OS**: Select macOS, Linux, or Windows from the dropdown
-3. **Toggle Platforms**: Use "Customize View" to show/hide different OS sections (no asset swapping!)
-4. **URL Sharing**: Share specific configurations:
-   * `?state=macOS` - Show macOS-specific content
-   * `?state=windows` - Show Windows-specific content
+2. **Toggle Platforms**: Use "Customize View" to show/hide different OS sections
+3. **URL Sharing**: Share specific configurations via URL
 
 ## Live Demo - Cross-Platform Development
-
-### OS Image
-<div data-customviews-placeholder="osImage" style="width:200px; height:150px; border: 2px dashed #ccc; padding: 10px; text-align: center; margin: 10px 0;"></div>
-
-### Git Setup Instructions
-<div data-customviews-placeholder="gitCommands" style="margin: 15px 0;"></div>
 
 ### Platform-Specific Content
 
 <div data-customviews-toggle="mac">
 
 ## 🍎 macOS Development
-<div data-customviews-placeholder="fileStructure"></div>
+Content specific to macOS development environment.
 
 </div>
 
 <div data-customviews-toggle="linux">
 
 ## 🐧 Linux Development  
-<div data-customviews-placeholder="fileStructure"></div>
+Content specific to Linux development environment.
 
 </div>
 
 <div data-customviews-toggle="windows">
 
 ## 🪟 Windows Development
-<div data-customviews-placeholder="fileStructure"></div>
+Content specific to Windows development environment.
 
 </div>
 
 ## Why Use Custom Views?
 
-The concept behind Custom Views is very simple — showing or hiding elements, or swapping content based on state, can be done with just plain JavaScript manipulating the DOM. However, this library provides several benefits that make it more robust, maintainable, and scalable.
+The concept behind Custom Views is very simple — showing or hiding elements based on state can be done with just plain JavaScript manipulating the DOM. However, this library provides several benefits that make it more robust, maintainable, and scalable.
 
 Currently work in progress.
 

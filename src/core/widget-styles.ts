@@ -343,8 +343,7 @@ export const WIDGET_STYLES = `
   color: #555;
 }
 
-.cv-custom-state-input,
-.cv-custom-placeholder-select {
+.cv-custom-state-input {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -353,8 +352,7 @@ export const WIDGET_STYLES = `
   font-size: 14px;
 }
 
-.cv-custom-state-input:focus,
-.cv-custom-placeholder-select:focus {
+.cv-custom-state-input:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
@@ -431,8 +429,7 @@ export const WIDGET_STYLES = `
   color: #a0aec0;
 }
 
-.cv-widget-theme-dark .cv-custom-state-input,
-.cv-widget-theme-dark .cv-custom-placeholder-select {
+.cv-widget-theme-dark .cv-custom-state-input {
   background: #1a202c;
   border-color: #4a5568;
   color: #e2e8f0;

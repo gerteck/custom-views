@@ -7,16 +7,16 @@
 ## Overall Idea
 
 - **Custom View**: A configurable set of content and behaviors defined for a site or page.
-- **Author**: The person who creates the site and defines what is possible—sets up all available views, toggles, and placeholders.
+- **Author**: The person who creates the site and defines what is possible—sets up all available views and toggles.
 - **Configurator**: The person who sets up the configuration—chooses which options are available and sets defaults for the intended audience.
 - **Viewer**: The person viewing the page in the browser—selects their preferred options within the configured space, with the ability to share their chosen state via URL.
 
 In short:
 - The **Author** defines what is possible.
-  - This means defining all placeholders, all toggles in the website content, and all available assets.
+  - This means defining all toggles in the website content.
 
 - The **Configurator** defines what is available and sets defaults.
-  - Defines which predefined states are available, what toggles can be customized, and which assets can be swapped.
+  - Defines which predefined states are available and what toggles can be customized.
 
 - The **Viewer** picks what they want within the configured space, with a shareable state (e.g., via URL).
   - Viewer can select from predefined states or create custom combinations within the allowed constraints.
@@ -27,20 +27,10 @@ This separation allows for flexible site creation, targeted configuration for sp
 
 ## Terminology of CustomViews
 
-## 1. Placeholder
-
-A placeholder is a mutually exclusive content slot — only one variant can exist at a time.
-* Use cases: Used for things like logos, hero text, banners.
-
-E.g.
-```html
-<div data-customviews-placeholder="logo"></div>
-```
-
-## 2. Toggle
+## Toggle
 
 A toggle is a set of coexisting elements — multiple toggles can be active simultaneously.
-* Use case: Optional content like extra explanations, diagrams, dark mode, beginner/advanced sections.
+* Use case: Optional content like extra explanations, diagrams, dark mode, beginner/advanced sections, or platform-specific content.
 
 E.g.
 ```html
@@ -85,18 +75,8 @@ E.g. A sample Configuration JSON / `LocalConfig`
 ```json
 {
   "id": "myConfig",
-  "modifiablePlaceholderAssets": {
-    "logo": ["asset-logo-v1", "asset-logo-v2"],
-    "introText": ["asset-intro-v1", "asset-intro-beta"],
-    "heroImage": ["asset-hero-v1", "asset-hero-beta"]
-  },
   "allowedToggles": ["mac", "linux", "windows"],
   "defaultState": {
-    "placeholders": {
-      "logo": "asset-logo-v1",
-      "introText": "asset-intro-v1",
-      "heroImage": "asset-hero-v1"
-    },
     "toggles": ["mac"]
   }
 }
