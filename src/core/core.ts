@@ -67,27 +67,47 @@ export class CustomViewsCore {
   private async renderFromUrl() {
     this.parseUrlForState();
 
-    // Get persisted state for fallback
+    // Get persisted states for fallback
     const persistedState = this.persistenceManager.getPersistedState();
+    const persistedCustomState = this.persistenceManager.getPersistedCustomState();
     
-    // Determine if URL state param is present
+    // Determine if URL has state params
     const hasUrlState = this.stateIdFromUrl !== null;
+    const hasUrlCustomState = this.customStateFromUrl !== null;
     
-    // Use URL state if available, otherwise use persistence
-    if (!hasUrlState && persistedState) {
+    // Priority: URL state > persisted custom state > persisted regular state > default
+    if (hasUrlState || hasUrlCustomState) {
+      // URL state takes precedence - persist it and use it
+      if (hasUrlCustomState && this.customStateFromUrl) {
+        const customState = URLStateManager.customStateToState(this.customStateFromUrl);
+        this.persistenceManager.persistCustomState(customState);
+        this.persistenceManager.persistState(null); // Clear regular state
+        this.renderState(customState);
+      } else if (hasUrlState) {
+        this.persistenceManager.persistState(this.stateIdFromUrl);
+        this.persistenceManager.clearCustomState(); // Clear custom state
+        if (this.localConfig) {
+          this.renderLocalConfigState(this.localConfig);
+        }
+      }
+    } else if (persistedCustomState) {
+      // Load persisted custom state and update URL
+      this.customStateFromUrl = URLStateManager.stateToCustomState(persistedCustomState);
+      this.stateIdFromUrl = null;
+      this.renderState(persistedCustomState);
+      
+      // Update URL to reflect the persisted custom state
+      URLStateManager.updateURL({
+        customState: this.customStateFromUrl
+      });
+    } else if (persistedState) {
+      // Load persisted regular state
       this.stateIdFromUrl = persistedState;
-    }
-
-    // If URL state is present, persist it (URL takes precedence and should be saved)
-    if (hasUrlState) {
-      this.persistenceManager.persistState(this.stateIdFromUrl);
-    }
-
-    // Handle custom state
-    if (this.customStateFromUrl) {
-      const customState = URLStateManager.customStateToState(this.customStateFromUrl);
-      this.renderState(customState);
+      if (this.localConfig) {
+        this.renderLocalConfigState(this.localConfig);
+      }
     } else if (this.localConfig) {
+      // No persisted state, use default configuration
       this.renderLocalConfigState(this.localConfig);
     } else {
       console.warn("No configuration loaded, cannot render any state");
@@ -169,6 +189,7 @@ export class CustomViewsCore {
     this.stateIdFromUrl = null;
     this.customStateFromUrl = null;
     this.persistenceManager.persistState(null);
+    this.persistenceManager.clearCustomState();
     
     if (this.localConfig) {
       this.renderState(this.localConfig.defaultState);
@@ -195,6 +216,24 @@ export class CustomViewsCore {
       state: this.stateIdFromUrl,
       customState: this.customStateFromUrl
     };
+  }
+
+  /**
+   * Get the currently active toggles regardless of whether they come from custom state or default configuration
+   */
+  public getCurrentActiveToggles(): string[] {
+    // If we have a custom state, return its toggles
+    if (this.customStateFromUrl) {
+      return this.customStateFromUrl.toggles || [];
+    }
+    
+    // Otherwise, if we have local config, return its default state toggles
+    if (this.localConfig) {
+      return this.localConfig.defaultState.toggles || [];
+    }
+    
+    // No configuration or state
+    return [];
   }
 
   /**
@@ -232,6 +271,12 @@ export class CustomViewsCore {
     
     const state = URLStateManager.customStateToState(customState);
     this.renderState(state);
+    
+    // Persist the custom state to localStorage
+    this.persistenceManager.persistCustomState(state);
+    
+    // Clear any persisted regular state since we're using custom state
+    this.persistenceManager.persistState(null);
     
     // Update URL
     URLStateManager.updateURL({

@@ -76,6 +76,14 @@ export class PersistenceManager {
     return null;
   }
 
+  /**
+   * Clear only the persisted custom state
+   */
+  public clearCustomState(): void {
+    if (!this.isStorageAvailable()) return;
+    localStorage.removeItem(PersistenceManager.STORAGE_KEYS.CUSTOM_STATE);
+  }
+
   // === UTILITY METHODS ===
 
 

@@ -116,7 +116,10 @@ export class CustomViewsWidget {
   private setupStateChangeListener(): void {
     this.stateChangeListener = () => {
       // Icon doesn't need updates for simplified version
-      // Modal updates are handled within the custom state creator
+      // But we need to update the modal form if it's open
+      if (this.modal) {
+        this.loadCurrentStateIntoForm();
+      }
     };
     
     this.core.addStateChangeListener(this.stateChangeListener);
@@ -380,17 +383,22 @@ export class CustomViewsWidget {
   }
 
   /**
-   * Load current state into form if we're viewing a custom state
+   * Load current state into form based on currently active toggles
    */
   private loadCurrentStateIntoForm(): void {
     if (!this.modal) return;
 
-    const currentView = this.core.getCurrentView();
-    if (!currentView.customState) return;
+    // Get currently active toggles (from custom state or default configuration)
+    const activeToggles = this.core.getCurrentActiveToggles();
+    
+    // First, uncheck all checkboxes
+    const allCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
+    allCheckboxes.forEach(checkbox => {
+      checkbox.checked = false;
+    });
 
-
-    // Load toggle values
-    currentView.customState.toggles.forEach(toggle => {
+    // Then check the ones that should be active
+    activeToggles.forEach(toggle => {
       const checkbox = this.modal?.querySelector(`[data-toggle="${toggle}"]`) as HTMLInputElement;
       if (checkbox) {
         checkbox.checked = true;
