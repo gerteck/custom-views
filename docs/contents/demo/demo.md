@@ -12,12 +12,6 @@ We will use different OSes to show the different states!
 
 **Use the "Custom Views" widget in the top-right corner** to interact with all examples on this page in real-time!
 
-### Available Profiles
-
-- **Profile A** - Basic user profile with beginner and advanced modes
-- **Profile B** - Advanced user profile with expert features  
-- **Profile OS** - Operating system specific profile with Mac, Linux, and Windows toggles
-
 ### OS-Specific Demos
 
 Explore cross-platform development with our new operating system demos:

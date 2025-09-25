@@ -5,8 +5,6 @@
 <header sticky>
   <navbar type="dark">
     <a slot="brand" href="{{baseUrl}}/index.html" title="Home" class="navbar-brand">Your Logo</a>
-    <li><a href="{{baseUrl}}/contents/concepts.html" class="nav-link">Concepts</a></li>
-    <li><a href="{{baseUrl}}/contents/configuration.html" class="nav-link">Configuration</a></li>
     <li slot="right">
       <form class="navbar-form">
         <searchbar :data="searchData" placeholder="Search" :on-hit="searchCallback" menu-align-right></searchbar>
@@ -23,9 +21,7 @@
     <div class="nav-component slim-scroll">
       <site-nav>
 * [Introduction]({{ baseUrl }}/index.html)
-  * [Architecture]({{baseUrl}}/contents/architecture.html)
-  * [Concepts]({{baseUrl}}/contents/concepts.html)
-* [Configuration]({{baseUrl}}/contents/configuration.html)
+  * [Concepts]({{baseUrl}}/contents/archive/concepts.html)
 * [Demo]({{baseUrl}}/contents/demo/demo.html)
   * [CLI Mastery]({{baseUrl}}/contents/demo/cliMastery.html)
   * [File Structures]({{baseUrl}}/contents/demo/fileStructure.html) 
