@@ -4,6 +4,8 @@ import { renderAssetInto } from "./render";
 import { LocalConfig } from "models/LocalConfig";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager, type CustomState } from "./url-state-manager";
+import { VisibilityManager, type ToggleId } from "./visibility-manager";
+import { injectCoreStyles } from "./styles";
 
 
 export interface CustomViewsOptions {
@@ -17,6 +19,7 @@ export class CustomViewsCore {
   private rootEl: HTMLElement;
   private assetsManager: AssetsManager;
   private persistenceManager: PersistenceManager;
+  private visibilityManager: VisibilityManager;
 
   private profilePath: string;
   private onViewChange: any;
@@ -35,6 +38,8 @@ export class CustomViewsCore {
     this.rootEl = options.rootEl || document.body;
     this.onViewChange = options.onViewChange;
     this.persistenceManager = new PersistenceManager();
+    this.visibilityManager = new VisibilityManager();
+    injectCoreStyles();
   }
 
   /** Initialize: render default or URL-specified state */
@@ -80,9 +85,14 @@ export class CustomViewsCore {
       // URL state takes precedence - persist it and use it
       if (hasUrlCustomState && this.customStateFromUrl) {
         const customState = URLStateManager.customStateToState(this.customStateFromUrl);
-        this.persistenceManager.persistCustomState(customState);
+        const filtered = this.visibilityManager.filterStateForPersistence(customState);
+        this.persistenceManager.persistCustomState(filtered);
         this.persistenceManager.persistState(null); // Clear regular state
-        this.renderState(customState);
+        this.renderState(filtered);
+        // Normalize the URL to exclude hidden toggles
+        URLStateManager.updateURL({
+          customState: URLStateManager.stateToCustomState(filtered)
+        });
       } else if (hasUrlState) {
         this.persistenceManager.persistState(this.stateIdFromUrl);
         this.persistenceManager.clearCustomState(); // Clear custom state
@@ -92,9 +102,10 @@ export class CustomViewsCore {
       }
     } else if (persistedCustomState) {
       // Load persisted custom state and update URL
-      this.customStateFromUrl = URLStateManager.stateToCustomState(persistedCustomState);
+      const filtered = this.visibilityManager.filterStateForPersistence(persistedCustomState);
+      this.customStateFromUrl = URLStateManager.stateToCustomState(filtered);
       this.stateIdFromUrl = null;
-      this.renderState(persistedCustomState);
+      this.renderState(filtered);
       
       // Update URL to reflect the persisted custom state
       URLStateManager.updateURL({
@@ -140,19 +151,17 @@ export class CustomViewsCore {
     if (!state) return;
 
     const toggles = state.toggles || [];
+    const finalToggles = this.visibilityManager.filterVisibleToggles(toggles);
 
     // Toggles hide or show relevant toggles
     this.rootEl.querySelectorAll("[data-customviews-toggle]").forEach(el => {
       const category = (el as HTMLElement).dataset.customviewsToggle;
-      if (!category || !toggles.includes(category)) {
-        el.setAttribute("hidden", "");
-      } else {
-        el.removeAttribute("hidden");
-      }
+      const shouldShow = !!category && finalToggles.includes(category);
+      this.visibilityManager.applyElementVisibility(el as HTMLElement, shouldShow);
     });
 
     // Render toggles
-    for (const category of toggles) {
+    for (const category of finalToggles) {
       this.rootEl.querySelectorAll(`[data-customviews-toggle="${category}"]`).forEach(el => {
         // if it has an id, then we render the asset into it
         // if it has no id, then we assume it's a container and just show it
@@ -270,17 +279,18 @@ export class CustomViewsCore {
     this.stateIdFromUrl = null; // Clear predefined state when applying custom state
     
     const state = URLStateManager.customStateToState(customState);
-    this.renderState(state);
+    const filtered = this.visibilityManager.filterStateForPersistence(state);
+    this.renderState(filtered);
     
     // Persist the custom state to localStorage
-    this.persistenceManager.persistCustomState(state);
+    this.persistenceManager.persistCustomState(filtered);
     
     // Clear any persisted regular state since we're using custom state
     this.persistenceManager.persistState(null);
     
     // Update URL
     URLStateManager.updateURL({
-      customState: customState
+      customState: URLStateManager.stateToCustomState(filtered)
     });
   }
 
@@ -289,6 +299,86 @@ export class CustomViewsCore {
    */
   public getCurrentLocalConfig(): LocalConfig | null {
     return this.localConfig || null;
+  }
+
+  // === VISIBILITY PUBLIC API ===
+
+  /** Explicitly show/hide a toggle category. */
+  public setToggleVisibility(id: ToggleId, visible: boolean): void {
+    const changed = this.visibilityManager.setToggleVisibility(id, visible);
+    if (changed) this.applyVisibilityToDom();
+  }
+
+  /** Predicate-based visibility across all known toggles. */
+  public setVisibility(predicate: (t: ToggleId) => boolean, visible: boolean): void {
+    const all = this.getAllKnownToggles();
+    this.visibilityManager.setVisibilityByPredicate(all, predicate, visible);
+    this.applyVisibilityToDom();
+  }
+
+  /** Hide everything. */
+  public hideAll(): void {
+    const all = this.getAllKnownToggles();
+    this.visibilityManager.hideAll(all);
+    this.applyVisibilityToDom();
+  }
+
+  /** Show everything. */
+  public showAll(): void {
+    const all = this.getAllKnownToggles();
+    this.visibilityManager.showAll(all);
+    this.applyVisibilityToDom();
+  }
+
+  /** Visible toggles considering current state and hidden set. */
+  public getVisibleToggles(): ToggleId[] {
+    const active = this.getCurrentActiveToggles();
+    const present = this.collectDomToggleSet();
+    return this.visibilityManager.getVisibleToggles(active, present);
+  }
+
+  /** Globally hidden toggles (via API). */
+  public getHiddenToggles(): ToggleId[] {
+    return this.visibilityManager.getHiddenToggles();
+  }
+
+  /** Filter a list of toggles for URL/persistence safety. */
+  public filterTogglesForPersistence(toggleIds: ToggleId[]): ToggleId[] {
+    return this.visibilityManager.filterVisibleToggles(toggleIds);
+  }
+
+  /** Subscribe to toggle visibility changes. */
+  public onToggleVisibilityChange(listener: (e: { toggleId: string; visible: boolean }) => void): () => void {
+    this.visibilityManager.addListener(listener);
+    return () => this.visibilityManager.removeListener(listener);
+  }
+
+  /** Apply current visibility to DOM without re-rendering assets. */
+  private applyVisibilityToDom(): void {
+    const active = this.getCurrentActiveToggles();
+    const finalActive = this.visibilityManager.filterVisibleToggles(active);
+    this.rootEl.querySelectorAll('[data-customviews-toggle]').forEach(el => {
+      const category = (el as HTMLElement).dataset.customviewsToggle;
+      const shouldShow = !!category && finalActive.includes(category);
+      this.visibilityManager.applyElementVisibility(el as HTMLElement, shouldShow);
+    });
+  }
+
+  /** Collect all known toggle ids from config or DOM. */
+  private getAllKnownToggles(): ToggleId[] {
+    const fromConfig = this.localConfig?.allowedToggles || [];
+    const present = this.collectDomToggleSet();
+    const merged = new Set<ToggleId>([...fromConfig, ...present]);
+    return Array.from(merged);
+  }
+
+  private collectDomToggleSet(): Set<ToggleId> {
+    const set = new Set<ToggleId>();
+    this.rootEl.querySelectorAll('[data-customviews-toggle]').forEach(el => {
+      const id = (el as HTMLElement).dataset.customviewsToggle;
+      if (id) set.add(id);
+    });
+    return set;
   }
 
   // === STATE CHANGE LISTENER METHODS ===

@@ -123,6 +123,13 @@ export class CustomViewsWidget {
     };
     
     this.core.addStateChangeListener(this.stateChangeListener);
+
+    // Also react to visibility changes to keep form in sync
+    this.core.onToggleVisibilityChange(() => {
+      if (this.modal) {
+        this.loadCurrentStateIntoForm();
+      }
+    });
   }
 
 
@@ -390,18 +397,29 @@ export class CustomViewsWidget {
 
     // Get currently active toggles (from custom state or default configuration)
     const activeToggles = this.core.getCurrentActiveToggles();
+    const hiddenGlobal = new Set(this.core.getHiddenToggles());
     
     // First, uncheck all checkboxes
     const allCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
     allCheckboxes.forEach(checkbox => {
       checkbox.checked = false;
+      const toggle = checkbox.dataset.toggle;
+      const isHidden = toggle ? hiddenGlobal.has(toggle) : false;
+      checkbox.disabled = isHidden;
+      if (isHidden) {
+        checkbox.parentElement?.setAttribute('aria-hidden', 'true');
+      } else {
+        checkbox.parentElement?.removeAttribute('aria-hidden');
+      }
     });
 
     // Then check the ones that should be active
     activeToggles.forEach(toggle => {
       const checkbox = this.modal?.querySelector(`[data-toggle="${toggle}"]`) as HTMLInputElement;
       if (checkbox) {
-        checkbox.checked = true;
+        if (!checkbox.disabled) {
+          checkbox.checked = true;
+        }
       }
     });
   }

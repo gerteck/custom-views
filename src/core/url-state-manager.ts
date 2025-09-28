@@ -70,7 +70,9 @@ export class URLStateManager {
       }
     }
     
-    window.history.replaceState({}, '', url.toString());
+    // Use a relative URL to satisfy stricter environments (e.g., jsdom)
+    const relative = url.pathname + (url.search || '') + (url.hash || '');
+    window.history.replaceState({}, '', relative);
   }
 
   /**
@@ -85,7 +87,14 @@ export class URLStateManager {
       
       // Convert to JSON and encode
       const json = JSON.stringify(compact);
-      const encoded = btoa(json); // Base64 encode
+      let encoded: string;
+      if (typeof btoa === 'function') {
+        encoded = btoa(json);
+      } else {
+        // Node/test fallback
+        // @ts-ignore
+        encoded = Buffer.from(json, 'utf-8').toString('base64');
+      }
       
       // Make URL-safe
       return encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
@@ -109,7 +118,14 @@ export class URLStateManager {
       }
       
       // Decode and parse
-      const json = atob(base64);
+      let json: string;
+      if (typeof atob === 'function') {
+        json = atob(base64);
+      } else {
+        // Node/test fallback
+        // @ts-ignore
+        json = Buffer.from(base64, 'base64').toString('utf-8');
+      }
       const compact = JSON.parse(json);
       
       // Validate structure

@@ -26,10 +26,11 @@ export function getScripts() {
           
           widget.render();
 
-          // Expose for debugging (development only)
+          // Expose for demo snippets and debugging
+          window.cvCore = customviewsCore;
+          window.customViewsCore = customviewsCore;
+          window.customViewsPersistence = customviewsCore.getPersistenceManager();
           if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            window.customViewsCore = customviewsCore;
-            window.customViewsPersistence = customviewsCore.getPersistenceManager();
             console.log('CustomViews Debug: Core and persistence manager available on window object');
             console.log('Try: window.customViewsPersistence.debugLog()');
           }
