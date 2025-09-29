@@ -5,86 +5,89 @@
 
 import type { State } from "../types/types";
 
-export interface CustomState {
-  toggles: string[];
-}
-
-export interface URLState {
-  state?: string | null | undefined;
-  customState?: CustomState | undefined;
-}
 
 export class URLStateManager {
   /**
    * Parse current URL parameters into state object
    */
-  public static parseURL(): URLState {
+  public static parseURL(): State | null {
     const urlParams = new URLSearchParams(window.location.search);
-    
-    const result: URLState = {};
-    
-    // Get predefined state
-    const state = urlParams.get('state');
-    if (state) {
-      result.state = state;
-    }
-    
-    // Get custom state
-    const customStateParam = urlParams.get('custom');
-    if (customStateParam) {
+
+    // Get view state
+    const viewParam = urlParams.get('view');
+    let decoded: State | null = null;
+    if (viewParam) {
       try {
-        const decoded = this.decodeCustomState(customStateParam);
-        if (decoded) {
-          result.customState = decoded;
-        }
+        decoded = this.decodeState(viewParam);
       } catch (error) {
-        console.warn('Failed to decode custom state from URL:', error);
+        console.warn('Failed to decode view state from URL:', error);
       }
     }
-    
-    return result;
+
+    return decoded;
   }
 
   /**
    * Update URL with current state without triggering navigation
    */
-  public static updateURL(urlState: URLState): void {
+  public static updateURL(state: State | null | undefined): void {
     if (typeof window === 'undefined' || !window.history) return;
-    
+
     const url = new URL(window.location.href);
-    
+
     // Clear existing parameters
-    url.searchParams.delete('state');
-    url.searchParams.delete('custom');
-    
-    // Set predefined state (only if no custom state)
-    if (urlState.state && !urlState.customState) {
-      url.searchParams.set('state', urlState.state);
-    }
-    
-    // Set custom state
-    if (urlState.customState) {
-      const encoded = this.encodeCustomState(urlState.customState);
+    url.searchParams.delete('view');
+
+    // Set view state
+    if (state) {
+      const encoded = this.encodeState(state);
       if (encoded) {
-        url.searchParams.set('custom', encoded);
+        url.searchParams.set('view', encoded);
       }
     }
-    
-    // Use a relative URL to satisfy stricter environments (e.g., jsdom)
+
+    // Use a relative URL to satisfy stricter environments (e.g., jsdom tests)
     const relative = url.pathname + (url.search || '') + (url.hash || '');
     window.history.replaceState({}, '', relative);
   }
 
   /**
-   * Encode custom state into URL-safe string
+   * Clear all state parameters from URL
    */
-  public static encodeCustomState(customState: CustomState): string | null {
+  public static clearURL(): void {
+    this.updateURL(null);
+  }
+
+  /**
+   * Generate shareable URL for current state
+   */
+  public static generateShareableURL(state: State | null | undefined): string {
+    const url = new URL(window.location.href);
+
+    // Clear existing parameters
+    url.searchParams.delete('view');
+
+    // Set new parameters
+    if (state) {
+      const encoded = this.encodeState(state);
+      if (encoded) {
+        url.searchParams.set('view', encoded);
+      }
+    }
+
+    return url.toString();
+  }
+
+  /**
+   * Encode state into URL-safe string
+   */
+  private static encodeState(state: State): string | null {
     try {
       // Create a compact representation
       const compact = {
-        t: customState.toggles       // toggles
+        t: state.toggles
       };
-      
+
       // Convert to JSON and encode
       const json = JSON.stringify(compact);
       let encoded: string;
@@ -95,11 +98,12 @@ export class URLStateManager {
         // @ts-ignore
         encoded = Buffer.from(json, 'utf-8').toString('base64');
       }
-      
+
       // Make URL-safe
-      return encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      const urlSafeString = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      return urlSafeString;
     } catch (error) {
-      console.warn('Failed to encode custom state:', error);
+      console.warn('Failed to encode state:', error);
       return null;
     }
   }
@@ -107,16 +111,16 @@ export class URLStateManager {
   /**
    * Decode custom state from URL parameter
    */
-  public static decodeCustomState(encoded: string): CustomState | null {
+  private static decodeState(encoded: string): State | null {
     try {
       // Restore base64 padding and characters
       let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-      
+
       // Add padding if needed
       while (base64.length % 4) {
         base64 += '=';
       }
-      
+
       // Decode and parse
       let json: string;
       if (typeof atob === 'function') {
@@ -127,76 +131,20 @@ export class URLStateManager {
         json = Buffer.from(base64, 'base64').toString('utf-8');
       }
       const compact = JSON.parse(json);
-      
+
       // Validate structure
       if (!compact || typeof compact !== 'object') {
         throw new Error('Invalid compact state structure');
       }
-      
+
       return {
         toggles: Array.isArray(compact.t) ? compact.t : []
       };
     } catch (error) {
-      console.warn('Failed to decode custom state:', error);
+      console.warn('Failed to decode view state:', error);
       return null;
     }
   }
 
-  /**
-   * Convert CustomState to State format
-   */
-  public static customStateToState(customState: CustomState): State {
-    return {
-      toggles: customState.toggles
-    };
-  }
 
-  /**
-   * Convert State to CustomState format
-   */
-  public static stateToCustomState(state: State): CustomState {
-    return {
-      toggles: state.toggles || []
-    };
-  }
-
-  /**
-   * Check if current URL has custom state
-   */
-  public static hasCustomState(): boolean {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.has('custom');
-  }
-
-  /**
-   * Clear all state parameters from URL
-   */
-  public static clearURL(): void {
-    this.updateURL({});
-  }
-
-  /**
-   * Generate shareable URL for current state
-   */
-  public static generateShareableURL(urlState: URLState): string {
-    const url = new URL(window.location.href);
-    
-    // Clear existing parameters
-    url.searchParams.delete('state');
-    url.searchParams.delete('custom');
-    
-    // Set new parameters
-    if (urlState.state && !urlState.customState) {
-      url.searchParams.set('state', urlState.state);
-    }
-    
-    if (urlState.customState) {
-      const encoded = this.encodeCustomState(urlState.customState);
-      if (encoded) {
-        url.searchParams.set('custom', encoded);
-      }
-    }
-    
-    return url.toString();
-  }
 }

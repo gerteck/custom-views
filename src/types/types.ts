@@ -1,24 +1,13 @@
 /**
  * Represents an individual asset that can be rendered in a custom view.
- * Used for toggles.
  */
 export interface CustomViewAsset {
-  /** Unique identifier for this asset. Used in States to reference it. */
+  /** Used by elements to reference the asset. */
   id: string;
-
-  /** Type of asset. Determines which renderer is used. */
   type: 'image' | 'text' | 'html' | string;
-
-  /** URL for an image asset. Required if type is 'image'. */
   src?: string;
-
-  /** Alt text for image assets. Optional, defaults to empty string. */
   alt?: string;
-
-  /** Content for text or HTML assets. Optional. */
   content?: string;
-
-  /** Any additional custom properties that a specific asset might need. */
   [key: string]: any;
 }
 
@@ -27,10 +16,7 @@ export interface CustomViewAsset {
  * States contain the list of toggle categories that should be displayed in this state. 
  */
 export interface State {
-  /**
-   * List of toggle categories that should be displayed in this state.
-   * Example:
-   * ["advancedOptions", "extraInfo"]
-   */
-  toggles: string[];
+  toggles: ToggleId[];
 }
+
+export type ToggleId = string;

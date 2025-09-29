@@ -1,34 +1,51 @@
-import { CustomViewsCore } from "core/core";
+import { CustomViewsCore, type CustomViewsOptions } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
 import { CustomViewsWidget } from "core/widget";
 import { PersistenceManager } from "core/persistence";
 import type { CustomViewAsset } from "types/types";
+import { Config } from "models/Config";
 
 export type InitFromJsonOptions = {
-  assetsJsonPath: string;
-  profilePath: string;
+  assetsJsonPath?: string;
   rootEl?: HTMLElement;
-  onViewChange?: any;
+  
+  configPath?: string;
 }
 
 export class CustomViews {
 
   // Entry Point to use CustomViews
-  static async initFromJson(opts: InitFromJsonOptions): Promise<CustomViewsCore> {
-    // Load assets JSON
-    const assetsJson : Record<string, CustomViewAsset> = await (await fetch(opts.assetsJsonPath)).json();
-    const assetsManager = new AssetsManager(assetsJson);
+  static async initFromJson(opts: InitFromJsonOptions): Promise<CustomViewsCore | null> {
 
-    // Init CustomViews
-    const coreOptions: any = {
+    // Load assets JSON if provided
+    let assetsManager: AssetsManager | undefined;
+    if (opts.assetsJsonPath) {
+      const assetsJson : Record<string, CustomViewAsset> = await (await fetch(opts.assetsJsonPath)).json();
+      assetsManager = new AssetsManager(assetsJson);
+    } else {
+      assetsManager = new AssetsManager({});
+    }
+
+    // Load config JSON if provided, else just log error and don't load the custom views
+    let localConfig: Config;
+    if (!opts.configPath) {
+      console.error("No config path provided, skipping custom views");
+      return null;
+    } 
+
+    try {
+      localConfig = await (await fetch(opts.configPath)).json();
+    } catch (error) {
+      console.error("Error loading config:", error);
+      return null;
+    }
+
+    const coreOptions: CustomViewsOptions = {
       assetsManager,
-      profilePath: opts.profilePath,
+      config: localConfig,
       rootEl: opts.rootEl,
-      onViewChange: opts.onViewChange,
     };
-    
     const core = new CustomViewsCore(coreOptions);
-
     core.init();
     return core;
   }
@@ -38,24 +55,15 @@ export class CustomViews {
 export { CustomViewsCore } from "core/core";
 export type { CustomViewsOptions } from "core/core";
 
-// Export the widget class
 export { CustomViewsWidget } from "core/widget";
 export type { WidgetOptions } from "core/widget";
 
-// Export the persistence manager
 export { PersistenceManager } from "core/persistence";
 
-// Export custom state manager and types
-export { CustomStateManager } from "core/custom-state-manager";
-export type { ConfigConstraints } from "core/custom-state-manager";
-
-// Export URL state manager and types
 export { URLStateManager } from "core/url-state-manager";
-export type { CustomState, URLState } from "core/url-state-manager";
 
-// Export models
 export { AssetsManager } from "models/AssetsManager";
-export { LocalConfig } from "models/LocalConfig";
+export { Config as LocalConfig } from "models/Config";
 
 if (typeof window !== "undefined") {
   // @ts-ignore

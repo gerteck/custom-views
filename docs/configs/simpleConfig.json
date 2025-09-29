@@ -1,6 +1,5 @@
 {
-  "id": "simpleConfig",
-  "allowedToggles": ["mac", "linux", "windows"],
+  "allToggles": ["mac", "linux", "windows"],
   "defaultState": {
     "toggles": ["mac"]
   }

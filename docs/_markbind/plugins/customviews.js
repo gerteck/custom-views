@@ -11,7 +11,7 @@ export function getScripts() {
           // Initialize CustomViews with simplified configuration
           const customviewsCore = await window.CustomViews.initFromJson({
             assetsJsonPath: '/configs/assets.json',
-            profilePath: '/configs/simpleConfig.json',
+            configPath: '/configs/simpleConfig.json',
             rootEl: document.body
           });
 

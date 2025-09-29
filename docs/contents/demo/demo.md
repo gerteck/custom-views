@@ -26,30 +26,4 @@ Understand how different operating systems organize files, install applications,
 
 </box>
 
-## Hide Toggles
-
-Demonstrating the new visibility APIs:
-
-- Hide by id:
-
-```html
-<button onclick="window.cvCore.setToggleVisibility('linux', false)">Hide Linux</button>
-<button onclick="window.cvCore.setToggleVisibility('linux', true)">Show Linux</button>
-```
-
-- Hide by predicate (group):
-
-```html
-<button onclick="window.cvCore.setVisibility(id => id.startsWith('win'), false)">Hide all Windows</button>
-<button onclick="window.cvCore.setVisibility(id => id.startsWith('win'), true)">Show all Windows</button>
-```
-
-- Hide all / Show all:
-
-```html
-<button onclick="window.cvCore.hideAll()">Hide All</button>
-<button onclick="window.cvCore.showAll()">Show All</button>
-```
-
-Note: Hidden toggles are excluded from URL and persistence. The widget disables controls for hidden toggles automatically.
 
