@@ -21,10 +21,16 @@
     "content": "<h1>Welcome to the Expert View</h1><p>This view is for expert users only.</p>"
   },
   "mac": {
-    "src": "/assets/mac.png"
+    "src": "/assets/mac.png",
+    "alt": "macOS screenshot",
+    "className": "os-image",
+    "style": "border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);"
   },
   "linux": {
-    "src": "/assets/linux.jpg"
+    "src": "/assets/linux.jpg",
+    "alt": "Linux screenshot",
+    "className": "os-image",
+    "style": "border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);"
   },
   "windows": {
     "src": "/assets/windows.png"

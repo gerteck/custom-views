@@ -27,6 +27,15 @@ Understand how different operating systems organize files, install applications,
 </box>
 
 
-<div data-customviews-toggle="mac" data-customviews-id="mac"/>
-<div data-customviews-toggle="windows" data-customviews-id="windows"/>
-<div data-customviews-toggle="linux" data-customviews-id="linux"/>
+<div data-customviews-toggle="mac" data-customviews-id="mac" class="styleimage"/>
+<div data-customviews-toggle="windows" data-customviews-id="windows" class="styleimage"/>
+<div data-customviews-toggle="linux" data-customviews-id="linux" class="styleimage"/>
+
+<style>
+.styleimage{
+  max-width: 600px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center; /* center horizontally */
+  align-items: center;     /* center vertically if height > image */
+}
+</style>

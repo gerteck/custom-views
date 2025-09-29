@@ -9,9 +9,19 @@ function renderImage(el: HTMLElement, asset: CustomViewAsset) {
   const img = document.createElement('img');
   img.src = asset.src;
   img.alt = asset.alt || '';
-  img.style.maxWidth = '100%';
-  img.style.height = 'auto';
-  img.style.display = 'block';
+  
+  // Apply custom styling if provided
+  if (asset.className) {
+    img.className = asset.className;
+  }
+  if (asset.style) {
+    img.setAttribute('style', asset.style);
+  }
+  
+  // Default styles (can be overridden by asset.style)
+  img.style.maxWidth = img.style.maxWidth || '100%';
+  img.style.height = img.style.height || 'auto';
+  img.style.display = img.style.display || 'block';
   el.appendChild(img);
 }
 
@@ -19,11 +29,27 @@ function renderText(el: HTMLElement, asset: CustomViewAsset) {
   if (asset.content != null) {
     el.textContent = asset.content;
   }
+  
+  // Apply custom styling if provided
+  if (asset.className) {
+    el.className = asset.className;
+  }
+  if (asset.style) {
+    el.setAttribute('style', asset.style);
+  }
 }
 
 function renderHtml(el: HTMLElement, asset: CustomViewAsset) {
   if (asset.content != null) {
     el.innerHTML = asset.content;
+  }
+  
+  // Apply custom styling if provided
+  if (asset.className) {
+    el.className = asset.className;
+  }
+  if (asset.style) {
+    el.setAttribute('style', asset.style);
   }
 }
 
@@ -38,7 +64,6 @@ function detectAssetType(asset: CustomViewAsset): 'image' | 'text' | 'html' {
     return 'html';
   }
   
-  // Otherwise, plain text
   return 'text';
 }
 
