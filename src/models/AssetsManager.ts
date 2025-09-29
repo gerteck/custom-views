@@ -5,6 +5,14 @@ export class AssetsManager {
 
   constructor(assets: Record<string, CustomViewAsset>) {
     this.assets = assets;
+    if (!this.validate()) {
+      console.warn('Invalid assets:', this.assets);
+    }
+  }
+
+  // Check each asset has content or src
+  validate(): boolean {
+    return Object.values(this.assets).every(a => a.src || a.content);
   }
 
   get(assetId: string): CustomViewAsset | undefined {
@@ -19,8 +27,4 @@ export class AssetsManager {
     this.assets = { ...this.assets, ...additionalAssets };
   }
 
-  validate(): boolean {
-    // optional: check each asset has type, id, etc.
-    return Object.values(this.assets).every(a => a.type);
-  }
 }

@@ -29,6 +29,19 @@ function renderHtml(el: HTMLElement, asset: CustomViewAsset) {
 
 /** --- Unified asset renderer --- */
 
+function detectAssetType(asset: CustomViewAsset): 'image' | 'text' | 'html' {
+  // If src exists, it's an image
+  if (asset.src) return 'image';
+  
+  // If content contains HTML tags, it's HTML
+  if (asset.content && /<[^>]+>/.test(asset.content)) {
+    return 'html';
+  }
+  
+  // Otherwise, plain text
+  return 'text';
+}
+
 export function renderAssetInto(
   el: HTMLElement,
   assetId: string,
@@ -37,7 +50,9 @@ export function renderAssetInto(
   const asset = assetsManager.get(assetId);
   if (!asset) return;
 
-  switch (asset.type) {
+  const type = asset.type || detectAssetType(asset);
+
+  switch (type) {
     case 'image':
       renderImage(el, asset);
       break;
@@ -49,6 +64,6 @@ export function renderAssetInto(
       break;
     default:
       el.innerHTML = asset.content || String(asset);
-      console.warn('[CustomViews] Unknown asset type:', asset.type);
+      console.warn('[CustomViews] Unknown asset type:', type);
   }
 }

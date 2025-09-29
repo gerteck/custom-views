@@ -2,9 +2,8 @@
  * Represents an individual asset that can be rendered in a custom view.
  */
 export interface CustomViewAsset {
-  /** Used by elements to reference the asset. */
-  id: string;
-  type: 'image' | 'text' | 'html' | string;
+  /** Optional type. If not provided, auto-detected from src/content. */
+  type?: 'image' | 'text' | 'html' | string;
   src?: string;
   alt?: string;
   content?: string;

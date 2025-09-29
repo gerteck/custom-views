@@ -27,3 +27,6 @@ Understand how different operating systems organize files, install applications,
 </box>
 
 
+<div data-customviews-toggle="mac" data-customviews-id="mac"/>
+<div data-customviews-toggle="windows" data-customviews-id="windows"/>
+<div data-customviews-toggle="linux" data-customviews-id="linux"/>
