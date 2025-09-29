@@ -1,18 +1,23 @@
-const CORE_STYLES = `
+/* Core toggle visibility transitions */
 [data-customviews-toggle] {
+  /* Use max-height for collapsible vertical animation without JS measurements */
   transition: opacity 150ms ease,
               transform 150ms ease,
               max-height 200ms ease,
               margin 150ms ease;
   will-change: opacity, transform, max-height, margin;
 }
-
+  
+/* When visible, allow content to take space. The large max-height is a safe cap.
+    Override via --cv-max-height if your content can exceed this. */
 .cv-visible {
   opacity: 1 !important;
   transform: translateY(0) !important;
   max-height: var(--cv-max-height, 9999px) !important;
 }
 
+/* Hidden elements collapse space while animating.
+    We avoid the native hidden attribute to keep transitions visible. */
 .cv-hidden {
   opacity: 0 !important;
   transform: translateY(-4px) !important;
@@ -26,18 +31,3 @@ const CORE_STYLES = `
   margin-bottom: 0 !important;
   overflow: hidden !important;
 }
-`;
-
-/**
- * Add styles for hiding and showing toggles animations and transitions to the document head
- */
-export function injectCoreStyles(): void {
-  if (typeof document === 'undefined') return;
-  if (document.querySelector('#cv-core-styles')) return;
-  const style = document.createElement('style');
-  style.id = 'cv-core-styles';
-  style.textContent = CORE_STYLES;
-  document.head.appendChild(style);
-}
-
-
