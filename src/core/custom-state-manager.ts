@@ -103,8 +103,10 @@ export class CustomStateManager {
    * Get a shareable URL for a custom state
    */
   public getShareableURL(customState: CustomState): string {
+    // Filter out hidden toggles via core before generating URL
+    const safeToggles = this.core.filterTogglesForPersistence(customState.toggles);
     return URLStateManager.generateShareableURL({
-      customState: customState
+      customState: { toggles: safeToggles }
     });
   }
 
