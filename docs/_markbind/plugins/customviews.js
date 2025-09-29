@@ -7,20 +7,24 @@ export function getScripts() {
   return [
     '<script type="module" src="../../../dist/custom-views.esm.js"></script>',
     `<script>
+        const config = {
+          "allToggles": ["mac", "linux", "windows"],
+          "defaultState": {
+            "toggles": ["mac", "linux", "windows"]
+          }
+        };
+
         window.addEventListener('DOMContentLoaded', async () => {
-          // Initialize CustomViews with simplified configuration
+
           const customviewsCore = await window.CustomViews.initFromJson({
+            config,
             assetsJsonPath: '/configs/assets.json',
-            configPath: '/configs/simpleConfig.json',
-            rootEl: document.body
           });
 
-          // Create and render the widget
           const widget = new window.CustomViewsWidget({
             core: customviewsCore,
             position: 'middle-left',
-            theme: 'auto',
-            showReset: true,
+            showReset: false,
             title: 'Custom Views'
           });
           

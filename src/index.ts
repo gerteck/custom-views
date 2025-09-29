@@ -1,14 +1,13 @@
 import { CustomViewsCore, type CustomViewsOptions } from "core/core";
 import { AssetsManager } from "models/AssetsManager";
 import { CustomViewsWidget } from "core/widget";
-import { PersistenceManager } from "core/persistence";
 import type { CustomViewAsset } from "types/types";
 import { Config } from "models/Config";
 
 export type InitFromJsonOptions = {
   assetsJsonPath?: string;
   rootEl?: HTMLElement;
-  
+  config?: Config;
   configPath?: string;
 }
 
@@ -28,17 +27,20 @@ export class CustomViews {
 
     // Load config JSON if provided, else just log error and don't load the custom views
     let localConfig: Config;
-    if (!opts.configPath) {
-      console.error("No config path provided, skipping custom views");
-      return null;
+    if (opts.config) {
+      localConfig = opts.config;
+    } else {
+      if (!opts.configPath) {
+        console.error("No config path provided, skipping custom views");
+        return null;
+      }
+      try {
+        localConfig = await (await fetch(opts.configPath)).json();
+      } catch (error) {
+        console.error("Error loading config:", error);
+        return null;
+      }
     } 
-
-    try {
-      localConfig = await (await fetch(opts.configPath)).json();
-    } catch (error) {
-      console.error("Error loading config:", error);
-      return null;
-    }
 
     const coreOptions: CustomViewsOptions = {
       assetsManager,
@@ -70,7 +72,5 @@ if (typeof window !== "undefined") {
   window.CustomViews = CustomViews;
   // @ts-ignore
   window.CustomViewsWidget = CustomViewsWidget;
-  // @ts-ignore
-  window.PersistenceManager = PersistenceManager;
 }
 
