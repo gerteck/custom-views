@@ -147,7 +147,7 @@ export class CustomViewsWidget {
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
           <h3>Customize View</h3>
-          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
+          <button class="cv-widget-modal-close" aria-label="Close modal">X</button>
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
@@ -159,7 +159,7 @@ export class CustomViewsWidget {
             </div>
             
             <div class="cv-custom-state-actions">
-              <button class="cv-custom-state-cancel">Back to Main</button>
+              ${this.options.showReset ? `<button class="cv-custom-state-reset">Reset to Default</button>` : ''}
               <button class="cv-custom-state-copy-url">Copy Shareable URL</button>
             </div>
           </div>
@@ -188,19 +188,20 @@ export class CustomViewsWidget {
       });
     }
 
-    // Cancel button
-    const cancelBtn = this.modal.querySelector('.cv-custom-state-cancel');
-    if (cancelBtn) {
-      cancelBtn.addEventListener('click', () => {
-        this.closeModal();
-      });
-    }
-
     // Copy URL button
     const copyUrlBtn = this.modal.querySelector('.cv-custom-state-copy-url');
     if (copyUrlBtn) {
       copyUrlBtn.addEventListener('click', () => {
         this.copyShareableURL();
+      });
+    }
+
+    // Reset to default button
+    const resetBtn = this.modal.querySelector('.cv-custom-state-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.core.resetToDefault();
+        this.loadCurrentStateIntoForm();
       });
     }
 

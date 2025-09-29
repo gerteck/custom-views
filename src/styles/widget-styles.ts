@@ -401,6 +401,22 @@ export const WIDGET_STYLES = `
   font-weight: 500;
 }
 
+.cv-custom-state-reset {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  background: #dc3545;
+  color: white;
+}
+
+.cv-custom-state-reset:hover {
+  background: #c82333;
+}
+
 .cv-custom-state-cancel {
   background: #6c757d;
   color: white;
