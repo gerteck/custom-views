@@ -13,8 +13,8 @@ export interface WidgetOptions {
   /** Widget position: 'top-right', 'top-left', 'bottom-right', 'bottom-left', 'middle-left', 'middle-right' */
   position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'middle-left' | 'middle-right';
   
-  /** Widget theme: 'light', 'dark', 'auto' */
-  theme?: 'light' | 'dark' | 'auto';
+  /** Widget theme: 'light' or 'dark' */
+  theme?: 'light' | 'dark';
   
   /** Whether to show reset button */
   showReset?: boolean;
@@ -42,7 +42,7 @@ export class CustomViewsWidget {
       core: options.core,
       container: this.container,
       position: options.position || 'bottom-right',
-      theme: options.theme || 'auto',
+      theme: options.theme || 'light',
       showReset: options.showReset ?? true,
       title: options.title || 'Custom Views'
     };
@@ -131,6 +131,7 @@ export class CustomViewsWidget {
 
     this.modal = document.createElement('div');
     this.modal.className = 'cv-widget-modal-overlay';
+    this.applyThemeToModal();
     
     const toggleControls = toggles.length
       ? toggles.map(toggle => `
@@ -229,6 +230,18 @@ export class CustomViewsWidget {
       }
     };
     document.addEventListener('keydown', handleEscape);
+  }
+
+  /**
+   * Apply theme class to the modal overlay based on options
+   */
+  private applyThemeToModal(): void {
+    if (!this.modal) return;
+    if (this.options.theme === 'dark') {
+      this.modal.classList.add('cv-widget-theme-dark');
+    } else {
+      this.modal.classList.remove('cv-widget-theme-dark');
+    }
   }
 
 
