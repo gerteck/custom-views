@@ -21,6 +21,9 @@ export interface WidgetOptions {
   
   /** Widget title */
   title?: string;
+  
+  /** Widget description text */
+  description?: string;
 }
 
 export class CustomViewsWidget {
@@ -41,10 +44,11 @@ export class CustomViewsWidget {
     this.options = {
       core: options.core,
       container: this.container,
-      position: options.position || 'bottom-right',
+      position: options.position || 'middle-left',
       theme: options.theme || 'light',
       showReset: options.showReset ?? true,
-      title: options.title || 'Custom Views'
+      title: options.title || 'Custom Views',
+      description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.'
     };
     
     // No external state manager to initialize
@@ -69,7 +73,7 @@ export class CustomViewsWidget {
   private createWidgetIcon(): HTMLElement {
     const icon = document.createElement('div');
     icon.className = `cv-widget-icon cv-widget-${this.options.position}`;
-    icon.innerHTML = '?';
+    icon.innerHTML = '⚙';
     icon.title = this.options.title;
     icon.setAttribute('aria-label', 'Open Custom Views');
     
@@ -152,7 +156,7 @@ export class CustomViewsWidget {
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
-            <p>Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.</p>
+            <p>${this.options.description}</p>
             
             <h4>Content Sections</h4>
             <div class="cv-custom-toggles">

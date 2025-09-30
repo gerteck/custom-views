@@ -7,14 +7,11 @@
  */
 
 export const WIDGET_STYLES = `
-/* Simple widget icon styles */
+/* Rounded rectangle widget icon styles */
 .cv-widget-icon {
   position: fixed;
-  width: 40px;
-  height: 40px;
   background: #007bff;
   color: white;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,45 +20,104 @@ export const WIDGET_STYLES = `
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 9998;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .cv-widget-icon:hover {
   background: #0056b3;
-  transform: scale(1.1);
 }
 
+/* Top-right: rounded end on left, sticks out leftward on hover */
 .cv-widget-top-right {
   top: 20px;
-  right: 20px;
+  right: 0;
+  width: 70px;
+  height: 36px;
+  border-radius: 18px 0 0 18px;
+  padding-left: 8px;
+  justify-content: flex-start;
 }
 
+.cv-widget-top-right:hover {
+  width: 85px;
+}
+
+/* Top-left: rounded end on right, sticks out rightward on hover */
 .cv-widget-top-left {
   top: 20px;
-  left: 20px;
+  left: 0;
+  width: 70px;
+  height: 36px;
+  border-radius: 0 18px 18px 0;
+  padding-right: 8px;
+  justify-content: flex-end;
 }
 
+.cv-widget-top-left:hover {
+  width: 85px;
+}
+
+/* Bottom-right: rounded end on left, sticks out leftward on hover */
 .cv-widget-bottom-right {
   bottom: 20px;
-  right: 20px;
+  right: 0;
+  width: 70px;
+  height: 36px;
+  border-radius: 18px 0 0 18px;
+  padding-left: 8px;
+  justify-content: flex-start;
 }
 
+.cv-widget-bottom-right:hover {
+  width: 85px;
+}
+
+/* Bottom-left: rounded end on right, sticks out rightward on hover */
 .cv-widget-bottom-left {
   bottom: 20px;
-  left: 20px;
+  left: 0;
+  width: 70px;
+  height: 36px;
+  border-radius: 0 18px 18px 0;
+  padding-right: 8px;
+  justify-content: flex-end;
 }
 
+.cv-widget-bottom-left:hover {
+  width: 85px;
+}
+
+/* Middle-left: rounded end on right, sticks out rightward on hover */
 .cv-widget-middle-left {
   top: 50%;
-  left: 20px;
+  left: 0;
   transform: translateY(-50%);
+  width: 70px;
+  height: 36px;
+  border-radius: 0 18px 18px 0;
+  padding-right: 8px;
+  justify-content: flex-end;
 }
 
+.cv-widget-middle-left:hover {
+  width: 85px;
+}
+
+/* Middle-right: rounded end on left, sticks out leftward on hover */
 .cv-widget-middle-right {
   top: 50%;
-  right: 20px;
+  right: 0;
   transform: translateY(-50%);
+  width: 70px;
+  height: 36px;
+  border-radius: 18px 0 0 18px;
+  padding-left: 8px;
+  justify-content: flex-start;
+}
+
+.cv-widget-middle-right:hover {
+  width: 85px;
 }
 
 /* Modal content styles */
@@ -152,21 +208,32 @@ export const WIDGET_STYLES = `
     top: 10px;
   }
 
+  .cv-widget-bottom-right,
+  .cv-widget-bottom-left {
+    bottom: 10px;
+  }
+
+  /* All widgets stay flush with screen edges */
   .cv-widget-top-right,
   .cv-widget-bottom-right,
   .cv-widget-middle-right {
-    right: 10px;
+    right: 0;
   }
 
   .cv-widget-top-left,
   .cv-widget-bottom-left,
   .cv-widget-middle-left {
-    left: 10px;
+    left: 0;
   }
 
-  .cv-widget-bottom-right,
-  .cv-widget-bottom-left {
-    bottom: 10px;
+  /* Slightly smaller on mobile */
+  .cv-widget-icon {
+    width: 60px;
+    height: 32px;
+  }
+
+  .cv-widget-icon:hover {
+    width: 75px;
   }
 }
 
