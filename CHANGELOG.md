@@ -1,26 +1,33 @@
 # Changelog
 
-Changelog for custom-views package that will bring greater customizability to authors of websites!
+## [0.2.0] - 2025-09-30
 
-## Next Ver 
+### Widget Redesign
+* Rounded rectangle widget with gear icon (⚙) at the circular end
+* Widget stays connected to screen edge on hover, extends inward
+* Consistent sizing across all 6 positions (36px height, expands from 36px to 55px width)
+* White background with black text for better visibility
 
-* Added state change listener mechanism to core for better component synchronization
-* Widget now automatically updates when core state changes from any source (URL, persistence, API calls)
-* Cleaner event handling in widget with automatic updates via listeners instead of manual calls
-* URL parameters now take precedence over persistence and automatically update saved state
-* Better separation between URL-driven state and persisted state management
+### Welcome Modal
+* **First-visit Modal**: Optional welcome screen for new users
+* localStorage caching - shows only once per browser
+* Configurable via `showWelcome`, `welcomeTitle`, `welcomeMessage` options
+* Visual preview of widget icon in modal
+* Theme support (light/dark)
+
+### Other Improvements
+* Added state change listener mechanism to core
+* Widget auto-updates when core state changes from any source
+* URL parameters take precedence over persistence
+* Better event handling with automatic updates
 
 ---
 
-## Previous - 2025-09-03
+## 2025-09-03
 
-* Test usage on markbind site
 
----
-
-To-do: Implement:
 * Persistence across pages
-* We can make this extendible to include multiple JSONs of assets as needed.
+* Extendible to include multiple JSONs of assets as needed.
 
 Ideas:
   * Aggregate the assets into a singular assets json file that will point to all 
