@@ -47,7 +47,7 @@
 <script>
   MarkBind.setupWithSearch()
 </script>
-    <script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"></script>
+    <script src="https://unpkg.com/@customviews-js/customviews@1.0.2/dist/custom-views.umd.min.js"></script>
     <script>
         const config = {
           "allToggles": ["mac", "linux", "windows"],
@@ -61,6 +61,7 @@
           const customviewsCore = await window.CustomViews.initFromJson({
             config,
             assetsJsonPath: '/configs/assets.json',
+            baseURL: '/customviews',
           });
 
           const widget = new window.CustomViewsWidget({

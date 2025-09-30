@@ -5,7 +5,7 @@
 export function getScripts() {
   // Return an array of <script> tags as strings
   return [
-    '<script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"/>',
+    '<script src="https://unpkg.com/@customviews-js/customviews@1.0.2/dist/custom-views.umd.min.js"/>',
     `<script>
         const config = {
           "allToggles": ["mac", "linux", "windows"],
@@ -19,6 +19,7 @@ export function getScripts() {
           const customviewsCore = await window.CustomViews.initFromJson({
             config,
             assetsJsonPath: '/configs/assets.json',
+            baseURL: '/customviews',
           });
 
           const widget = new window.CustomViewsWidget({

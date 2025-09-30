@@ -35,7 +35,7 @@ sites to custom tailor the content for the viewers.</p> <p>The simplified URL fo
 <script>
   MarkBind.setupWithSearch()
 </script>
-    <script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"></script>
+    <script src="https://unpkg.com/@customviews-js/customviews@1.0.2/dist/custom-views.umd.min.js"></script>
     <script>
         const config = {
           "allToggles": ["mac", "linux", "windows"],
@@ -49,6 +49,7 @@ sites to custom tailor the content for the viewers.</p> <p>The simplified URL fo
           const customviewsCore = await window.CustomViews.initFromJson({
             config,
             assetsJsonPath: '/configs/assets.json',
+            baseURL: '/customviews',
           });
 
           const widget = new window.CustomViewsWidget({
