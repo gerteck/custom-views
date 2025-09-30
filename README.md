@@ -1,6 +1,6 @@
 # Custom Views
 
-v0.2.0
+v1.0.0
 
 A JavaScript library for creating contextual, adaptive web content. Perfect for educational websites, documentation, and multi-audience platforms.
 
@@ -27,6 +27,14 @@ npm install customviews
 <!-- Dynamic content with ID -->
 <div data-customviews-toggle="beginner" data-customviews-id="intro-guide"></div>
 ```
+
+### Adding script to site
+
+```html
+<script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"/>
+```
+Additionally, you can bundle or copy the script into your own site.
+
 
 ### JavaScript Initialization
 
