@@ -7,7 +7,7 @@ A JavaScript library for creating contextual, adaptive web content. Perfect for 
 ## Installation
 
 ```bash
-npm install custom-views
+npm install customviews
 ```
 
 ## Quick Start
@@ -56,14 +56,6 @@ widget.render();
 - **Welcome Modal**: Optional first-visit modal (localStorage cached)
 - **Theme Support**: Light and dark themes
 - **URL Sharing**: Generate shareable URLs with custom states
-
-## Testing
-
-```bash
-npm run live-server
-```
-
-Navigate to `docs/_site/index.html` for live demo
 
 ## Widget Options
 
