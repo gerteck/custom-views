@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.2.0] - 2025-09-30
+## [1.0.0] - 2025-09-30
 
 ### Widget Redesign
 * Rounded rectangle widget with gear icon (⚙) at the circular end
@@ -20,6 +20,12 @@
 * Widget auto-updates when core state changes from any source
 * URL parameters take precedence over persistence
 * Better event handling with automatic updates
+
+### BaseURL Support
+* Added `baseURL` parameter to `initFromJson()` options
+* Automatically prepends baseURL to `configPath`, `assetsJsonPath`, and all asset `src` paths
+* Supports subdirectory deployments (e.g., GitHub Pages with `/project-name`)
+* Smart handling: skips prepending for absolute URLs (http://, https://)
 
 ---
 

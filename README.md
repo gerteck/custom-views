@@ -1,14 +1,10 @@
 # Custom Views
 
-v1.0.0
+v1.0.3
+
+[npm package link](https://www.npmjs.com/package/@customviews-js/customviews)
 
 A JavaScript library for creating contextual, adaptive web content. Perfect for educational websites, documentation, and multi-audience platforms.
-
-## Installation
-
-```bash
-npm install customviews
-```
 
 ## Quick Start
 
@@ -31,7 +27,7 @@ npm install customviews
 ### Adding script to site
 
 ```html
-<script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"/>
+<script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.umd.min.js"/>
 ```
 Additionally, you can bundle or copy the script into your own site.
 
@@ -45,7 +41,8 @@ const core = await window.CustomViews.initFromJson({
     allToggles: ['beginner', 'advanced'],
     defaultState: { toggles: ['beginner'] }
   },
-  assetsJsonPath: '/assets.json'
+  assetsJsonPath: '/assets.json',
+  baseURL: '/customviews',
 });
 
 // Add widget
@@ -64,6 +61,23 @@ widget.render();
 - **Welcome Modal**: Optional first-visit modal (localStorage cached)
 - **Theme Support**: Light and dark themes
 - **URL Sharing**: Generate shareable URLs with custom states
+
+## Core Initialization Options
+
+```typescript
+{
+  config?: Config;                 // Config object with allToggles and defaultState
+  configPath?: string;             // Path to JSON config file
+  assetsJsonPath?: string;         // Path to JSON assets file
+  baseURL?: string;                // Base URL prepended to all paths (e.g., '/customviews')
+  rootEl?: HTMLElement;            // Root element to apply custom views (default: document.body)
+}
+```
+
+**Notes**: 
+- Either `config` (literal config object) or `configPath` must be provided.
+- `baseURL` is automatically prepended to `configPath`, `assetsJsonPath`, and all asset `src` paths.
+- Absolute URLs (starting with `http://` or `https://`) are not modified.
 
 ## Widget Options
 
