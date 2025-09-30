@@ -3,11 +3,9 @@
  * Injects the CustomViews script into every page and initializes the library.
  */
 export function getScripts() {
-  // Return an array of <script> tags as strings
-  //     '<script src="https://unpkg.com/@customviews-js/customviews@1.0.2/dist/custom-views.umd.min.js"/>',
 
   return [
-    '<script src="./custom-views.umd.min.js"/>',
+    '<script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.umd.min.js"/>',
     `<script>
         const config = {
           "allToggles": ["mac", "linux", "windows"],

@@ -14,12 +14,8 @@
         "quick-start": "Quick Start",
         "for-development": "For Development",
         "for-production-build": "For Production Build",
-        "documentation-structure": "Documentation Structure",
-        "features": "Features",
         "interactive-demo": "Interactive Demo",
-        "configuration-files": "Configuration Files",
-        "development-notes": "Development Notes",
-        "deploying-updates": "Deploying Updates"
+        "development-notes": "Development Notes"
       },
       "headingKeywords": {}
     },
