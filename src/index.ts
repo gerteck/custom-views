@@ -9,20 +9,39 @@ export type InitFromJsonOptions = {
   rootEl?: HTMLElement;
   config?: Config;
   configPath?: string;
+  baseURL?: string;
 }
 
 export class CustomViews {
+
+  // Helper function to prepend baseURL to a path
+  private static prependBaseURL(path: string, baseURL: string): string {
+    if (!baseURL) return path;
+    
+    // Don't prepend if the path is already absolute (starts with http:// or https://)
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    // Ensure baseURL doesn't end with / and path starts with /
+    const cleanBaseURL = baseURL.endsWith('/') ? baseURL.slice(0, -1) : baseURL;
+    const cleanPath = path.startsWith('/') ? path : '/' + path;
+    
+    return cleanBaseURL + cleanPath;
+  }
 
   // Entry Point to use CustomViews
   static async initFromJson(opts: InitFromJsonOptions): Promise<CustomViewsCore | null> {
 
     // Load assets JSON if provided
     let assetsManager: AssetsManager | undefined;
+    const baseURL = opts.baseURL || '';
     if (opts.assetsJsonPath) {
-      const assetsJson : Record<string, CustomViewAsset> = await (await fetch(opts.assetsJsonPath)).json();
-      assetsManager = new AssetsManager(assetsJson);
+      const assetsPath = this.prependBaseURL(opts.assetsJsonPath, baseURL);
+      const assetsJson : Record<string, CustomViewAsset> = await (await fetch(assetsPath)).json();
+      assetsManager = new AssetsManager(assetsJson, baseURL);
     } else {
-      assetsManager = new AssetsManager({});
+      assetsManager = new AssetsManager({}, baseURL);
     }
 
     // Load config JSON if provided, else just log error and don't load the custom views
@@ -35,7 +54,8 @@ export class CustomViews {
         return null;
       }
       try {
-        localConfig = await (await fetch(opts.configPath)).json();
+        const configPath = this.prependBaseURL(opts.configPath, baseURL);
+        localConfig = await (await fetch(configPath)).json();
       } catch (error) {
         console.error("Error loading config:", error);
         return null;
