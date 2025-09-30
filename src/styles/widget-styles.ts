@@ -505,6 +505,87 @@ export const WIDGET_STYLES = `
 .cv-widget-theme-dark .cv-custom-state-actions {
   border-color: #4a5568;
 }
+
+/* Welcome modal styles */
+.cv-welcome-modal {
+  max-width: 500px;
+}
+
+.cv-welcome-content {
+  text-align: center;
+}
+
+.cv-welcome-content p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 24px;
+}
+
+.cv-welcome-widget-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.cv-welcome-widget-icon {
+  width: 36px;
+  height: 36px;
+  background: white;
+  color: black;
+  border-radius: 0 18px 18px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cv-welcome-widget-label {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
+}
+
+.cv-welcome-got-it {
+  width: 100%;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.cv-welcome-got-it:hover {
+  background: #0056b3;
+}
+
+.cv-welcome-got-it:active {
+  background: #004494;
+}
+
+/* Dark theme welcome modal styles */
+.cv-widget-theme-dark .cv-welcome-content p {
+  color: #cbd5e0;
+}
+
+.cv-widget-theme-dark .cv-welcome-widget-preview {
+  background: #1a202c;
+}
+
+.cv-widget-theme-dark .cv-welcome-widget-label {
+  color: #a0aec0;
+}
 `;
 
 /**

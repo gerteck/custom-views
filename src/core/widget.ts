@@ -24,6 +24,15 @@ export interface WidgetOptions {
   
   /** Widget description text */
   description?: string;
+  
+  /** Whether to show welcome modal on first visit */
+  showWelcome?: boolean;
+  
+  /** Welcome modal title (only used if showWelcome is true) */
+  welcomeTitle?: string;
+  
+  /** Welcome modal message (only used if showWelcome is true) */
+  welcomeMessage?: string;
 }
 
 export class CustomViewsWidget {
@@ -48,7 +57,10 @@ export class CustomViewsWidget {
       theme: options.theme || 'light',
       showReset: options.showReset ?? true,
       title: options.title || 'Custom Views',
-      description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.'
+      description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.',
+      showWelcome: options.showWelcome ?? false,
+      welcomeTitle: options.welcomeTitle || 'Welcome to Custom Views!',
+      welcomeMessage: options.welcomeMessage || 'This website uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.'
     };
     
     // No external state manager to initialize
@@ -63,6 +75,11 @@ export class CustomViewsWidget {
     
     // Always append to body since it's a floating icon
     document.body.appendChild(this.widgetIcon);
+    
+    // Show welcome modal on first visit if enabled
+    if (this.options.showWelcome) {
+      this.showWelcomeModalIfFirstVisit();
+    }
     
     return this.widgetIcon;
   }
@@ -316,6 +333,101 @@ export class CustomViewsWidget {
    */
   private formatToggleName(toggle: string): string {
     return toggle.charAt(0).toUpperCase() + toggle.slice(1);
+  }
+
+  /**
+   * Check if this is the first visit and show welcome modal
+   */
+  private showWelcomeModalIfFirstVisit(): void {
+    const STORAGE_KEY = 'cv-welcome-shown';
+    
+    // Check if welcome has been shown before
+    const hasSeenWelcome = localStorage.getItem(STORAGE_KEY);
+    
+    if (!hasSeenWelcome) {
+      // Show welcome modal after a short delay to let the page settle
+      setTimeout(() => {
+        this.createWelcomeModal();
+      }, 500);
+      
+      // Mark as shown
+      localStorage.setItem(STORAGE_KEY, 'true');
+    }
+  }
+
+  /**
+   * Create and show the welcome modal
+   */
+  private createWelcomeModal(): void {
+    // Don't show if there's already a modal open
+    if (this.modal) return;
+
+    this.modal = document.createElement('div');
+    this.modal.className = 'cv-widget-modal-overlay cv-welcome-modal-overlay';
+    this.applyThemeToModal();
+    
+    this.modal.innerHTML = `
+      <div class="cv-widget-modal cv-welcome-modal">
+        <div class="cv-widget-modal-header">
+          <h3>${this.options.welcomeTitle}</h3>
+          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
+        </div>
+        <div class="cv-widget-modal-content">
+          <div class="cv-welcome-content">
+            <p>${this.options.welcomeMessage}</p>
+            
+            <div class="cv-welcome-widget-preview">
+              <div class="cv-welcome-widget-icon">⚙</div>
+              <p class="cv-welcome-widget-label">Look for this widget on the side of the screen</p>
+            </div>
+            
+            <button class="cv-welcome-got-it">Got it!</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(this.modal);
+    this.attachWelcomeModalEventListeners();
+  }
+
+  /**
+   * Attach event listeners for welcome modal
+   */
+  private attachWelcomeModalEventListeners(): void {
+    if (!this.modal) return;
+
+    // Close button
+    const closeBtn = this.modal.querySelector('.cv-widget-modal-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+
+    // Got it button
+    const gotItBtn = this.modal.querySelector('.cv-welcome-got-it');
+    if (gotItBtn) {
+      gotItBtn.addEventListener('click', () => {
+        this.closeModal();
+      });
+    }
+
+    // Overlay click to close
+    this.modal.addEventListener('click', (e) => {
+      if (e.target === this.modal) {
+        this.closeModal();
+      }
+    });
+
+    // Escape key to close
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        this.closeModal();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
   }
 
 
