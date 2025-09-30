@@ -10,8 +10,8 @@ export const WIDGET_STYLES = `
 /* Rounded rectangle widget icon styles */
 .cv-widget-icon {
   position: fixed;
-  background: #007bff;
-  color: white;
+  background: white;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,67 +25,44 @@ export const WIDGET_STYLES = `
 }
 
 .cv-widget-icon:hover {
-  background: #0056b3;
+  background: white;
+  color: black;
 }
 
 /* Top-right: rounded end on left, sticks out leftward on hover */
 .cv-widget-top-right {
   top: 20px;
   right: 0;
-  width: 70px;
-  height: 36px;
   border-radius: 18px 0 0 18px;
   padding-left: 8px;
   justify-content: flex-start;
-}
-
-.cv-widget-top-right:hover {
-  width: 85px;
 }
 
 /* Top-left: rounded end on right, sticks out rightward on hover */
 .cv-widget-top-left {
   top: 20px;
   left: 0;
-  width: 70px;
-  height: 36px;
   border-radius: 0 18px 18px 0;
   padding-right: 8px;
   justify-content: flex-end;
-}
-
-.cv-widget-top-left:hover {
-  width: 85px;
 }
 
 /* Bottom-right: rounded end on left, sticks out leftward on hover */
 .cv-widget-bottom-right {
   bottom: 20px;
   right: 0;
-  width: 70px;
-  height: 36px;
   border-radius: 18px 0 0 18px;
   padding-left: 8px;
   justify-content: flex-start;
-}
-
-.cv-widget-bottom-right:hover {
-  width: 85px;
 }
 
 /* Bottom-left: rounded end on right, sticks out rightward on hover */
 .cv-widget-bottom-left {
   bottom: 20px;
   left: 0;
-  width: 70px;
-  height: 36px;
   border-radius: 0 18px 18px 0;
   padding-right: 8px;
   justify-content: flex-end;
-}
-
-.cv-widget-bottom-left:hover {
-  width: 85px;
 }
 
 /* Middle-left: rounded end on right, sticks out rightward on hover */
@@ -93,15 +70,9 @@ export const WIDGET_STYLES = `
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  width: 70px;
-  height: 36px;
   border-radius: 0 18px 18px 0;
   padding-right: 8px;
   justify-content: flex-end;
-}
-
-.cv-widget-middle-left:hover {
-  width: 85px;
 }
 
 /* Middle-right: rounded end on left, sticks out leftward on hover */
@@ -109,15 +80,28 @@ export const WIDGET_STYLES = `
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  width: 70px;
-  height: 36px;
   border-radius: 18px 0 0 18px;
   padding-left: 8px;
   justify-content: flex-start;
 }
 
-.cv-widget-middle-right:hover {
-  width: 85px;
+.cv-widget-top-right,
+.cv-widget-middle-right,
+.cv-widget-bottom-right,
+.cv-widget-top-left,
+.cv-widget-middle-left,
+.cv-widget-bottom-left {
+  height: 36px;
+  width: 36px;
+}
+
+.cv-widget-middle-right:hover,
+.cv-widget-top-right:hover,
+.cv-widget-bottom-right:hover,
+.cv-widget-top-left:hover,
+.cv-widget-middle-left:hover,
+.cv-widget-bottom-left:hover {
+  width: 55px;
 }
 
 /* Modal content styles */

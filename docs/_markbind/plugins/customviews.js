@@ -25,7 +25,8 @@ export function getScripts() {
             core: customviewsCore,
             position: 'middle-left',
             showReset: false,
-            title: 'Custom Views'
+            title: 'Customize your view here',
+            description: 'This is a widget that allows you to customize your view here'
           });
           
           widget.render();
