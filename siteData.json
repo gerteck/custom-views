@@ -1,0 +1,107 @@
+{
+  "enableSearch": true,
+  "pages": [
+    {
+      "src": "404.md",
+      "title": "Page not found",
+      "headings": {},
+      "headingKeywords": {}
+    },
+    {
+      "src": "README.md",
+      "headings": {
+        "custom-views-library-documentation": "Custom Views Library Documentation",
+        "quick-start": "Quick Start",
+        "for-development": "For Development",
+        "for-production-build": "For Production Build",
+        "documentation-structure": "Documentation Structure",
+        "features": "Features",
+        "interactive-demo": "Interactive Demo",
+        "configuration-files": "Configuration Files",
+        "development-notes": "Development Notes",
+        "deploying-updates": "Deploying Updates"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/archive/concepts.md",
+      "title": "Development Concepts",
+      "headings": {
+        "overall-idea": "Overall Idea",
+        "terminology-of-customviews": "Terminology of CustomViews",
+        "toggle": "Toggle",
+        "3-state": "3. State",
+        "4-view-a-predefined-state": "4. View: (A predefined State)",
+        "5-configuration-local-config": "5. Configuration / Local Config",
+        "url-formatting": "URL Formatting"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/demo/cliMastery.md",
+      "title": "Git CLI Mastery Across Operating Systems",
+      "headings": {
+        "git-cli-mastery-across-operating-systems": "Git CLI Mastery Across Operating Systems ",
+        "1-repository-initialization": "1. Repository Initialization",
+        "platform-specific-notes": "Platform-Specific Notes",
+        "2-basic-git-workflow": "2. Basic Git Workflow",
+        "essential-commands-for-daily-use": "Essential Commands for Daily Use",
+        "3-advanced-git-commands": "3. Advanced Git Commands",
+        "interactive-rebase": "Interactive Rebase",
+        "stashing-changes": "Stashing Changes",
+        "4-git-configuration-best-practices": "4. Git Configuration Best Practices",
+        "global-configuration": "Global Configuration",
+        "5-troubleshooting-common-issues": "5. Troubleshooting Common Issues",
+        "6-platform-specific-git-tools": "6. Platform-Specific Git Tools",
+        "macos-git-tools": " macOS Git Tools",
+        "linux-git-tools": " Linux Git Tools",
+        "windows-git-tools": " Windows Git Tools",
+        "quick-reference-card": "🎯 Quick Reference Card",
+        "most-used-git-commands": "Most Used Git Commands"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/demo/demo.md",
+      "title": "Interactive Demo & Examples",
+      "headings": {
+        "interactive-demo-and-amp-examples": "Interactive Demo &amp; Examples",
+        "demo-controls": "Demo Controls",
+        "os-specific-demos": "OS-Specific Demos"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/demo/fileStructure.md",
+      "title": "File System Structures Across Operating Systems",
+      "headings": {
+        "file-system-structures-across-operating-systems": "File System Structures Across Operating Systems ",
+        "platform-specific-file-organization": "Platform-Specific File Organization",
+        "macos-file-system": " macOS File System",
+        "linux-file-system": " Linux File System",
+        "windows-file-system": " Windows File System",
+        "configuration-file-locations": "Configuration File Locations",
+        "quick-file-operations-reference": "Quick File Operations Reference",
+        "essential-commands-by-platform": "Essential Commands by Platform"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "index.md",
+      "title": "Custom Views Library - Interactive Documentation & Demo",
+      "headings": {
+        "introduction": "Introduction",
+        "interactive-demo": "Interactive Demo",
+        "try-it-out": "Try It Out",
+        "live-demo-cross-platform-development": "Live Demo - Cross-Platform Development",
+        "platform-specific-content": "Platform-Specific Content",
+        "macos-development": "🍎 macOS Development",
+        "linux-development": "🐧 Linux Development",
+        "windows-development": "🪟 Windows Development",
+        "why-use-custom-views": "Why Use Custom Views?",
+        "references": "References"
+      },
+      "headingKeywords": {}
+    }
+  ]
+}

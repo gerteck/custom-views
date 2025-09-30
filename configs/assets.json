@@ -1,0 +1,56 @@
+{
+  "asset1": {
+    "src": "/assets/logo-1.png"
+  },
+  "asset2": {
+    "src": "/assets/logo-2.png"
+  },
+  "asset3": {
+    "src": "/assets/logo-3.png"
+  },
+  "toggleAsset": {
+    "src": "/assets/toggle-image.png"
+  },
+  "intro": {
+    "content": "<h1>Welcome to Custom Views</h1><p>This is a simple demo of the Custom Views library.</p>"
+  },
+  "advancedIntro": {
+    "content": "<h1>Welcome to the Advanced View</h1><p>This view contains more advanced features.</p>"
+  },
+  "expertIntro": {
+    "content": "<h1>Welcome to the Expert View</h1><p>This view is for expert users only.</p>"
+  },
+  "mac": {
+    "src": "/assets/mac.png",
+    "alt": "macOS screenshot",
+    "className": "os-image",
+    "style": "border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);"
+  },
+  "linux": {
+    "src": "/assets/linux.jpg",
+    "alt": "Linux screenshot",
+    "className": "os-image",
+    "style": "border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);"
+  },
+  "windows": {
+    "src": "/assets/windows.png"
+  },
+  "gitInitMac": {
+    "content": "<div class='command-block'><pre><code class='language-bash'># Initialize a new Git repository on macOS\n$ git init my-project\n$ cd my-project\n$ git config user.name \"Your Name\"\n$ git config user.email \"your.email@example.com\"</code></pre></div>"
+  },
+  "gitInitLinux": {
+    "content": "<div class='command-block'><pre><code class='language-bash'># Initialize a new Git repository on Linux\n$ git init my-project\n$ cd my-project\n$ git config --global user.name \"Your Name\"\n$ git config --global user.email \"your.email@example.com\"</code></pre></div>"
+  },
+  "gitInitWindows": {
+    "content": "<div class='command-block'><pre><code class='language-powershell'># Initialize a new Git repository on Windows\nPS> git init my-project\nPS> cd my-project\nPS> git config user.name \"Your Name\"\nPS> git config user.email \"your.email@example.com\"</code></pre></div>"
+  },
+  "fileStructureMac": {
+    "content": "<div class='structure-block'><h4>🍎 macOS Application Structure</h4><pre>/Applications/MyApp.app/\n├── Contents/\n│   ├── Info.plist\n│   ├── MacOS/\n│   │   └── MyApp\n│   └── Resources/\n│       ├── icon.icns\n│       └── data/\n└── ~/Library/Application Support/MyApp/</pre></div>"
+  },
+  "fileStructureLinux": {
+    "content": "<div class='structure-block'><h4>🐧 Linux Application Structure</h4><pre>/usr/bin/myapp\n/etc/myapp/\n├── config.conf\n└── settings/\n/var/lib/myapp/\n├── data/\n└── logs/\n~/.config/myapp/\n└── user-settings.conf</pre></div>"
+  },
+  "fileStructureWindows": {
+    "content": "<div class='structure-block'><h4>🪟 Windows Application Structure</h4><pre>C:\\Program Files\\MyApp\\\n├── MyApp.exe\n├── config.ini\n├── lib\\\n│   └── dependencies.dll\nC:\\Users\\%USERNAME%\\AppData\\Roaming\\MyApp\\\n├── settings.json\n└── data\\</pre></div>"
+  }
+}
