@@ -5,7 +5,7 @@
 export function getScripts() {
   // Return an array of <script> tags as strings
   return [
-    '<script type="module" src="../../../dist/custom-views.esm.js"></script>',
+    '<script src="https://unpkg.com/@customviews-js/customviews@1.0.0/dist/custom-views.umd.min.js"/>',
     `<script>
         const config = {
           "allToggles": ["mac", "linux", "windows"],
