@@ -95,6 +95,48 @@ widget.render();
 }
 ```
 
+## Assets JSON Setup
+
+The `assets.json` file defines reusable content that can be dynamically injected into your pages. Each asset is referenced by a unique key and can contain images, HTML, or text.
+* Note that `baseURL` defined during initialization is automatically prepended to all asset `src` paths.
+
+### Structure
+
+```json
+{
+  "htmlContent": {
+    "content": "<h2>Dynamic HTML</h2><p>This content is injected dynamically.</p>"
+  },
+  "textContent": {
+    "content": "Plain text content"
+  },
+  "imageContent": {
+    "src": "/assets/mac.png"
+  },
+  "assetKey": {
+    "src": "/path/to/image.png",
+    "alt": "Description",
+    "className": "custom-class",
+    "style": "border-radius: 8px;"
+  },
+}
+```
+
+### Asset Properties
+
+- **`src`**: Image URL (makes it an image asset), **`content`**: Text or HTML content (auto-detected)
+- **`alt`**: Alt text for images, **`className`**: CSS classes to apply, **`style`**: Inline CSS styles
+
+### Usage in HTML
+
+```html
+<!-- Reference asset by key using data-customviews-id -->
+<div data-customviews-toggle="beginner" data-customviews-id="assetKey"></div>
+```
+
+When the toggle is active, the asset will be automatically rendered into the element.
+
+
 ## License
 
 MIT
