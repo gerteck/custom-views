@@ -1,6 +1,6 @@
 {
-  "name": "customviews",
-  "version": "0.2.0",
+  "name": "@customviews-js/customviews",
+  "version": "1.0.0",
   "description": "A JavaScript dynamic custom views Library.",
   "type": "module",
   "types": "dist/index.d.ts",
