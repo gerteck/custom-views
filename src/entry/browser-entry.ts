@@ -99,7 +99,7 @@ export default function initializeFromScript(): void {
       const effectiveBaseURL = baseURL || configFile.baseURL || '';
 
       // Initialize CustomViews core
-      const core = await CustomViews.initFromJson({
+      const core = await CustomViews.init({
         config: configFile.config,
         assetsJsonPath: configFile.assetsJsonPath,
         baseURL: effectiveBaseURL,
