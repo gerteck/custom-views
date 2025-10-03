@@ -52,7 +52,7 @@ export class VisibilityManager {
 
   /**
    * Apply simple class-based visibility to a toggle element.
-   * The element is assumed to have data-customviews-toggle.
+   * The element is assumed to have data-cv-toggle or data-customviews-toggle.
    */
   public applyElementVisibility(el: HTMLElement, visible: boolean): void {
     if (visible) {

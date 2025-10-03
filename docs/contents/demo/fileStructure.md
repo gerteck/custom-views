@@ -10,7 +10,7 @@ Explore how different operating systems organize files, install applications, an
 
 ## Platform-Specific File Organization
 
-<div data-customviews-toggle="mac" style="border: 2px solid #007aff; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e3f2fd;">
+<div data-cv-toggle="mac" style="border: 2px solid #007aff; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e3f2fd;">
 
 ### :fas-apple-alt: **macOS File System**
 
@@ -28,7 +28,7 @@ Explore how different operating systems organize files, install applications, an
 
 </div>
 
-<div data-customviews-toggle="linux" style="border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; background: #fff8e1;">
+<div data-cv-toggle="linux" style="border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; background: #fff8e1;">
 
 ### :fas-linux: **Linux File System**
 
@@ -46,7 +46,7 @@ Explore how different operating systems organize files, install applications, an
 
 </div>
 
-<div data-customviews-toggle="windows" style="border: 2px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e8f5e8;">
+<div data-cv-toggle="windows" style="border: 2px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e8f5e8;">
 
 ### :fas-windows: **Windows File System**
 
@@ -72,7 +72,7 @@ Explore how different operating systems organize files, install applications, an
 
   <tab header="**macOS Config** :fas-apple-alt:">
 
-<div data-customviews-toggle="mac">
+<div data-cv-toggle="mac">
 
 ```bash
 # System-wide configurations
@@ -92,7 +92,7 @@ Explore how different operating systems organize files, install applications, an
   
   <tab header="**Linux Config** :fas-linux:">
 
-<div data-customviews-toggle="linux">
+<div data-cv-toggle="linux">
 
 ```bash
 # System-wide configurations
@@ -112,7 +112,7 @@ Explore how different operating systems organize files, install applications, an
   
   <tab header="**Windows Config** :fas-windows:">
 
-<div data-customviews-toggle="windows">
+<div data-cv-toggle="windows">
 
 ```powershell
 # System-wide configurations

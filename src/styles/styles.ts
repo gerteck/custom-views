@@ -1,5 +1,5 @@
 const CORE_STYLES = `
-[data-customviews-toggle] {
+[data-cv-toggle], [data-customviews-toggle] {
   transition: opacity 150ms ease,
               transform 150ms ease,
               max-height 200ms ease,

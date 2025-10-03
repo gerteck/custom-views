@@ -29,17 +29,24 @@ It allows you to dynamically toggle content based on configuration and state, pr
 
 ### Platform-Specific Content
 
-<div data-customviews-toggle="mac">
+<div data-cv-toggle="mac">
 
 ## 🍎 macOS Development
 Content specific to macOS development environment.
 
 </div>
 
-<div data-customviews-toggle="linux">
+<div data-cv-toggle="linux">
 
 ## 🐧 Linux Development  
 Content specific to Linux development environment.
+
+</div>
+
+<div data-cv-toggle="windows">
+
+## 🪟 Windows Development
+Content specific to Windows development environment.
 
 </div>
 

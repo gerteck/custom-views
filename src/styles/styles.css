@@ -1,5 +1,5 @@
 /* Core toggle visibility transitions */
-[data-customviews-toggle] {
+[data-cv-toggle], [data-customviews-toggle] {
   /* Use max-height for collapsible vertical animation without JS measurements */
   transition: opacity 150ms ease,
               transform 150ms ease,

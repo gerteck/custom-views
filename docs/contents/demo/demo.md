@@ -27,9 +27,9 @@ Understand how different operating systems organize files, install applications,
 </box>
 
 
-<div data-customviews-toggle="mac" data-customviews-id="mac" class="styleimage"/>
-<div data-customviews-toggle="windows" data-customviews-id="windows" class="styleimage"/>
-<div data-customviews-toggle="linux" data-customviews-id="linux" class="styleimage"/>
+<div data-cv-toggle="mac" data-cv-id="mac" class="styleimage"/>
+<div data-cv-toggle="windows" data-cv-id="windows" class="styleimage"/>
+<div data-cv-toggle="linux" data-cv-id="linux" class="styleimage"/>
 
 <style>
 .styleimage{

@@ -10,7 +10,7 @@ Welcome to the **Git CLI Mastery** demo! This interactive guide shows you how to
 
 ### Platform-Specific Notes
 
-<div data-customviews-toggle="mac" style="border: 2px solid #007aff; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e3f2fd;">
+<div data-cv-toggle="mac" style="border: 2px solid #007aff; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e3f2fd;">
 
 #### :fas-apple-alt: **macOS Specific Tips**
 
@@ -34,7 +34,7 @@ $ git config --global init.defaultBranch main
 
 </div>
 
-<div data-customviews-toggle="linux" style="border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; background: #fff8e1;">
+<div data-cv-toggle="linux" style="border: 2px solid #ffc107; padding: 15px; margin: 10px 0; border-radius: 8px; background: #fff8e1;">
 
 #### :fas-linux: **Linux Specific Tips**
 
@@ -60,7 +60,7 @@ $ git config --global core.filemode true
 
 </div>
 
-<div data-customviews-toggle="windows" style="border: 2px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e8f5e8;">
+<div data-cv-toggle="windows" style="border: 2px solid #28a745; padding: 15px; margin: 10px 0; border-radius: 8px; background: #e8f5e8;">
 
 #### :fa-brands-windows: **Windows Specific Tips**
 
@@ -188,7 +188,7 @@ These commands can modify Git history. Use with caution, especially on shared re
 
 ### Interactive Rebase
 
-<div data-customviews-toggle="mac linux windows">
+<div data-cv-toggle="mac linux windows">
 
 ```bash
 # Interactive rebase for last 3 commits
@@ -206,7 +206,7 @@ git rebase --abort
 
 ### Stashing Changes
 
-<div data-customviews-toggle="mac linux windows">
+<div data-cv-toggle="mac linux windows">
 
 ```bash
 # Stash current changes
@@ -233,7 +233,7 @@ git stash drop stash@{0}
 
 ### Global Configuration
 
-<div data-customviews-toggle="mac linux windows">
+<div data-cv-toggle="mac linux windows">
 
 <box type="info">
 
@@ -366,7 +366,7 @@ git pull --rebase origin main
 
 ## 6. Platform-Specific Git Tools
 
-<div data-customviews-toggle="mac">
+<div data-cv-toggle="mac">
 
 ### :fas-apple-alt: **macOS Git Tools**
 
@@ -384,7 +384,7 @@ brew install --cask gitkraken
 
 </div>
 
-<div data-customviews-toggle="linux">
+<div data-cv-toggle="linux">
 
 ### :fas-linux: **Linux Git Tools**
 
@@ -407,7 +407,7 @@ sudo pacman -S gitg tig
 
 </div>
 
-<div data-customviews-toggle="windows">
+<div data-cv-toggle="windows">
 
 ### :fas-windows: **Windows Git Tools**
 

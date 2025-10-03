@@ -34,7 +34,7 @@ A toggle is a set of coexisting elements — multiple toggles can be active simu
 
 E.g.
 ```html
-<div data-customviews-toggle="beginner" data-customviews-id="intro"></div>
+<div data-cv-toggle="beginner" data-cv-id="intro"></div>
 ```
 
 ## 3. State

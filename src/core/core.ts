@@ -85,18 +85,19 @@ export class CustomViewsCore {
     const finalToggles = this.visibilityManager.filterVisibleToggles(toggles);
 
     // Toggles hide or show relevant toggles
-    this.rootEl.querySelectorAll("[data-customviews-toggle]").forEach(el => {
-      const category = (el as HTMLElement).dataset.customviewsToggle;
+    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle]").forEach(el => {
+      const category = (el as HTMLElement).dataset.cvToggle || (el as HTMLElement).dataset.customviewsToggle;
       const shouldShow = !!category && finalToggles.includes(category);
       this.visibilityManager.applyElementVisibility(el as HTMLElement, shouldShow);
     });
 
     // Render toggles
     for (const category of finalToggles) {
-      this.rootEl.querySelectorAll(`[data-customviews-toggle="${category}"]`).forEach(el => {
+      this.rootEl.querySelectorAll(`[data-cv-toggle="${category}"], [data-customviews-toggle="${category}"]`).forEach(el => {
         // if it has an id, then we render the asset into it
         // if it has no id, then we assume it's a container
-        const toggleId = (el as HTMLElement).dataset.customviewsId;
+        // Support both (data-cv-id) and (data-customviews-id) attributes
+        const toggleId = (el as HTMLElement).dataset.cvId || (el as HTMLElement).dataset.customviewsId;
         if (toggleId) {
           renderAssetInto(el as HTMLElement, toggleId, this.assetsManager);
         }

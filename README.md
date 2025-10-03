@@ -11,17 +11,17 @@ A JavaScript library for creating contextual, adaptive web content. Perfect for 
 ### HTML Setup
 
 ```html
-<!-- Mark content with data-customviews-toggle attribute -->
-<div data-customviews-toggle="beginner">
+<!-- Mark content with data-cv-toggle attribute -->
+<div data-cv-toggle="beginner">
   <p>Beginner content here</p>
 </div>
 
-<div data-customviews-toggle="advanced">
+<div data-cv-toggle="advanced">
   <p>Advanced content here</p>
 </div>
 
 <!-- Dynamic content with ID -->
-<div data-customviews-toggle="beginner" data-customviews-id="intro-guide"></div>
+<div data-cv-toggle="beginner" data-cv-id="intro-guide"></div>
 ```
 
 ### Adding script to site
@@ -130,8 +130,8 @@ The `assets.json` file defines reusable content that can be dynamically injected
 ### Usage in HTML
 
 ```html
-<!-- Reference asset by key using data-customviews-id -->
-<div data-customviews-toggle="beginner" data-customviews-id="assetKey"></div>
+<!-- Reference asset by key using data-cv-id (or data-customviews-id for backward compatibility) -->
+<div data-cv-toggle="beginner" data-cv-id="assetKey"></div>
 ```
 
 When the toggle is active, the asset will be automatically rendered into the element.
