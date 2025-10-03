@@ -1,6 +1,6 @@
 # Custom Views
 
-v1.0.3
+v1.1.0
 
 [npm package link](https://www.npmjs.com/package/@customviews-js/customviews)
 
@@ -24,34 +24,52 @@ A JavaScript library for creating contextual, adaptive web content. Perfect for 
 <div data-cv-toggle="beginner" data-cv-id="intro-guide"></div>
 ```
 
-### Adding script to site
+### Simple Setup
 
 ```html
-<script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.umd.min.js"/>
+<script src="https://unpkg.com/@customviews-js/customviews"></script>
 ```
-Additionally, you can bundle or copy the script into your own site.
 
+This auto-init script will:
+1. Automatically load configuration from `/customviews.config.json`
+2. Initialize the core library
+3. Create and render the widget if enabled
 
-### JavaScript Initialization
+#### Configuration File
 
-```javascript
-// Initialize CustomViews
-const core = await window.CustomViews.initFromJson({
-  config: {
-    allToggles: ['beginner', 'advanced'],
-    defaultState: { toggles: ['beginner'] }
+Create a `customviews.config.json` file in your site root:
+
+```json
+{
+  "core": {
+    "config": {
+      "allToggles": ["beginner", "advanced"],
+      "defaultState": {
+        "toggles": ["beginner"]
+      }
+    },
+    "assetsJsonPath": "/assets.json"
   },
-  assetsJsonPath: '/assets.json',
-  baseURL: '/customviews',
-});
+  "widget": {
+    "enabled": true,
+    "position": "middle-left",
+    "showWelcome": true
+  }
+}
+```
 
-// Add widget
-const widget = new window.CustomViewsWidget({
-  core,
-  position: 'middle-left',
-  showWelcome: true
-});
-widget.render();
+#### Script Attributes
+
+The auto-init script supports these data attributes:
+- `data-base-url`: Base URL for all paths (e.g., `/customviews`)
+- `data-config-path`: Custom path to config file (default: `/customviews.config.json`)
+
+```html
+<script 
+  src="https://unpkg.com/@customviews-js/customviews" 
+  data-base-url="/my-site"
+  data-config-path="/configs/custom-views.json">
+</script>
 ```
 
 ## Widget Features
@@ -78,6 +96,66 @@ widget.render();
 - Either `config` (literal config object) or `configPath` must be provided.
 - `baseURL` is automatically prepended to `configPath`, `assetsJsonPath`, and all asset `src` paths.
 - Absolute URLs (starting with `http://` or `https://`) are not modified.
+
+## Configuration File Format
+
+When using auto-initialization, the config file follows this structure:
+
+```typescript
+{
+  core: {
+    config?: any;                  // Core configuration object
+    configPath?: string;           // Path to the configuration file
+    assetsJsonPath?: string;       // Path to the assets JSON file
+    baseURL?: string;              // Base URL for all paths
+  };
+  
+  widget?: {
+    enabled?: boolean;             // Whether the widget is enabled
+    position?: string;             // Widget position
+    theme?: 'light' | 'dark';      // Widget theme
+    showReset?: boolean;           // Whether to show reset button
+    title?: string;                // Widget title
+    description?: string;          // Widget description text
+    showWelcome?: boolean;         // Whether to show welcome modal on first visit
+    welcomeTitle?: string;         // Welcome modal title
+    welcomeMessage?: string;       // Welcome modal message
+  };
+}
+```
+
+## Events
+
+### `customviews:ready` Event
+
+When using auto-initialization, a `customviews:ready` event is dispatched when CustomViews is fully initialized:
+
+```javascript
+document.addEventListener('customviews:ready', (event) => {
+  const { core, widget } = event.detail;
+  
+  // You can now access the core and widget instances
+  console.log('CustomViews initialized!');
+  
+  // Example: Programmatically change state
+  core.applyState({ toggles: ['advanced'] });
+});
+```
+
+### Global Instance Access
+
+When using auto-initialization, the core and widget instances are stored on the `window` object:
+
+```javascript
+// Access the core instance
+const core = window.customViewsInstance.core;
+
+// Access the widget instance (if enabled)
+const widget = window.customViewsInstance.widget;
+
+// Example: Programmatically change state
+core.applyState({ toggles: ['advanced'] });
+```
 
 ## Widget Options
 

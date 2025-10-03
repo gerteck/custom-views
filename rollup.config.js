@@ -12,7 +12,58 @@ const banner = `/*!
  */`;
 
 export default [
-  // ESM build
+  // ESM build for core API (for bundlers/advanced usage)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/custom-views.core.esm.js',
+      format: 'esm',
+      banner,
+      sourcemap: true
+    },
+    plugins: [typescript()]
+  },
+  
+  // CommonJS build for core API (for Node.js/advanced usage)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/custom-views.core.cjs.js',
+      format: 'cjs',
+      banner,
+      sourcemap: true,
+      exports: 'named',
+    },
+    plugins: [typescript()]
+  },
+  
+  // Main UMD build (unminified)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/custom-views.js',
+      format: 'umd',
+      name: 'CustomViews',
+      banner,
+      sourcemap: true
+    },
+    plugins: [typescript()]
+  },
+  
+  // Main UMD build (minified)
+  {
+    input: 'src/index.ts',
+    output: {
+      file: 'dist/custom-views.min.js',
+      format: 'umd',
+      name: 'CustomViews',
+      banner,
+      sourcemap: true
+    },
+    plugins: [typescript(), terser()]
+  },
+  
+  // ESM build for browser module scripts
   {
     input: 'src/index.ts',
     output: {
@@ -22,46 +73,5 @@ export default [
       sourcemap: true
     },
     plugins: [typescript()]
-  },
-  
-  // CommonJS build
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/custom-views.cjs.js',
-      format: 'cjs',
-      banner,
-      sourcemap: true,
-      exports: 'named',
-    },
-    plugins: [typescript()]
-  },
-  
-  // UMD build (unminified)
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/custom-views.umd.js',
-      format: 'umd',
-      name: 'CustomViews',
-      banner,
-      sourcemap: true,
-      exports: 'named',
-    },
-    plugins: [typescript()]
-  },
-  
-  // UMD build (minified)
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/custom-views.umd.min.js',
-      format: 'umd',
-      name: 'CustomViews',
-      banner,
-      sourcemap: true,
-      exports: 'named',
-    },
-    plugins: [typescript(), terser()]
   }
 ];

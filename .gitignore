@@ -8,6 +8,10 @@ dist/
 src/**/*.d.ts
 src/**/*.d.ts.map
 
+# Allow hand-written type declaration files kept in src/types (e.g. global.d.ts)
+!src/types/
+!src/types/*.d.ts
+
 
 # NPM Publishing
 *.tgz
