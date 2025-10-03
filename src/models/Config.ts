@@ -5,7 +5,7 @@ import type { State } from "types/types";
  */
 export class Config {
   constructor(
+    public allToggles: string[],
     public defaultState: State,
-    public allToggles?: string[],
   ) {} 
 }

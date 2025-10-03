@@ -26,3 +26,51 @@ export interface State {
 }
 
 export type ToggleId = string;
+
+/**
+ * Represents the configuration file structure for CustomViews auto-initialization.
+ */
+export interface ConfigFile {
+  /** Core configuration object with allToggles and defaultState */
+  config?: any;
+  /** Path to the assets JSON file */
+  assetsJsonPath?: string;
+  /** Base URL for all paths */
+  baseUrl?: string;
+  
+  /** Widget configuration options */
+  widget?: {
+    /** Whether the widget is enabled */
+    enabled?: boolean;
+    /** Widget position */
+    position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'middle-left' | 'middle-right';
+    /** Widget theme */
+    theme?: 'light' | 'dark';
+    /** Whether to show reset button */
+    showReset?: boolean;
+    /** Widget title */
+    title?: string;
+    /** Widget description text */
+    description?: string;
+    /** Whether to show welcome modal on first visit */
+    showWelcome?: boolean;
+    /** Welcome modal title */
+    welcomeTitle?: string;
+    /** Welcome modal message */
+    welcomeMessage?: string;
+  };
+}
+
+/**
+ * Global window interface augmentation for CustomViews
+ */
+declare global {
+  interface Window {
+    CustomViews: any;
+    CustomViewsWidget: any;
+    customViewsInstance?: {
+      core: any;
+      widget?: any;
+    };
+  }
+}
