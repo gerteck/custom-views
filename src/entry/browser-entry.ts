@@ -1,10 +1,17 @@
 import { CustomViews } from "../lib/custom-views";
 import { CustomViewsWidget } from "../core/widget";
-import { prependBaseURL } from "../utils/url-utils";
+import { prependBaseUrl } from "../utils/url-utils";
 
 /**
  * Initialize CustomViews from script tag attributes and config file
  * This function handles the automatic initialization of CustomViews when included via script tag
+ * 
+ * Data attributes supported:
+ * - data-base-url: Base URL for the site (e.g., "/customviews" for subdirectory deployments)
+ * - data-config-path: Path to config file (default: "/customviews.config.json")
+ * 
+ * The function fetches the config file and uses it directly to initialize CustomViews.
+ * Widget visibility is controlled via the config file (widget.enabled property).
  */
 export default function initializeFromScript(): void {
   // Only run in browser environment
@@ -60,16 +67,28 @@ export default function initializeFromScript(): void {
       }
 
       // Fetch config file
-      let config;
+      let configFile;
       try {
-        const fullConfigPath = prependBaseURL(configPath, baseURL);
+        const fullConfigPath = prependBaseUrl(configPath, baseURL);
+        console.log(`[CustomViews] Loading config from: ${fullConfigPath}`);
+        
         const response = await fetch(fullConfigPath);
         
         if (!response.ok) {
           console.warn(`[CustomViews] Config file not found at ${fullConfigPath}. Using defaults.`);
-          config = { core: {} };
+          // Provide minimal default config structure
+          configFile = { 
+            config: {
+              allToggles: [],
+              defaultState: { toggles: [] }
+            },
+            widget: {
+              enabled: true
+            }
+          };
         } else {
-          config = await response.json();
+          configFile = await response.json();
+          console.log('[CustomViews] Config loaded successfully');
         }
       } catch (error) {
         console.error('[CustomViews] Error loading config file:', error);
@@ -77,13 +96,12 @@ export default function initializeFromScript(): void {
       }
 
       // Determine effective baseURL (data attribute takes precedence over config)
-      const effectiveBaseURL = baseURL || config.core.baseURL || '';
+      const effectiveBaseURL = baseURL || configFile.baseURL || '';
 
       // Initialize CustomViews core
       const core = await CustomViews.initFromJson({
-        config: config.core.config,
-        configPath: config.core.configPath,
-        assetsJsonPath: config.core.assetsJsonPath,
+        config: configFile.config,
+        assetsJsonPath: configFile.assetsJsonPath,
         baseURL: effectiveBaseURL,
       });
 
@@ -97,15 +115,18 @@ export default function initializeFromScript(): void {
 
       // Initialize widget if enabled in config
       let widget;
-      if (config.widget?.enabled !== false) {
+      if (configFile.widget?.enabled !== false) {
         widget = new CustomViewsWidget({
           core,
-          ...config.widget
+          ...configFile.widget
         });
         widget.render();
         
         // Store widget instance
         window.customViewsInstance.widget = widget;
+        console.log('[CustomViews] Widget initialized and rendered');
+      } else {
+        console.log('[CustomViews] Widget disabled in config - skipping initialization');
       }
 
       // Dispatch ready event

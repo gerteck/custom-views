@@ -2,7 +2,7 @@ import { CustomViewsCore, type CustomViewsOptions } from "../core/core";
 import { AssetsManager } from "../models/AssetsManager";
 import type { CustomViewAsset } from "../types/types";
 import { Config } from "../models/Config";
-import { prependBaseURL } from "../utils/url-utils";
+import { prependBaseUrl } from "../utils/url-utils";
 
 /**
  * Options for initializing CustomViews from JSON
@@ -14,8 +14,6 @@ export type InitFromJsonOptions = {
   rootEl?: HTMLElement;
   /** Config object with allToggles and defaultState */
   config?: Config;
-  /** Path to JSON config file */
-  configPath?: string;
   /** Base URL for all paths */
   baseURL?: string;
 }
@@ -26,7 +24,7 @@ export type InitFromJsonOptions = {
 export class CustomViews {
   /**
    * Entry Point to use CustomViews
-   * @param opts Initialization options
+   * @param opts Initialization options including config object and assets path
    * @returns Promise resolving to the CustomViewsCore instance or null if initialization fails
    */
   static async initFromJson(opts: InitFromJsonOptions): Promise<CustomViewsCore | null> {
@@ -34,30 +32,22 @@ export class CustomViews {
     let assetsManager: AssetsManager | undefined;
     const baseURL = opts.baseURL || '';
     if (opts.assetsJsonPath) {
-      const assetsPath = prependBaseURL(opts.assetsJsonPath, baseURL);
+      const assetsPath = prependBaseUrl(opts.assetsJsonPath, baseURL);
       const assetsJson: Record<string, CustomViewAsset> = await (await fetch(assetsPath)).json();
       assetsManager = new AssetsManager(assetsJson, baseURL);
     } else {
       assetsManager = new AssetsManager({}, baseURL);
     }
 
-    // Load config JSON if provided, else just log error and don't load the custom views
+    // Use provided config or create a minimal default one
     let localConfig: Config;
     if (opts.config) {
       localConfig = opts.config;
     } else {
-      if (!opts.configPath) {
-        console.error("No config path provided, skipping custom views");
-        return null;
-      }
-      try {
-        const configPath = prependBaseURL(opts.configPath, baseURL);
-        localConfig = await (await fetch(configPath)).json();
-      } catch (error) {
-        console.error("Error loading config:", error);
-        return null;
-      }
-    } 
+      console.error("No config provided, using minimal default config");
+      // Create a minimal default config
+      localConfig = new Config([], { toggles: [] });
+    }
 
     const coreOptions: CustomViewsOptions = {
       assetsManager,

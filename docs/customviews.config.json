@@ -1,13 +1,12 @@
 {
-  "core": {
-    "config": {
-      "allToggles": ["mac", "linux", "windows"],
-      "defaultState": {
-        "toggles": ["mac", "linux", "windows"]
-      }
-    },
-    "assetsJsonPath": "/assets/assets.json"
+  "config": {
+    "allToggles": ["mac", "linux", "windows"],
+    "defaultState": {
+      "toggles": ["mac", "linux", "windows"]
+    }
   },
+  "assetsJsonPath": "/assets/assets.json",
+  "baseUrl": "/customviews",
   "widget": {
     "enabled": true,
     "position": "middle-left",
