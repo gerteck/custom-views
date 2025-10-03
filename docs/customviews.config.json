@@ -1,0 +1,21 @@
+{
+  "core": {
+    "config": {
+      "allToggles": ["mac", "linux", "windows"],
+      "defaultState": {
+        "toggles": ["mac", "linux", "windows"]
+      }
+    },
+    "assetsJsonPath": "/assets/assets.json"
+  },
+  "widget": {
+    "enabled": true,
+    "position": "middle-left",
+    "showReset": false,
+    "title": "Customize your view here",
+    "description": "This is a widget that allows you to customize your view here",
+    "showWelcome": true,
+    "welcomeTitle": "Welcome to Custom Views!",
+    "welcomeMessage": "This documentation uses Custom Views to personalize your experience. Click the gear icon (⚙) on the side to show or hide different content sections based on your operating system or preferences."
+  }
+}

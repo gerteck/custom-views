@@ -1,6 +1,0 @@
-{
-  "allToggles": ["mac", "linux", "windows"],
-  "defaultState": {
-    "toggles": ["mac", "linux", "windows"]
-  }
-}
