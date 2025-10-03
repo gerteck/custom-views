@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0] ---
+
+* Set default auto-initialization: Just include script tag and config `/customviews.config.json` file at root.
+  * Customize via `data-base-url`, `data-config-path` if separate baseURL or config file path.
+
+++
+
+
+
+
 ## [1.0.0] - 2025-09-30
 
 ### Widget Redesign
@@ -22,7 +32,7 @@
 * Better event handling with automatic updates
 
 ### BaseURL Support
-* Added `baseURL` parameter to `initFromJson()` options
+* Added `baseURL` parameter to `init()` options
 * Automatically prepends baseURL to `configPath`, `assetsJsonPath`, and all asset `src` paths
 * Supports subdirectory deployments (e.g., GitHub Pages with `/project-name`)
 * Smart handling: skips prepending for absolute URLs (http://, https://)
