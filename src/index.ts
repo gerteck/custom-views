@@ -9,7 +9,7 @@ export type { CustomViewsOptions } from "./core/core";
 export { CustomViewsWidget } from "./core/widget";
 export type { WidgetOptions } from "./core/widget";
 export { CustomViews } from "./lib/custom-views";
-export type { InitFromJsonOptions } from "./lib/custom-views";
+export type { initOptions } from "./lib/custom-views";
 export { PersistenceManager } from "./core/persistence";
 export { URLStateManager } from "./core/url-state-manager";
 export { AssetsManager } from "./models/AssetsManager";

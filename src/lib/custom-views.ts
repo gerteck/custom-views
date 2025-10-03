@@ -7,7 +7,7 @@ import { prependBaseUrl } from "../utils/url-utils";
 /**
  * Options for initializing CustomViews from JSON
  */
-export type InitFromJsonOptions = {
+export type initOptions = {
   /** Path to the assets JSON file */
   assetsJsonPath?: string;
   /** Root element to apply custom views */
@@ -27,7 +27,7 @@ export class CustomViews {
    * @param opts Initialization options including config object and assets path
    * @returns Promise resolving to the CustomViewsCore instance or null if initialization fails
    */
-  static async initFromJson(opts: InitFromJsonOptions): Promise<CustomViewsCore | null> {
+  static async init(opts: initOptions): Promise<CustomViewsCore | null> {
     // Load assets JSON if provided
     let assetsManager: AssetsManager | undefined;
     const baseURL = opts.baseURL || '';
