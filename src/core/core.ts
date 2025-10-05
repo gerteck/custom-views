@@ -1,7 +1,6 @@
-import type { State, TabGroupConfig } from "../types/types";
+import type { State, TabGroupConfig, Config } from "../types/types";
 import type { AssetsManager } from "./AssetsManager";
 import { renderAssetInto } from "./render";
-import { Config } from "types/Config";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager } from "./url-state-manager";
 import { VisibilityManager } from "./visibility-manager";
