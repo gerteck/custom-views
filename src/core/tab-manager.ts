@@ -158,6 +158,11 @@ export class TabManager {
         listItem.appendChild(navLink);
         navContainer.appendChild(listItem);
       });
+
+      // Add bottom border line at the end of the tab group
+      const bottomBorder = document.createElement('div');
+      bottomBorder.className = 'cv-tabgroup-bottom-border';
+      groupEl.appendChild(bottomBorder);
     });
   }
 
