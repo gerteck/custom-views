@@ -1,7 +1,7 @@
 import type { State, TabGroupConfig } from "../types/types";
-import type { AssetsManager } from "../models/AssetsManager";
+import type { AssetsManager } from "./AssetsManager";
 import { renderAssetInto } from "./render";
-import { Config } from "models/Config";
+import { Config } from "types/Config";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager } from "./url-state-manager";
 import { VisibilityManager } from "./visibility-manager";
@@ -98,15 +98,15 @@ export class CustomViewsCore {
 
     // For session history, clicks on back/forward button
     window.addEventListener("popstate", () => {
-      this.loadAndRenderState();
+      this.loadAndCallApplyState();
     });
-    this.loadAndRenderState();
+    this.loadAndCallApplyState();
   }
 
   // Priority: URL state > persisted state > default
   // Also filters using the visibility manager to persist selection
   // across back/forward button clicks
-  private async loadAndRenderState() {
+  private async loadAndCallApplyState() {
     // 1. URL State
     this.stateFromUrl = URLStateManager.parseURL();
     if (this.stateFromUrl) {
@@ -125,9 +125,9 @@ export class CustomViewsCore {
     this.renderState(this.localConfig.defaultState);
   }
 
-    /**
-   * Apply a custom state, saves to localStorage and updates the URL
-   */
+  /**
+  * Apply a custom state, saves to localStorage and updates the URL
+  */
   public applyState(state: State) {
     this.renderState(state);
     this.persistenceManager.persistState(state);
@@ -150,8 +150,7 @@ export class CustomViewsCore {
     // Render toggles
     for (const category of finalToggles) {
       this.rootEl.querySelectorAll(`[data-cv-toggle="${category}"], [data-customviews-toggle="${category}"]`).forEach(el => {
-        // if it has an id, then we render the asset into it
-        // if it has no id, then we assume it's a container
+        // if it has an id, then we should render the asset into it
         // Support both (data-cv-id) and (data-customviews-id) attributes
         const toggleId = (el as HTMLElement).dataset.cvId || (el as HTMLElement).dataset.customviewsId;
         if (toggleId) {

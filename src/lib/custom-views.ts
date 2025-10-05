@@ -1,7 +1,7 @@
 import { CustomViewsCore, type CustomViewsOptions } from "../core/core";
-import { AssetsManager } from "../models/AssetsManager";
+import { AssetsManager } from "../core/AssetsManager";
 import type { CustomViewAsset } from "../types/types";
-import { Config } from "../models/Config";
+import { Config } from "../types/Config";
 import { prependBaseUrl } from "../utils/url-utils";
 
 /**
