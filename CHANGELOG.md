@@ -2,11 +2,17 @@
 
 ## [1.1.0] ---
 
+### QoL Improvements
 * Set default auto-initialization: Just include script tag and config `/customviews.config.json` file at root.
   * Customize via `data-base-url`, `data-config-path` if separate baseURL or config file path.
 
-++
-
+### Tab Groups Feature
+* Added `<cv-tabgroup>` and `<cv-tab>` custom elements for synchronized, mutually exclusive content sections
+* Auto-generated navigation with `nav="auto"` attribute
+* Optional configuration - works out of the box, defaults to first tab
+* Widget integration for centralized tab control
+* URL state persistence for bookmarking and sharing
+* Synchronized updates across all tab groups with the same ID
 
 
 

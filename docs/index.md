@@ -30,206 +30,48 @@ It allows you to dynamically toggle content based on configuration and state, pr
 
 Tab groups allow you to create synchronized, mutually exclusive content sections. All instances of the same tab group stay in sync across the page.
 
-### Platform-Specific Installation
-
-
-<tabs>
-  <tab header="First tab">
-    Text in the first tab
-    <markdown>_some markdown_</markdown>
-  </tab>
-  <tab header="Second Tab">
-  </tab>
-</tabs>
-
-<cv-tabgroup id="platform" nav="auto">
-  <cv-tab id="windows" header="🪟 Windows">
+<cv-tabgroup id="fruit" nav="auto">
+  <cv-tab id="apple" header="Apple">
   
-#### Windows Installation
+**Apple Information**
 
-```bash
-# Using npm
-npm install custom-views
+Apples are crisp, sweet fruits that come in many varieties. They are rich in fiber and vitamin C.
 
-# Using yarn
-yarn add custom-views
-```
-
-**Note**: On Windows, you may need to run your terminal as Administrator for global installations.
+<box type="success" icon=":apple:">
+    An apple a day keeps the doctor away!
+</box>
 
   </cv-tab>
-  <cv-tab id="mac" header="🍎 macOS">
+  <cv-tab id="orange" header="Orange">
   
-#### macOS Installation
+**Orange Information**
 
-```bash
-# Using npm
-npm install custom-views
-
-# Using yarn  
-yarn add custom-views
-
-# Using Homebrew (if available)
-brew install node
-npm install custom-views
-```
-
-**Note**: macOS users may need to use `sudo` for global installations.
+Oranges are citrus fruits known for their high vitamin C content and refreshing juice.
 
   </cv-tab>
-  <cv-tab id="linux" header="🐧 Linux">
+  <cv-tab id="pear" header="Pear">
   
-#### Linux Installation
+**Pear Information**
 
-```bash
-# Using npm
-npm install custom-views
-
-# Using yarn
-yarn add custom-views
-
-# On Debian/Ubuntu
-sudo apt-get install nodejs npm
-npm install custom-views
-```
-
-**Note**: Linux users should ensure Node.js and npm are installed via their package manager first.
+Pears are sweet, bell-shaped fruits with a soft texture when ripe. They're high in fiber and antioxidants.
 
   </cv-tab>
 </cv-tabgroup>
 
-### Language-Specific Usage Examples
-
-<cv-tabgroup id="language" nav="auto">
-  <cv-tab id="javascript" header="JavaScript">
-
-#### JavaScript Usage
-
-```javascript
-// Import the library
-import { CustomViews } from 'custom-views';
-
-// Initialize with config
-const core = await CustomViews.init({
-  config: {
-    allToggles: ['feature1', 'feature2'],
-    defaultState: { toggles: ['feature1'] }
-  }
-});
-
-console.log('CustomViews initialized!');
-```
+<cv-tabgroup id="fruit" nav="auto">
+  <cv-tab id="apple" header="Apple">
+  
+I love Apples!
 
   </cv-tab>
-  <cv-tab id="typescript" header="TypeScript">
-
-#### TypeScript Usage
-
-```typescript
-// Import with types
-import { CustomViews, type initOptions } from 'custom-views';
-
-// Initialize with typed config
-const options: initOptions = {
-  config: {
-    allToggles: ['feature1', 'feature2'],
-    defaultState: { toggles: ['feature1'] }
-  }
-};
-
-const core = await CustomViews.init(options);
-console.log('CustomViews initialized with TypeScript!');
-```
+  <cv-tab id="orange" header="Orange">
+  
+I love Oranges!
 
   </cv-tab>
-  <cv-tab id="python" header="Python">
 
-#### Python Usage (Conceptual)
-
-```python
-# Note: This is a JavaScript library
-# For Python projects, you can use it in your templates
-
-# In your Jinja2/Django template:
-"""
-<script src="custom-views.min.js"></script>
-<script>
-  // Initialize from template
-  window.addEventListener('customviews:ready', function(e) {
-    console.log('CustomViews ready in Python project!');
-  });
-</script>
-"""
-```
-
-  </cv-tab>
 </cv-tabgroup>
 
-### Synchronized Tab Groups Demo
-
-Notice how changing the platform in the widget affects **both** tab groups below:
-
-#### First Platform Tab Group
-
-<cv-tabgroup id="platform" nav="auto">
-  <cv-tab id="windows" header="Windows">
-  
-**Windows Environment Variables**
-
-Set your environment variables in PowerShell:
-```powershell
-$env:NODE_ENV = "production"
-```
-
-  </cv-tab>
-  <cv-tab id="mac" header="macOS">
-  
-**macOS Environment Variables**
-
-Set your environment variables in Terminal:
-```bash
-export NODE_ENV=production
-```
-
-  </cv-tab>
-  <cv-tab id="linux" header="Linux">
-  
-**Linux Environment Variables**
-
-Set your environment variables in your shell:
-```bash
-export NODE_ENV=production
-# Add to ~/.bashrc or ~/.zshrc for persistence
-```
-
-  </cv-tab>
-</cv-tabgroup>
-
-#### Second Platform Tab Group (Same ID = Synced!)
-
-<cv-tabgroup id="platform" nav="auto">
-  <cv-tab id="windows" header="Windows">
-  
-**Windows File Paths**
-- Use backslashes: `C:\Users\YourName\project`
-- Or forward slashes: `C:/Users/YourName/project`
-
-  </cv-tab>
-  <cv-tab id="mac" header="macOS">
-  
-**macOS File Paths**
-- Use forward slashes: `/Users/YourName/project`
-- Home directory: `~/project`
-
-  </cv-tab>
-  <cv-tab id="linux" header="Linux">
-  
-**Linux File Paths**
-- Use forward slashes: `/home/yourname/project`
-- Home directory: `~/project`
-
-  </cv-tab>
-</cv-tabgroup>
 
 **✨ Try it**: Click any tab above and watch both groups update simultaneously! You can also use the widget to control all tab groups at once.
 
@@ -259,12 +101,6 @@ Content specific to Windows development environment.
 
 </div>
 
-<div data-customviews-toggle="windows">
-
-## 🪟 Windows Development
-Content specific to Windows development environment.
-
-</div>
 
 ## Why Use Custom Views?
 
@@ -273,8 +109,8 @@ The concept behind Custom Views is very simple — showing or hiding elements ba
 Currently work in progress.
 
 ## References
-* [GitHub Repository](https://github.com/gerteck/custom-views)
-* [NPM Package](https://www.npmjs.com/package/custom-views)
+* [GitHub Repository](https://github.com/customviews-js/customviews)
+* [NPM Package](https://www.npmjs.com/package/customviews)
 
 Others:
 * [i18n library](https://www.i18next.com/) - Similar concept for internationalization

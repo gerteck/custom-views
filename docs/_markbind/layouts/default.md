@@ -22,6 +22,8 @@
       <site-nav>
 * [Introduction]({{ baseUrl }}/index.html)
   * [Concepts]({{baseUrl}}/contents/archive/concepts.html)
+* User Guide
+  * [Tabs]({{baseUrl}}/contents/userGuide/tabs.html)
 * Developer Guide
   * [Tabs]({{baseUrl}}/contents/devGuide/tabs.html)
 * [Demo]({{baseUrl}}/contents/demo/demo.html)
