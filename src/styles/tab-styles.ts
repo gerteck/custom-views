@@ -96,6 +96,12 @@ cv-tabgroup {
   margin-bottom: 1.5rem;
 }
 
+/* Bottom border line for tab groups */
+.cv-tabgroup-bottom-border {
+  border-bottom: 1px solid #dee2e6;
+  margin-top: 1rem;
+}
+
 /* Tab content wrapper */
 .cv-tab-content {
   padding: 1rem 0;
