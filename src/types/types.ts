@@ -22,10 +22,37 @@ export interface CustomViewAsset {
  * States contain the list of toggle categories that should be displayed in this state. 
  */
 export interface State {
+  /** List of toggle categories that should be displayed in this state */
   toggles: ToggleId[];
+  /** Optional tab selections: groupId -> tabId */
+  tabs?: Record<string, string>;
 }
 
 export type ToggleId = string;
+
+/**
+ * Configuration for a single tab within a tab group
+ */
+export interface TabConfig {
+  /** Tab identifier */
+  id: string;
+  /** Display label for the tab */
+  label?: string;
+}
+
+/**
+ * Configuration for a tab group
+ */
+export interface TabGroupConfig {
+  /** Group identifier (stable across the page) */
+  id: string;
+  /** Display name for widget/nav */
+  label?: string;
+  /** Available tabs in this group */
+  tabs: TabConfig[];
+  /** Default tab id for this group (fallback to first in tabs if omitted) */
+  default?: string;
+}
 
 /**
  * Represents the configuration file structure for CustomViews auto-initialization.
@@ -58,6 +85,8 @@ export interface ConfigFile {
     welcomeTitle?: string;
     /** Welcome modal message */
     welcomeMessage?: string;
+    /** Whether to show tab groups section in widget (default: true) */
+    showTabGroups?: boolean;
   };
 }
 

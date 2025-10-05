@@ -1,10 +1,11 @@
-import type { State } from "../types/types";
+import type { State, TabGroupConfig } from "../types/types";
 import type { AssetsManager } from "../models/AssetsManager";
 import { renderAssetInto } from "./render";
 import { Config } from "models/Config";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager } from "./url-state-manager";
 import { VisibilityManager } from "./visibility-manager";
+import { TabManager } from "./tab-manager";
 import { injectCoreStyles } from "../styles/styles";
 
 
@@ -34,6 +35,61 @@ export class CustomViewsCore {
 
   public getLocalConfig(): Config {
     return this.localConfig;
+  }
+
+  /**
+   * Get tab groups from config
+   */
+  public getTabGroups(): TabGroupConfig[] | undefined {
+    return this.localConfig.tabGroups;
+  }
+
+  /**
+   * Get currently active tabs (from URL > persisted > defaults)
+   */
+  public getCurrentActiveTabs(): Record<string, string> {
+    // Priority: URL state > persisted state > default state
+    let currentState: State | null = null;
+
+    if (this.stateFromUrl) {
+      currentState = this.stateFromUrl;
+    } else {
+      currentState = this.persistenceManager.getPersistedState();
+    }
+
+    if (!currentState) {
+      currentState = this.localConfig.defaultState;
+    }
+
+    return currentState.tabs || {};
+  }
+
+  /**
+   * Set active tab for a group and apply state
+   */
+  public setActiveTab(groupId: string, tabId: string): void {
+    // Get current state
+    const currentToggles = this.getCurrentActiveToggles();
+    const currentTabs = this.getCurrentActiveTabs();
+
+    // Merge new tab selection
+    const newTabs = { ...currentTabs, [groupId]: tabId };
+
+    // Create new state
+    const newState: State = {
+      toggles: currentToggles,
+      tabs: newTabs
+    };
+
+    // Apply the state
+    this.applyState(newState);
+
+    // Emit custom event
+    const event = new CustomEvent('customviews:tab-change', {
+      detail: { groupId, tabId },
+      bubbles: true
+    });
+    document.dispatchEvent(event);
   }
 
   // Inject styles, setup listeners and call rendering logic
@@ -104,6 +160,13 @@ export class CustomViewsCore {
       });
     }
 
+    // Apply tab selections
+    TabManager.applySelections(this.rootEl, state.tabs || {}, this.localConfig.tabGroups);
+
+    // Refresh navs with click handlers
+    TabManager.refreshNavs(this.rootEl, this.localConfig.tabGroups, (groupId, tabId) => {
+      this.setActiveTab(groupId, tabId);
+    });
 
     // Notify state change listeners (like widgets)
     this.notifyStateChangeListeners();

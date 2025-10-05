@@ -22,10 +22,219 @@ It allows you to dynamically toggle content based on configuration and state, pr
 ### Try It Out
 
 1. **Use the Widget**: Look for the "Custom Views" widget in the corner
-2. **Toggle Platforms**: Use "Customize View" to show/hide different OS sections
-3. **URL Sharing**: Share specific configurations via URL
+1. **Toggle Platforms**: Use "Customize View" to show/hide different OS sections
+1. **Switch Tabs**: Use the "Tab Groups" section in the widget to switch between platforms and languages
+1. **URL Sharing**: Share specific configurations via URL
 
-## Live Demo - Cross-Platform Development
+## Demo: Tab Groups Feature
+
+Tab groups allow you to create synchronized, mutually exclusive content sections. All instances of the same tab group stay in sync across the page.
+
+### Platform-Specific Installation
+
+
+<tabs>
+  <tab header="First tab">
+    Text in the first tab
+    <markdown>_some markdown_</markdown>
+  </tab>
+  <tab header="Second Tab">
+  </tab>
+</tabs>
+
+<cv-tabgroup id="platform" nav="auto">
+  <cv-tab id="windows" header="🪟 Windows">
+  
+#### Windows Installation
+
+```bash
+# Using npm
+npm install custom-views
+
+# Using yarn
+yarn add custom-views
+```
+
+**Note**: On Windows, you may need to run your terminal as Administrator for global installations.
+
+  </cv-tab>
+  <cv-tab id="mac" header="🍎 macOS">
+  
+#### macOS Installation
+
+```bash
+# Using npm
+npm install custom-views
+
+# Using yarn  
+yarn add custom-views
+
+# Using Homebrew (if available)
+brew install node
+npm install custom-views
+```
+
+**Note**: macOS users may need to use `sudo` for global installations.
+
+  </cv-tab>
+  <cv-tab id="linux" header="🐧 Linux">
+  
+#### Linux Installation
+
+```bash
+# Using npm
+npm install custom-views
+
+# Using yarn
+yarn add custom-views
+
+# On Debian/Ubuntu
+sudo apt-get install nodejs npm
+npm install custom-views
+```
+
+**Note**: Linux users should ensure Node.js and npm are installed via their package manager first.
+
+  </cv-tab>
+</cv-tabgroup>
+
+### Language-Specific Usage Examples
+
+<cv-tabgroup id="language" nav="auto">
+  <cv-tab id="javascript" header="JavaScript">
+
+#### JavaScript Usage
+
+```javascript
+// Import the library
+import { CustomViews } from 'custom-views';
+
+// Initialize with config
+const core = await CustomViews.init({
+  config: {
+    allToggles: ['feature1', 'feature2'],
+    defaultState: { toggles: ['feature1'] }
+  }
+});
+
+console.log('CustomViews initialized!');
+```
+
+  </cv-tab>
+  <cv-tab id="typescript" header="TypeScript">
+
+#### TypeScript Usage
+
+```typescript
+// Import with types
+import { CustomViews, type initOptions } from 'custom-views';
+
+// Initialize with typed config
+const options: initOptions = {
+  config: {
+    allToggles: ['feature1', 'feature2'],
+    defaultState: { toggles: ['feature1'] }
+  }
+};
+
+const core = await CustomViews.init(options);
+console.log('CustomViews initialized with TypeScript!');
+```
+
+  </cv-tab>
+  <cv-tab id="python" header="Python">
+
+#### Python Usage (Conceptual)
+
+```python
+# Note: This is a JavaScript library
+# For Python projects, you can use it in your templates
+
+# In your Jinja2/Django template:
+"""
+<script src="custom-views.min.js"></script>
+<script>
+  // Initialize from template
+  window.addEventListener('customviews:ready', function(e) {
+    console.log('CustomViews ready in Python project!');
+  });
+</script>
+"""
+```
+
+  </cv-tab>
+</cv-tabgroup>
+
+### Synchronized Tab Groups Demo
+
+Notice how changing the platform in the widget affects **both** tab groups below:
+
+#### First Platform Tab Group
+
+<cv-tabgroup id="platform" nav="auto">
+  <cv-tab id="windows" header="Windows">
+  
+**Windows Environment Variables**
+
+Set your environment variables in PowerShell:
+```powershell
+$env:NODE_ENV = "production"
+```
+
+  </cv-tab>
+  <cv-tab id="mac" header="macOS">
+  
+**macOS Environment Variables**
+
+Set your environment variables in Terminal:
+```bash
+export NODE_ENV=production
+```
+
+  </cv-tab>
+  <cv-tab id="linux" header="Linux">
+  
+**Linux Environment Variables**
+
+Set your environment variables in your shell:
+```bash
+export NODE_ENV=production
+# Add to ~/.bashrc or ~/.zshrc for persistence
+```
+
+  </cv-tab>
+</cv-tabgroup>
+
+#### Second Platform Tab Group (Same ID = Synced!)
+
+<cv-tabgroup id="platform" nav="auto">
+  <cv-tab id="windows" header="Windows">
+  
+**Windows File Paths**
+- Use backslashes: `C:\Users\YourName\project`
+- Or forward slashes: `C:/Users/YourName/project`
+
+  </cv-tab>
+  <cv-tab id="mac" header="macOS">
+  
+**macOS File Paths**
+- Use forward slashes: `/Users/YourName/project`
+- Home directory: `~/project`
+
+  </cv-tab>
+  <cv-tab id="linux" header="Linux">
+  
+**Linux File Paths**
+- Use forward slashes: `/home/yourname/project`
+- Home directory: `~/project`
+
+  </cv-tab>
+</cv-tabgroup>
+
+**✨ Try it**: Click any tab above and watch both groups update simultaneously! You can also use the widget to control all tab groups at once.
+
+
+## Demo of Toggles
 
 ### Platform-Specific Content
 
