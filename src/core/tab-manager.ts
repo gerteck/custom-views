@@ -1,5 +1,11 @@
 import type { TabGroupConfig } from "../types/types";
 
+// Constants for selectors
+const TABGROUP_SELECTOR = 'cv-tabgroup';
+const TAB_SELECTOR = 'cv-tab';
+const NAV_AUTO_SELECTOR = 'cv-tabgroup[nav="auto"], cv-tabgroup:not([nav])';
+const NAV_CONTAINER_CLASS = 'cv-tabs-nav';
+
 /**
  * TabManager handles discovery, visibility, and navigation for tab groups and tabs
  */
@@ -13,7 +19,7 @@ export class TabManager {
     cfgGroups?: TabGroupConfig[]
   ): void {
     // Find all cv-tabgroup elements
-    const tabGroups = rootEl.querySelectorAll('cv-tabgroup');
+    const tabGroups = rootEl.querySelectorAll(TABGROUP_SELECTOR);
     
     tabGroups.forEach((groupEl) => {
       const groupId = groupEl.getAttribute('id');
@@ -23,7 +29,7 @@ export class TabManager {
       const activeTabId = this.resolveActiveTab(groupId, tabs, cfgGroups, groupEl as HTMLElement);
       
       // Apply visibility to child cv-tab elements
-      const tabElements = groupEl.querySelectorAll('cv-tab');
+      const tabElements = groupEl.querySelectorAll(TAB_SELECTOR);
       tabElements.forEach((tabEl) => {
         const tabId = tabEl.getAttribute('id');
         if (!tabId) return;
@@ -64,7 +70,7 @@ export class TabManager {
     }
 
     // 3. Fallback to first cv-tab child in DOM
-    const firstTab = groupEl.querySelector('cv-tab');
+    const firstTab = groupEl.querySelector(TAB_SELECTOR);
     if (firstTab) {
       return firstTab.getAttribute('id');
     }
@@ -86,7 +92,7 @@ export class TabManager {
   }
 
   /**
-   * Build or refresh navigation for tab groups with nav="auto"
+   * Build navigation for tab groups with nav="auto" (one-time setup)
    */
   public static buildNavs(
     rootEl: HTMLElement,
@@ -94,29 +100,25 @@ export class TabManager {
     onTabClick?: (groupId: string, tabId: string) => void
   ): void {
     // Find all cv-tabgroup elements with nav="auto" or no nav attribute
-    const tabGroups = rootEl.querySelectorAll('cv-tabgroup[nav="auto"], cv-tabgroup:not([nav])');
+    const tabGroups = rootEl.querySelectorAll(NAV_AUTO_SELECTOR);
     
     tabGroups.forEach((groupEl) => {
       const groupId = groupEl.getAttribute('id');
       if (!groupId) return;
 
-      // Check if nav already exists
-      let navContainer = groupEl.querySelector('.cv-tabs-nav');
+      // Check if nav already exists - if so, skip building
+      let navContainer = groupEl.querySelector(`.${NAV_CONTAINER_CLASS}`);
+      if (navContainer) return; // Already built
       
       // Get all child tabs
-      const tabElements = Array.from(groupEl.querySelectorAll('cv-tab'));
+      const tabElements = Array.from(groupEl.querySelectorAll(TAB_SELECTOR));
       if (tabElements.length === 0) return;
 
-      // Create nav if it doesn't exist
-      if (!navContainer) {
-        navContainer = document.createElement('ul');
-        navContainer.className = 'cv-tabs-nav nav-tabs';
-        navContainer.setAttribute('role', 'tablist');
-        groupEl.insertBefore(navContainer, groupEl.firstChild);
-      }
-
-      // Clear existing nav items
-      navContainer.innerHTML = '';
+      // Create nav container
+      navContainer = document.createElement('ul');
+      navContainer.className = `${NAV_CONTAINER_CLASS} nav-tabs`;
+      navContainer.setAttribute('role', 'tablist');
+      groupEl.insertBefore(navContainer, groupEl.firstChild);
 
       // Build nav items
       tabElements.forEach((tabEl) => {
@@ -177,12 +179,45 @@ export class TabManager {
   }
 
   /**
-   * Update active state in navs after selection change
+   * Update active state in navs after selection change (single group)
    */
   public static updateNavActiveState(rootEl: HTMLElement, groupId: string, activeTabId: string): void {
-    const tabGroups = rootEl.querySelectorAll(`cv-tabgroup[id="${groupId}"]`);
+    const tabGroups = rootEl.querySelectorAll(`${TABGROUP_SELECTOR}[id="${groupId}"]`);
     
     tabGroups.forEach((groupEl) => {
+      const navLinks = groupEl.querySelectorAll('.nav-link');
+      navLinks.forEach((link) => {
+        const tabId = link.getAttribute('data-tab-id');
+        if (tabId === activeTabId) {
+          link.classList.add('active');
+          link.setAttribute('aria-selected', 'true');
+        } else {
+          link.classList.remove('active');
+          link.setAttribute('aria-selected', 'false');
+        }
+      });
+    });
+  }
+
+  /**
+   * Update active states for all tab groups based on current state
+   */
+  public static updateAllNavActiveStates(
+    rootEl: HTMLElement,
+    tabs: Record<string, string>,
+    cfgGroups?: TabGroupConfig[]
+  ): void {
+    const tabGroups = rootEl.querySelectorAll(TABGROUP_SELECTOR);
+    
+    tabGroups.forEach((groupEl) => {
+      const groupId = groupEl.getAttribute('id');
+      if (!groupId) return;
+
+      // Determine the active tab for this group
+      const activeTabId = this.resolveActiveTab(groupId, tabs, cfgGroups, groupEl as HTMLElement);
+      if (!activeTabId) return;
+
+      // Update nav links for this group
       const navLinks = groupEl.querySelectorAll('.nav-link');
       navLinks.forEach((link) => {
         const tabId = link.getAttribute('data-tab-id');
