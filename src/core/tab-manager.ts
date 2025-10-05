@@ -88,11 +88,12 @@ export class TabManager {
   /**
    * Build or refresh navigation for tab groups with nav="auto"
    */
-  public static refreshNavs(
+  public static buildNavs(
     rootEl: HTMLElement,
     cfgGroups?: TabGroupConfig[],
     onTabClick?: (groupId: string, tabId: string) => void
   ): void {
+    // Find all cv-tabgroup elements with nav="auto" or no nav attribute
     const tabGroups = rootEl.querySelectorAll('cv-tabgroup[nav="auto"], cv-tabgroup:not([nav])');
     
     tabGroups.forEach((groupEl) => {
@@ -108,8 +109,9 @@ export class TabManager {
 
       // Create nav if it doesn't exist
       if (!navContainer) {
-        navContainer = document.createElement('div');
-        navContainer.className = 'cv-tabs-nav';
+        navContainer = document.createElement('ul');
+        navContainer.className = 'cv-tabs-nav nav-tabs';
+        navContainer.setAttribute('role', 'tablist');
         groupEl.insertBefore(navContainer, groupEl.firstChild);
       }
 
@@ -123,27 +125,36 @@ export class TabManager {
 
         const header = tabEl.getAttribute('header') || this.getTabLabel(tabId, groupId, cfgGroups) || tabId;
         
-        const navItem = document.createElement('button');
-        navItem.className = 'cv-tabs-nav-item';
-        navItem.textContent = header;
-        navItem.setAttribute('data-tab-id', tabId);
-        navItem.setAttribute('data-group-id', groupId);
+        const listItem = document.createElement('li');
+        listItem.className = 'nav-item';
+        
+        const navLink = document.createElement('a');
+        navLink.className = 'nav-link';
+        navLink.textContent = header;
+        navLink.href = '#';
+        navLink.setAttribute('data-tab-id', tabId);
+        navLink.setAttribute('data-group-id', groupId);
+        navLink.setAttribute('role', 'tab');
         
         // Check if this tab is currently active
         const isActive = tabEl.classList.contains('cv-visible');
         if (isActive) {
-          navItem.classList.add('active');
+          navLink.classList.add('active');
+          navLink.setAttribute('aria-selected', 'true');
+        } else {
+          navLink.setAttribute('aria-selected', 'false');
         }
 
         // Add click handler
         if (onTabClick) {
-          navItem.addEventListener('click', (e) => {
+          navLink.addEventListener('click', (e) => {
             e.preventDefault();
             onTabClick(groupId, tabId);
           });
         }
 
-        navContainer.appendChild(navItem);
+        listItem.appendChild(navLink);
+        navContainer.appendChild(listItem);
       });
     });
   }
@@ -172,13 +183,15 @@ export class TabManager {
     const tabGroups = rootEl.querySelectorAll(`cv-tabgroup[id="${groupId}"]`);
     
     tabGroups.forEach((groupEl) => {
-      const navItems = groupEl.querySelectorAll('.cv-tabs-nav-item');
-      navItems.forEach((item) => {
-        const tabId = item.getAttribute('data-tab-id');
+      const navLinks = groupEl.querySelectorAll('.nav-link');
+      navLinks.forEach((link) => {
+        const tabId = link.getAttribute('data-tab-id');
         if (tabId === activeTabId) {
-          item.classList.add('active');
+          link.classList.add('active');
+          link.setAttribute('aria-selected', 'true');
         } else {
-          item.classList.remove('active');
+          link.classList.remove('active');
+          link.setAttribute('aria-selected', 'false');
         }
       });
     });

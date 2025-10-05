@@ -162,7 +162,7 @@ export class CustomViewsCore {
     TabManager.applySelections(this.rootEl, state.tabs || {}, this.config.tabGroups);
 
     // Refresh navs with click handlers
-    TabManager.refreshNavs(this.rootEl, this.config.tabGroups, (groupId, tabId) => {
+    TabManager.buildNavs(this.rootEl, this.config.tabGroups, (groupId, tabId) => {
       this.setActiveTab(groupId, tabId);
     });
 
