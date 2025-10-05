@@ -2,8 +2,34 @@
   "config": {
     "allToggles": ["mac", "linux", "windows"],
     "defaultState": {
-      "toggles": ["mac", "linux", "windows"]
-    }
+      "toggles": ["mac", "linux", "windows"],
+      "tabs": {
+        "platform": "windows",
+        "language": "javascript"
+      }
+    },
+    "tabGroups": [
+      {
+        "id": "platform",
+        "label": "Operating System",
+        "default": "windows",
+        "tabs": [
+          { "id": "windows", "label": "Windows" },
+          { "id": "mac", "label": "macOS" },
+          { "id": "linux", "label": "Linux" }
+        ]
+      },
+      {
+        "id": "language",
+        "label": "Programming Language",
+        "default": "javascript",
+        "tabs": [
+          { "id": "javascript", "label": "JavaScript" },
+          { "id": "typescript", "label": "TypeScript" },
+          { "id": "python", "label": "Python" }
+        ]
+      }
+    ]
   },
   "assetsJsonPath": "/assets/assets.json",
   "baseUrl": "/customviews",
@@ -12,9 +38,10 @@
     "position": "middle-left",
     "showReset": false,
     "title": "Customize your view here",
-    "description": "This is a widget that allows you to customize your view here",
+    "description": "Toggle content sections and switch between different tab views. All changes sync across the page and are saved in the URL for sharing.",
     "showWelcome": true,
     "welcomeTitle": "Welcome to Custom Views!",
-    "welcomeMessage": "This documentation uses Custom Views to personalize your experience. Click the gear icon (⚙) on the side to show or hide different content sections based on your operating system or preferences."
+    "welcomeMessage": "This documentation uses Custom Views to personalize your experience. Click the gear icon (⚙) on the side to show or hide different content sections based on your operating system or preferences. You can also switch between different tab groups to see synchronized content updates across the entire page!",
+    "showTabGroups": true
   }
 }

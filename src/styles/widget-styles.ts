@@ -433,6 +433,43 @@ export const WIDGET_STYLES = `
   width: auto;
 }
 
+.cv-tab-groups {
+  margin-top: 20px;
+}
+
+.cv-tab-group-control {
+  margin-bottom: 15px;
+}
+
+.cv-tab-group-control label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.cv-tab-group-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.cv-tab-group-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.cv-widget-theme-dark .cv-tab-group-select {
+  background-color: #2d3748;
+  border-color: #4a5568;
+  color: #e2e8f0;
+}
+
 .cv-custom-state-actions {
   display: flex;
   gap: 10px;

@@ -33,6 +33,9 @@ export interface WidgetOptions {
   
   /** Welcome modal message (only used if showWelcome is true) */
   welcomeMessage?: string;
+  
+  /** Whether to show tab groups section in widget (default: true) */
+  showTabGroups?: boolean;
 }
 
 export class CustomViewsWidget {
@@ -60,7 +63,8 @@ export class CustomViewsWidget {
       description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.',
       showWelcome: options.showWelcome ?? false,
       welcomeTitle: options.welcomeTitle || 'Welcome to Custom Views!',
-      welcomeMessage: options.welcomeMessage || 'This website uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.'
+      welcomeMessage: options.welcomeMessage || 'This website uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.',
+      showTabGroups: options.showTabGroups ?? true
     };
     
     // No external state manager to initialize
@@ -165,6 +169,34 @@ export class CustomViewsWidget {
       `).join('')
       : `<p class="cv-no-toggles">No configurable sections available.</p>`;
 
+    // Get tab groups
+    const tabGroups = this.core.getTabGroups();
+    let tabGroupsHTML = '';
+    
+    if (this.options.showTabGroups && tabGroups && tabGroups.length > 0) {
+      const tabGroupControls = tabGroups.map(group => {
+        const options = group.tabs.map(tab => 
+          `<option value="${tab.id}">${tab.label || tab.id}</option>`
+        ).join('');
+        
+        return `
+          <div class="cv-tab-group-control">
+            <label for="tab-group-${group.id}">${group.label || group.id}</label>
+            <select id="tab-group-${group.id}" class="cv-tab-group-select" data-group-id="${group.id}">
+              ${options}
+            </select>
+          </div>
+        `;
+      }).join('');
+      
+      tabGroupsHTML = `
+        <h4>Tab Groups</h4>
+        <div class="cv-tab-groups">
+          ${tabGroupControls}
+        </div>
+      `;
+    }
+
     this.modal.innerHTML = `
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
@@ -179,6 +211,8 @@ export class CustomViewsWidget {
             <div class="cv-custom-toggles">
               ${toggleControls}
             </div>
+            
+            ${tabGroupsHTML}
             
             <div class="cv-custom-state-actions">
               ${this.options.showReset ? `<button class="cv-custom-state-reset">Reset to Default</button>` : ''}
@@ -233,6 +267,18 @@ export class CustomViewsWidget {
       checkbox.addEventListener('change', () => {
         const state = this.getCurrentCustomStateFromModal();
         this.core.applyState(state);
+      });
+    });
+
+    // Listen to tab group selects
+    const tabGroupSelects = this.modal.querySelectorAll('.cv-tab-group-select') as NodeListOf<HTMLSelectElement>;
+    tabGroupSelects.forEach(select => {
+      select.addEventListener('change', () => {
+        const groupId = select.dataset.groupId;
+        const tabId = select.value;
+        if (groupId && tabId) {
+          this.core.setActiveTab(groupId, tabId);
+        }
       });
     });
 
@@ -323,6 +369,16 @@ export class CustomViewsWidget {
         if (!checkbox.disabled) {
           checkbox.checked = true;
         }
+      }
+    });
+
+    // Load tab group selections
+    const activeTabs = this.core.getCurrentActiveTabs();
+    const tabGroupSelects = this.modal.querySelectorAll('.cv-tab-group-select') as NodeListOf<HTMLSelectElement>;
+    tabGroupSelects.forEach(select => {
+      const groupId = select.dataset.groupId;
+      if (groupId && activeTabs[groupId]) {
+        select.value = activeTabs[groupId];
       }
     });
   }

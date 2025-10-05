@@ -9,7 +9,7 @@
 }
   
 /* When visible, allow content to take space. The large max-height is a safe cap.
-    Override via --cv-max-height if your content can exceed this. */
+   Override via --cv-max-height if your content can exceed this. */
 .cv-visible {
   opacity: 1 !important;
   transform: translateY(0) !important;
@@ -17,7 +17,7 @@
 }
 
 /* Hidden elements collapse space while animating.
-    We avoid the native hidden attribute to keep transitions visible. */
+   We avoid the native hidden attribute to keep transitions visible. */
 .cv-hidden {
   opacity: 0 !important;
   transform: translateY(-4px) !important;
@@ -30,4 +30,50 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   overflow: hidden !important;
+}
+
+/* Tab navigation styles */
+.cv-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0;
+}
+
+.cv-tabs-nav-item {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #6c757d;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.cv-tabs-nav-item:hover {
+  color: #495057;
+  border-bottom-color: #dee2e6;
+}
+
+.cv-tabs-nav-item.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: 500;
+}
+
+.cv-tabs-nav-item:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Tab panel base styles */
+cv-tab {
+  display: block;
+}
+
+cv-tabgroup {
+  display: block;
+  margin-bottom: 1.5rem;
 }

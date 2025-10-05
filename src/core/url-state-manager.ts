@@ -84,9 +84,14 @@ export class URLStateManager {
   private static encodeState(state: State): string | null {
     try {
       // Create a compact representation
-      const compact = {
+      const compact: any = {
         t: state.toggles
       };
+
+      // Add tab groups if present
+      if (state.tabs && Object.keys(state.tabs).length > 0) {
+        compact.g = Object.entries(state.tabs);
+      }
 
       // Convert to JSON and encode
       const json = JSON.stringify(compact);
@@ -137,9 +142,21 @@ export class URLStateManager {
         throw new Error('Invalid compact state structure');
       }
 
-      return {
+      const state: State = {
         toggles: Array.isArray(compact.t) ? compact.t : []
       };
+
+      // Reconstruct tabs from compact format
+      if (Array.isArray(compact.g)) {
+        state.tabs = {};
+        for (const [groupId, tabId] of compact.g) {
+          if (typeof groupId === 'string' && typeof tabId === 'string') {
+            state.tabs[groupId] = tabId;
+          }
+        }
+      }
+
+      return state;
     } catch (error) {
       console.warn('Failed to decode view state:', error);
       return null;
