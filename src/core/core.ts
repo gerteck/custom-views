@@ -95,6 +95,11 @@ export class CustomViewsCore {
   public async init() {
     injectCoreStyles();
 
+    // Build navigation once (with click handlers)
+    TabManager.buildNavs(this.rootEl, this.config.tabGroups, (groupId, tabId) => {
+      this.setActiveTab(groupId, tabId);
+    });
+
     // For session history, clicks on back/forward button
     window.addEventListener("popstate", () => {
       this.loadAndCallApplyState();
@@ -161,10 +166,8 @@ export class CustomViewsCore {
     // Apply tab selections
     TabManager.applySelections(this.rootEl, state.tabs || {}, this.config.tabGroups);
 
-    // Refresh navs with click handlers
-    TabManager.buildNavs(this.rootEl, this.config.tabGroups, (groupId, tabId) => {
-      this.setActiveTab(groupId, tabId);
-    });
+    // Update nav active states (without rebuilding)
+    TabManager.updateAllNavActiveStates(this.rootEl, state.tabs || {}, this.config.tabGroups);
 
     // Notify state change listeners (like widgets)
     this.notifyStateChangeListeners();
