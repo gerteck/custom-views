@@ -4,19 +4,19 @@
     "defaultState": {
       "toggles": ["mac", "linux", "windows"],
       "tabs": {
-        "platform": "windows",
+        "fruit": "apple",
         "language": "javascript"
       }
     },
     "tabGroups": [
       {
-        "id": "platform",
-        "label": "Operating System",
-        "default": "windows",
+        "id": "fruit",
+        "label": "Fruit Selection",
+        "default": "apple",
         "tabs": [
-          { "id": "windows", "label": "Windows" },
-          { "id": "mac", "label": "macOS" },
-          { "id": "linux", "label": "Linux" }
+          { "id": "apple", "label": "Apple" },
+          { "id": "orange", "label": "Orange" },
+          { "id": "pear", "label": "Pear" }
         ]
       },
       {
