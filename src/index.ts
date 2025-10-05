@@ -12,7 +12,7 @@ export { CustomViews } from "./lib/custom-views";
 export type { initOptions } from "./lib/custom-views";
 export { PersistenceManager } from "./core/persistence";
 export { URLStateManager } from "./core/url-state-manager";
-export { AssetsManager } from "./core/AssetsManager";
+export { AssetsManager } from "./core/assets-manager";
 export type { Config } from "./types/types";
 export type { ConfigFile } from "./types/types";
 

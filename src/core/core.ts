@@ -1,5 +1,5 @@
 import type { State, TabGroupConfig, Config } from "../types/types";
-import type { AssetsManager } from "./AssetsManager";
+import type { AssetsManager } from "./assets-manager";
 import { renderAssetInto } from "./render";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager } from "./url-state-manager";
