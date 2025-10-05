@@ -22,6 +22,8 @@
       <site-nav>
 * [Introduction]({{ baseUrl }}/index.html)
   * [Concepts]({{baseUrl}}/contents/archive/concepts.html)
+* Developer Guide
+  * [Tabs]({{baseUrl}}/contents/devGuide/tabs.html)
 * [Demo]({{baseUrl}}/contents/demo/demo.html)
   * [CLI Mastery]({{baseUrl}}/contents/demo/cliMastery.html)
   * [File Structures]({{baseUrl}}/contents/demo/fileStructure.html) 
