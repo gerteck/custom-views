@@ -21,26 +21,26 @@ export class CustomViewsCore {
   private visibilityManager: VisibilityManager;
 
   private stateFromUrl: State | null = null;
-  private localConfig: Config;
+  private config: Config;
   private stateChangeListeners: Array<() => void> = [];
 
   constructor(opt: CustomViewsOptions) {
     this.assetsManager = opt.assetsManager;
-    this.localConfig = opt.config;
+    this.config = opt.config;
     this.rootEl = opt.rootEl || document.body;
     this.persistenceManager = new PersistenceManager();
     this.visibilityManager = new VisibilityManager();
   }
 
-  public getLocalConfig(): Config {
-    return this.localConfig;
+  public getConfig(): Config {
+    return this.config;
   }
 
   /**
    * Get tab groups from config
    */
   public getTabGroups(): TabGroupConfig[] | undefined {
-    return this.localConfig.tabGroups;
+    return this.config.tabGroups;
   }
 
   /**
@@ -57,7 +57,7 @@ export class CustomViewsCore {
     }
 
     if (!currentState) {
-      currentState = this.localConfig.defaultState;
+      currentState = this.config.defaultState;
     }
 
     return currentState.tabs || {};
@@ -121,7 +121,7 @@ export class CustomViewsCore {
     }
 
     // 3. Local Config Fallback
-    this.renderState(this.localConfig.defaultState);
+    this.renderState(this.config.defaultState);
   }
 
   /**
@@ -159,10 +159,10 @@ export class CustomViewsCore {
     }
 
     // Apply tab selections
-    TabManager.applySelections(this.rootEl, state.tabs || {}, this.localConfig.tabGroups);
+    TabManager.applySelections(this.rootEl, state.tabs || {}, this.config.tabGroups);
 
     // Refresh navs with click handlers
-    TabManager.refreshNavs(this.rootEl, this.localConfig.tabGroups, (groupId, tabId) => {
+    TabManager.refreshNavs(this.rootEl, this.config.tabGroups, (groupId, tabId) => {
       this.setActiveTab(groupId, tabId);
     });
 
@@ -177,8 +177,8 @@ export class CustomViewsCore {
     this.stateFromUrl = null;
     this.persistenceManager.clearAll();
 
-    if (this.localConfig) {
-      this.renderState(this.localConfig.defaultState);
+    if (this.config) {
+      this.renderState(this.config.defaultState);
     } else {
       console.warn("No configuration loaded, cannot reset to default state");
     }
@@ -198,8 +198,8 @@ export class CustomViewsCore {
     }
 
     // Otherwise, if we have local config, return its default state toggles
-    if (this.localConfig) {
-      return this.localConfig.defaultState.toggles || [];
+    if (this.config) {
+      return this.config.defaultState.toggles || [];
     }
 
     // No configuration or state
@@ -212,8 +212,8 @@ export class CustomViewsCore {
   public clearPersistence() {
     this.persistenceManager.clearAll();
     this.stateFromUrl = null;
-    if (this.localConfig) {
-      this.renderState(this.localConfig.defaultState);
+    if (this.config) {
+      this.renderState(this.config.defaultState);
     } else {
       console.warn("No configuration loaded, cannot reset to default state");
     }

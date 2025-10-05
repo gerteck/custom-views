@@ -142,8 +142,8 @@ export class CustomViewsWidget {
    */
   private openStateModal(): void {
     // Get toggles from current configuration and open the modal regardless of count
-    const localConfig = this.core.getLocalConfig();
-    const toggles = localConfig?.allToggles || [];
+    const config = this.core.getConfig();
+    const toggles = config?.allToggles || [];
     this.createCustomStateModal(toggles);
   }
 
