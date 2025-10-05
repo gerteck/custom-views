@@ -1,7 +1,6 @@
 import { CustomViewsCore, type CustomViewsOptions } from "../core/core";
 import { AssetsManager } from "../core/AssetsManager";
-import type { CustomViewAsset } from "../types/types";
-import { Config } from "../types/Config";
+import type { CustomViewAsset, Config } from "../types/types";
 import { prependBaseUrl } from "../utils/url-utils";
 
 /**
@@ -40,18 +39,18 @@ export class CustomViews {
     }
 
     // Use provided config or create a minimal default one
-    let localConfig: Config;
+    let config: Config;
     if (opts.config) {
-      localConfig = opts.config;
+      config = opts.config;
     } else {
       console.error("No config provided, using minimal default config");
       // Create a minimal default config
-      localConfig = new Config([], { toggles: [] });
+      config = { allToggles: [], defaultState: { toggles: [] } };
     }
 
     const coreOptions: CustomViewsOptions = {
       assetsManager,
-      config: localConfig,
+      config: config,
       rootEl: opts.rootEl,
     };
     const core = new CustomViewsCore(coreOptions);

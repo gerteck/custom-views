@@ -13,7 +13,7 @@ export type { initOptions } from "./lib/custom-views";
 export { PersistenceManager } from "./core/persistence";
 export { URLStateManager } from "./core/url-state-manager";
 export { AssetsManager } from "./core/AssetsManager";
-export { Config } from "./types/Config";
+export type { Config } from "./types/types";
 export type { ConfigFile } from "./types/types";
 
 // Set up globals and auto-initialization
