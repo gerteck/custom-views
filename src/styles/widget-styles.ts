@@ -10,8 +10,10 @@ export const WIDGET_STYLES = `
 /* Rounded rectangle widget icon styles */
 .cv-widget-icon {
   position: fixed;
-  background: white;
-  color: black;
+  /* Slightly transparent by default so the widget is subtle at the page edge */
+  background: rgba(255, 255, 255, 0.92);
+  color: rgba(0, 0, 0, 0.9);
+  opacity: 0.6;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,8 +27,10 @@ export const WIDGET_STYLES = `
 }
 
 .cv-widget-icon:hover {
-  background: white;
-  color: black;
+  /* Become fully opaque on hover to improve readability */
+  background: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
 
 /* Top-right: rounded end on left, sticks out leftward on hover */
