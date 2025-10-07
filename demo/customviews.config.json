@@ -1,0 +1,26 @@
+{
+  "config": {
+    "allToggles": ["windows", "mac", "linux"],
+    "defaultState": {
+      "toggles": ["windows"],
+      "tabs": {
+        "demo-tabs": "tabA"
+      }
+    },
+    "tabGroups": [
+      {
+        "id": "demo-tabs",
+        "default": "tabA",
+        "tabs": [
+          { "id": "tabA", "label": "Alpha" },
+          { "id": "tabB", "label": "Beta" },
+          { "id": "tabC", "label": "Gamma" }
+        ]
+      }
+    ]
+  },
+  "baseURL": "/demo",
+  "widget": {
+    "enabled": true
+  }
+}
