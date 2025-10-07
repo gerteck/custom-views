@@ -21,6 +21,7 @@
   },
   "baseURL": "/demo",
   "widget": {
-    "enabled": true
+    "enabled": true,
+    "showWelcome": true
   }
 }
