@@ -75,43 +75,5 @@
         </cv-tab>
       </cv-tabgroup>
 
-    <script>
-      // Wait for the library's ready event. The library auto-initializes when loaded via script tag.
-      function $(id) { return document.getElementById(id); }
-
-      document.addEventListener('customviews:ready', function (ev) {
-        const core = window.customViewsInstance && window.customViewsInstance.core;
-        if (!core) {
-          console.error('CustomViews core not available');
-          return;
-        }
-
-        // Utility to refresh status display
-        function refreshStatus() {
-          try {
-            const toggles = core.getCurrentActiveToggles();
-            $('status-toggles').textContent = 'Active toggles: ' + (toggles.length ? toggles.join(', ') : '(none)');
-
-            const tabs = core.getCurrentActiveTabs();
-            $('status-tabs').textContent = 'Active tabs: ' + JSON.stringify(tabs);
-          } catch (err) {
-            console.warn('Error reading core state', err);
-          }
-        }
-
-        // Listen for state changes and refresh initial status
-        core.addStateChangeListener(refreshStatus);
-        refreshStatus();
-      });
-
-      // If the library was already initialized before this script runs, the event may have fired.
-      // Try a short deferred check in that case.
-      setTimeout(() => {
-        if (window.customViewsInstance && window.customViewsInstance.core) {
-          const ev = new CustomEvent('customviews:ready', { detail: { core: window.customViewsInstance.core, widget: window.customViewsInstance.widget } });
-          document.dispatchEvent(ev);
-        }
-      }, 50);
-    </script>
   </body>
 </html>

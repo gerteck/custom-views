@@ -12,6 +12,7 @@ export interface CustomViewsOptions {
   assetsManager: AssetsManager;
   config: Config;
   rootEl?: HTMLElement | undefined;
+  showUrl?: boolean;
 }
 
 export class CustomViewsCore {
@@ -20,9 +21,10 @@ export class CustomViewsCore {
   private persistenceManager: PersistenceManager;
   private visibilityManager: VisibilityManager;
 
-  private stateFromUrl: State | null = null;
   private config: Config;
   private stateChangeListeners: Array<() => void> = [];
+  private showUrlEnabled: boolean;
+  private lastAppliedState: State | null = null;
 
   constructor(opt: CustomViewsOptions) {
     this.assetsManager = opt.assetsManager;
@@ -30,6 +32,8 @@ export class CustomViewsCore {
     this.rootEl = opt.rootEl || document.body;
     this.persistenceManager = new PersistenceManager();
     this.visibilityManager = new VisibilityManager();
+    this.showUrlEnabled = opt.showUrl ?? true;
+    this.lastAppliedState = this.cloneState(this.config?.defaultState);
   }
 
   public getConfig(): Config {
@@ -44,23 +48,19 @@ export class CustomViewsCore {
   }
 
   /**
-   * Get currently active tabs (from URL > persisted > defaults)
+   * Get currently active tabs (from URL > persisted (localStorage) > defaults)
    */
   public getCurrentActiveTabs(): Record<string, string> {
-    // Priority: URL state > persisted state > default state
-    let currentState: State | null = null;
-
-    if (this.stateFromUrl) {
-      currentState = this.stateFromUrl;
-    } else {
-      currentState = this.persistenceManager.getPersistedState();
+    if (this.lastAppliedState?.tabs) {
+      return { ...this.lastAppliedState.tabs };
     }
 
-    if (!currentState) {
-      currentState = this.config.defaultState;
+    const persistedState = this.persistenceManager.getPersistedState();
+    if (persistedState?.tabs) {
+      return { ...persistedState.tabs };
     }
 
-    return currentState.tabs || {};
+    return this.config?.defaultState?.tabs ? { ...this.config.defaultState.tabs } : {};
   }
 
   /**
@@ -112,9 +112,9 @@ export class CustomViewsCore {
   // across back/forward button clicks
   private async loadAndCallApplyState() {
     // 1. URL State
-    this.stateFromUrl = URLStateManager.parseURL();
-    if (this.stateFromUrl) {
-      this.applyState(this.stateFromUrl);
+    const urlState = URLStateManager.parseURL();
+    if (urlState) {
+      this.applyState(urlState);
       return;
     }
 
@@ -133,14 +133,19 @@ export class CustomViewsCore {
   * Apply a custom state, saves to localStorage and updates the URL
   */
   public applyState(state: State) {
-    this.renderState(state);
-    this.persistenceManager.persistState(state);
-    this.stateFromUrl = state;
-    URLStateManager.updateURL(state);
+    const snapshot = this.cloneState(state);
+    this.renderState(snapshot);
+    this.persistenceManager.persistState(snapshot);
+    if (this.showUrlEnabled) {
+      URLStateManager.updateURL(snapshot);
+    } else {
+      URLStateManager.clearURL();
+    }
   }
 
   /** Render all toggles for the current state */
   private renderState(state: State) {
+    this.lastAppliedState = this.cloneState(state);
     const toggles = state.toggles || [];
     const finalToggles = this.visibilityManager.filterVisibleToggles(toggles);
 
@@ -177,7 +182,6 @@ export class CustomViewsCore {
    * Reset to default state
    */
   public resetToDefault() {
-    this.stateFromUrl = null;
     this.persistenceManager.clearAll();
 
     if (this.config) {
@@ -195,17 +199,14 @@ export class CustomViewsCore {
    * Get the currently active toggles regardless of whether they come from custom state or default configuration
    */
   public getCurrentActiveToggles(): string[] {
-    // If we have a custom state, return its toggles
-    if (this.stateFromUrl) {
-      return this.stateFromUrl.toggles || [];
+    if (this.lastAppliedState) {
+      return this.lastAppliedState.toggles || [];
     }
 
-    // Otherwise, if we have local config, return its default state toggles
     if (this.config) {
       return this.config.defaultState.toggles || [];
     }
 
-    // No configuration or state
     return [];
   }
 
@@ -214,7 +215,6 @@ export class CustomViewsCore {
    */
   public clearPersistence() {
     this.persistenceManager.clearAll();
-    this.stateFromUrl = null;
     if (this.config) {
       this.renderState(this.config.defaultState);
     } else {
@@ -222,6 +222,28 @@ export class CustomViewsCore {
     }
 
     URLStateManager.clearURL();
+  }
+
+  public setOption(flag: string, value: unknown): void {
+    switch (flag) {
+      case 'showUrl': {
+        const nextValue = Boolean(value);
+        if (this.showUrlEnabled === nextValue) {
+          return;
+        }
+
+        this.showUrlEnabled = nextValue;
+        if (nextValue) {
+          const stateForUrl = this.getTrackedStateSnapshot();
+          URLStateManager.updateURL(stateForUrl);
+        } else {
+          URLStateManager.clearURL();
+        }
+        break;
+      }
+      default:
+        console.warn(`[CustomViews] Unknown option '${flag}' passed to setOption`);
+    }
   }
 
   // === STATE CHANGE LISTENER METHODS ===
@@ -253,6 +275,24 @@ export class CustomViewsCore {
         console.warn('Error in state change listener:', error);
       }
     });
+  }
+
+  private cloneState(state?: State | null): State {
+    const toggles = state?.toggles ? [...state.toggles] : [];
+    const tabs = state?.tabs ? { ...state.tabs } : undefined;
+    return tabs ? { toggles, tabs } : { toggles };
+  }
+
+  private getTrackedStateSnapshot(): State {
+    if (this.lastAppliedState) {
+      return this.cloneState(this.lastAppliedState);
+    }
+
+    if (this.config) {
+      return this.cloneState(this.config.defaultState);
+    }
+
+    return { toggles: [] };
   }
 
 }

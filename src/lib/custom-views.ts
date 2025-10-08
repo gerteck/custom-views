@@ -15,6 +15,8 @@ export type initOptions = {
   config?: Config;
   /** Base URL for all paths */
   baseURL?: string;
+  /** Whether to show the `view` parameter in the browser URL bar */
+  showUrl?: boolean;
 }
 
 /**
@@ -53,6 +55,9 @@ export class CustomViews {
       config: config,
       rootEl: opts.rootEl,
     };
+    if (opts.showUrl !== undefined) {
+      coreOptions.showUrl = opts.showUrl;
+    }
     const core = new CustomViewsCore(coreOptions);
     core.init();
     return core;

@@ -8,6 +8,7 @@ export const TAB_STYLES = `
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
+  margin-top: 0.5rem;
   margin-bottom: 1rem;
   list-style: none;
   border-bottom: 1px solid #dee2e6;

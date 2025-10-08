@@ -103,12 +103,18 @@ export default function initializeFromScript(): void {
       // Determine effective baseURL (data attribute takes precedence over config)
       const effectiveBaseURL = baseURL || configFile.baseURL || '';
 
-      // Initialize CustomViews core
-      const core = await CustomViews.init({
+      const options: any = {
         config: configFile.config,
         assetsJsonPath: configFile.assetsJsonPath,
         baseURL: effectiveBaseURL,
-      });
+      }
+
+      if (configFile.showUrl !== undefined) {
+        options.showUrl = configFile.showUrl;
+      }
+
+      // Initialize CustomViews core
+      const core = await CustomViews.init(options);
 
       if (!core) {
         console.error('[CustomViews] Failed to initialize core.');
