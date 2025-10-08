@@ -83,14 +83,74 @@
       "headingKeywords": {}
     },
     {
+      "src": "contents/devGuide/tabs.md",
+      "title": "DevGuide - Tabs",
+      "headings": {
+        "how-do-the-tabs-and-tabgroups-work-in-customviews": "How do the Tabs and TabGroups work in CustomViews?",
+        "core-module": "Core Module",
+        "tab-manager": "Tab Manager",
+        "main-methods": "Main methods:"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/userGuide/setup.md",
+      "title": "User Guide - Setting up",
+      "headings": {
+        "using-the-customviews-plugin": "Using the CustomViews Plugin",
+        "1-include-the-script": "1. Include the script",
+        "2-create-customviews-config-json": "2. Create customviews.config.json",
+        "3-reference-and-use-a-custom-view-component": "3. Reference and use a custom view component",
+        "4-notes-and-troubleshooting": "4. Notes and troubleshooting"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/userGuide/tabs.md",
+      "title": "User Guide - Tabs",
+      "headings": {
+        "tab-groups": "Tab Groups",
+        "basic-usage": "Basic Usage",
+        "code": "CODE:",
+        "output": "OUTPUT:",
+        "configuration": "Configuration",
+        "config-file-optional": "Config File (Optional)",
+        "options": "Options",
+        "cv-tabgroup-attributes": "&lt;cv-tabgroup&gt; Attributes",
+        "cv-tab-attributes": "&lt;cv-tab&gt; Attributes",
+        "config-file-options": "Config File Options",
+        "advanced-features": "Advanced Features",
+        "custom-headers-with-emojis": "Custom Headers with Emojis",
+        "no-navigation-mode": "No Navigation Mode",
+        "widget-integration": "Widget Integration",
+        "url-state-persistence": "URL State Persistence"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/userGuide/toggles.md",
+      "title": "User Guide - Toggles",
+      "headings": {
+        "toggles": "Toggles",
+        "basic-usage": "Basic Usage",
+        "code": "CODE:",
+        "output": "OUTPUT:",
+        "configuration-required-for-widget-integration": "Configuration (required for widget integration)",
+        "attributes-and-options": "Attributes and Options",
+        "how-visibility-is-determined": "How visibility is determined",
+        "advanced-features": "Advanced Features",
+        "examples-and-patterns": "Examples and Patterns"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "index.md",
       "title": "Custom Views Library - Interactive Documentation & Demo",
       "headings": {
         "introduction": "Introduction",
         "interactive-demo": "Interactive Demo",
-        "try-it-out": "Try It Out",
-        "live-demo-cross-platform-development": "Live Demo - Cross-Platform Development",
-        "platform-specific-content": "Platform-Specific Content",
+        "demo-tab-groups-feature": "Demo: Tab Groups Feature",
+        "demo-of-toggles": "Demo of Toggles",
         "macos-development": "🍎 macOS Development",
         "linux-development": "🐧 Linux Development",
         "windows-development": "🪟 Windows Development",
