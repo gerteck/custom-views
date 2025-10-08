@@ -28,7 +28,78 @@ Use the `data-cv-toggle` attribute to mark content that should be shown only for
 
 ## Tabs
 
-Tabs are available via the custom elements `<cv-tabgroup>` and `<cv-tab>`. Tab groups synchronize across the page and can be surfaced in the widget when declared in the config.
+Tabs let you create mutually exclusive, synchronized content sections using the custom elements `<cv-tabgroup>` and `<cv-tab>`. All tab groups on the page that share the same `id` stay in sync — changing a tab in one group updates the others automatically.
+
+Basic example (automatic navigation):
+
+```html
+<cv-tabgroup id="fruit">
+  <cv-tab id="apple" header="Apple">I love Apples!</cv-tab>
+  <cv-tab id="orange" header="Orange">I love Oranges!</cv-tab>
+  <cv-tab id="pear" header="Pear">I love Pears!</cv-tab>
+</cv-tabgroup>
+```
+
+Attributes and options
+- `id` (on `<cv-tabgroup>`) — required group identifier. Groups with the same `id` synchronize.
+- `nav` (on `<cv-tabgroup>`) — navigation mode. Use `nav="none"` to hide navigation when you want to control tabs only via the widget or programmatically.
+- `id` (on `<cv-tab>`) — tab identifier inside the group (required).
+- `header` (on `<cv-tab>`) — text/HTML used for the tab label. Emojis are supported, for example `header="🍎 Apple"`.
+
+Config integration
+If you declare tab groups in `customviews.config.json` under `config.tabGroups`, they will appear in the widget with friendly labels and default selections. Example:
+
+```json
+{
+  "config": {
+    "tabGroups": [
+      {
+        "id": "fruit",
+        "label": "Fruit Selection",
+        "default": "apple",
+        "tabs": [
+          { "id": "apple", "label": "Apple" },
+          { "id": "orange", "label": "Orange" },
+          { "id": "pear", "label": "Pear" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+URL & persistence
+Tab selections are included in the same state snapshot as toggles. The resolution order is: URL state (if present) → persisted localStorage state → `config.defaultState`. When `showUrl` is enabled in your config, tab selections are saved to the shareable URL so users can bookmark or share a specific view.
+
+Programmatic API and events
+- Programmatically set an active tab:
+
+```js
+// When auto-initialized the instance is available at window.customViewsInstance
+window.customViewsInstance.core.setActiveTab('fruit', 'orange');
+```
+
+- The library dispatches a `customviews:tab-change` CustomEvent when a tab selection changes. The event `detail` contains `{ groupId, tabId }`.
+
+Advanced examples
+- Hide navigation and control from the widget only:
+
+```html
+<cv-tabgroup id="fruit" nav="none">
+  <cv-tab id="apple">Apple content</cv-tab>
+  <cv-tab id="orange">Orange content</cv-tab>
+</cv-tabgroup>
+```
+
+- Use emoji headers for friendly labels:
+
+```html
+<cv-tab id="apple" header="🍎 Apple">Apple content</cv-tab>
+```
+
+Notes
+- If a `<cv-tab>` matches a configured `tabGroups` entry by id, the widget will show that group and let users switch tabs from the panel.
+- Tab groups are purely client-side custom elements — they're accessible and keyboard-navigable via the auto-generated nav when `nav="auto"`.
 
 
 ### Simple Setup (auto-init)

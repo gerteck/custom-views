@@ -51,7 +51,7 @@ Pears are sweet, bell-shaped fruits with a soft texture when ripe. They're high 
   </cv-tab>
 </cv-tabgroup>
 
-<cv-tabgroup id="fruit" nav="auto">
+<cv-tabgroup id="fruit">
   <cv-tab id="apple" header="Apple">
   
 I love Apples!
