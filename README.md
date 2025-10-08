@@ -10,21 +10,38 @@ A lightweight JavaScript library for creating contextual, adaptive web content. 
 
 ### Mark content with toggles
 
-Use the `data-cv-toggle` attribute to mark content that should be shown only for specific categories (for example `mac`, `linux`, `windows`, `beginner`, `advanced`). 
+Use the `data-cv-toggle` attribute to mark content that should be shown only for specific categories (for example `mac`, `linux`, `windows`). 
 
 ```html
 <!-- Mark content with data-cv-toggle attribute -->
-<div data-cv-toggle="beginner">
-  <p>Beginner content here</p>
+<div data-cv-toggle="mac">
+  <p>Mac content here</p>
 </div>
 
-<div data-cv-toggle="advanced">
-  <p>Advanced content here</p>
+<div data-cv-toggle="linux">
+  <p>Linux content here</p>
+</div>
+
+<div data-cv-toggle="windows">
+  <p>Windows content here</p>
 </div>
 
 <!-- Dynamic content with ID -->
-<div data-cv-toggle="beginner" data-cv-id="intro-guide"></div>
+<div data-cv-toggle="mac" data-cv-id="mac-picture"></div>
 ```
+
+**Configuration Integration**
+To expose toggles in the widget and provide defaults, list them in your config file under `config.allToggles` and set `config.defaultState.toggles`:
+
+```json
+{
+  "config": {
+    "allToggles": ["mac", "linux", "windows"],
+    "defaultState": { "toggles": ["mac"] }
+  }
+}
+```
+
 
 ## Tabs
 
@@ -46,7 +63,7 @@ Attributes and options
 - `id` (on `<cv-tab>`) — tab identifier inside the group (required).
 - `header` (on `<cv-tab>`) — text/HTML used for the tab label. Emojis are supported, for example `header="🍎 Apple"`.
 
-Config integration
+**Config integration**:
 If you declare tab groups in `customviews.config.json` under `config.tabGroups`, they will appear in the widget with friendly labels and default selections. Example:
 
 ```json
@@ -68,38 +85,8 @@ If you declare tab groups in `customviews.config.json` under `config.tabGroups`,
 }
 ```
 
-URL & persistence
-Tab selections are included in the same state snapshot as toggles. The resolution order is: URL state (if present) → persisted localStorage state → `config.defaultState`. When `showUrl` is enabled in your config, tab selections are saved to the shareable URL so users can bookmark or share a specific view.
-
-Programmatic API and events
-- Programmatically set an active tab:
-
-```js
-// When auto-initialized the instance is available at window.customViewsInstance
-window.customViewsInstance.core.setActiveTab('fruit', 'orange');
-```
-
-- The library dispatches a `customviews:tab-change` CustomEvent when a tab selection changes. The event `detail` contains `{ groupId, tabId }`.
-
-Advanced examples
-- Hide navigation and control from the widget only:
-
-```html
-<cv-tabgroup id="fruit" nav="none">
-  <cv-tab id="apple">Apple content</cv-tab>
-  <cv-tab id="orange">Orange content</cv-tab>
-</cv-tabgroup>
-```
-
-- Use emoji headers for friendly labels:
-
-```html
-<cv-tab id="apple" header="🍎 Apple">Apple content</cv-tab>
-```
-
-Notes
-- If a `<cv-tab>` matches a configured `tabGroups` entry by id, the widget will show that group and let users switch tabs from the panel.
-- Tab groups are purely client-side custom elements — they're accessible and keyboard-navigable via the auto-generated nav when `nav="auto"`.
+Resolution order of tabs and toggles is as follows: 
+* URL state (if present) → persisted localStorage state → `config.defaultState`. 
 
 
 ### Simple Setup (auto-init)
