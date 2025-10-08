@@ -330,7 +330,17 @@ export class CustomViewsWidget {
       }
     });
 
-    return { toggles };
+    // Collect tab selections
+    const tabGroupSelects = this.modal.querySelectorAll('.cv-tab-group-select') as NodeListOf<HTMLSelectElement>;
+    const tabs: Record<string, string> = {};
+    tabGroupSelects.forEach(select => {
+      const groupId = select.dataset.groupId;
+      if (groupId) {
+        tabs[groupId] = select.value;
+      }
+    });
+
+    return Object.keys(tabs).length > 0 ? { toggles, tabs } : { toggles };
   }
 
   /**

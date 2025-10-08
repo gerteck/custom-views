@@ -76,6 +76,8 @@ export interface ConfigFile {
   assetsJsonPath?: string;
   /** Base URL for all paths */
   baseUrl?: string;
+  /** Whether to keep the `view` state parameter visible in the browser URL bar */
+  showUrl?: boolean;
   
   /** Widget configuration options */
   widget?: {

@@ -33,6 +33,7 @@
   },
   "assetsJsonPath": "/assets/assets.json",
   "baseUrl": "/customviews",
+  "showUrl": false,
   "widget": {
     "enabled": true,
     "position": "middle-left",
