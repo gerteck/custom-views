@@ -28,8 +28,10 @@ export class TabManager {
       // Determine the active tab for this group
       const activeTabId = this.resolveActiveTab(groupId, tabs, cfgGroups, groupEl as HTMLElement);
       
-      // Apply visibility to child cv-tab elements
-      const tabElements = groupEl.querySelectorAll(TAB_SELECTOR);
+      // Apply visibility to direct child cv-tab elements only (not nested ones)
+      const tabElements = Array.from(groupEl.children).filter(
+        (child) => child.tagName.toLowerCase() === 'cv-tab'
+      );
       tabElements.forEach((tabEl) => {
         const tabId = tabEl.getAttribute('id');
         if (!tabId) return;
@@ -69,8 +71,10 @@ export class TabManager {
       }
     }
 
-    // 3. Fallback to first cv-tab child in DOM
-    const firstTab = groupEl.querySelector(TAB_SELECTOR);
+    // 3. Fallback to first direct cv-tab child in DOM
+    const firstTab = Array.from(groupEl.children).find(
+      (child) => child.tagName.toLowerCase() === 'cv-tab'
+    );
     if (firstTab) {
       return firstTab.getAttribute('id');
     }
@@ -110,8 +114,10 @@ export class TabManager {
       let navContainer = groupEl.querySelector(`.${NAV_CONTAINER_CLASS}`);
       if (navContainer) return; // Already built
       
-      // Get all child tabs
-      const tabElements = Array.from(groupEl.querySelectorAll(TAB_SELECTOR));
+      // Get only direct child tabs (not nested ones)
+      const tabElements = Array.from(groupEl.children).filter(
+        (child) => child.tagName.toLowerCase() === 'cv-tab'
+      );
       if (tabElements.length === 0) return;
 
       // Create nav container
