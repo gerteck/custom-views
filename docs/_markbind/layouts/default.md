@@ -23,6 +23,8 @@
 * [Introduction]({{ baseUrl }}/index.html)
   * [Concepts]({{baseUrl}}/contents/archive/concepts.html)
 * User Guide
+  * [Setting Up]({{baseUrl}}/contents/userGuide/setup.html)
+  * [Toggles]({{baseUrl}}/contents/userGuide/toggles.html)
   * [Tabs]({{baseUrl}}/contents/userGuide/tabs.html)
 * Developer Guide
   * [Tabs]({{baseUrl}}/contents/devGuide/tabs.html)

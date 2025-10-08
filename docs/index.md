@@ -11,20 +11,13 @@
 
 ## Introduction
 
-Custom Views Library is a lightweight JavaScript library for managing dynamic content views using data attributes. This documentation serves as both a user guide and a live demo of the library's capabilities.
+CustomViews is a small runtime that lets you register and toggle custom content (assets, snippets, or UI panels) on your site and share visibility state via URLs. It provides a lightweight widget and API to manage toggles, tab groups and insert assets into the page.
 
 It allows you to dynamically toggle content based on configuration and state, providing a flexible way to manage content that can change based on user interactions, preferences, or URL parameters.
 
 ### Interactive Demo
 
-**Look for the "Custom Views" widget in the top-right corner** to interact with this demo in real-time! This entire page demonstrates the library's capabilities.
-
-### Try It Out
-
-1. **Use the Widget**: Look for the "Custom Views" widget in the corner
-1. **Toggle Platforms**: Use "Customize View" to show/hide different OS sections
-1. **Switch Tabs**: Use the "Tab Groups" section in the widget to switch between platforms and languages
-1. **URL Sharing**: Share specific configurations via URL
+**Look for the "Custom Views" widget on the left** to interact with this demo in real-time!
 
 ## Demo: Tab Groups Feature
 
@@ -78,7 +71,6 @@ I love Oranges!
 
 ## Demo of Toggles
 
-### Platform-Specific Content
 
 <div data-cv-toggle="mac">
 

@@ -4,8 +4,7 @@
     "defaultState": {
       "toggles": ["mac", "linux", "windows"],
       "tabs": {
-        "fruit": "apple",
-        "language": "javascript"
+        "fruit": "apple"
       }
     },
     "tabGroups": [
@@ -17,16 +16,6 @@
           { "id": "apple", "label": "Apple" },
           { "id": "orange", "label": "Orange" },
           { "id": "pear", "label": "Pear" }
-        ]
-      },
-      {
-        "id": "language",
-        "label": "Programming Language",
-        "default": "javascript",
-        "tabs": [
-          { "id": "javascript", "label": "JavaScript" },
-          { "id": "typescript", "label": "TypeScript" },
-          { "id": "python", "label": "Python" }
         ]
       }
     ]
