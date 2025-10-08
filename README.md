@@ -1,14 +1,16 @@
-# Custom Views
+## Custom Views
 
 v1.1.0
 
 [npm package link](https://www.npmjs.com/package/@customviews-js/customviews)
 
-A JavaScript library for creating contextual, adaptive web content. Perfect for educational websites, documentation, and multi-audience platforms.
+A lightweight JavaScript library for creating contextual, adaptive web content. Perfect for documentation, tutorials, and sites with multiple audiences or platforms.
 
 ## Quick Start
 
-### HTML Setup
+### Mark content with toggles
+
+Use the `data-cv-toggle` attribute to mark content that should be shown only for specific categories (for example `mac`, `linux`, `windows`, `beginner`, `advanced`). 
 
 ```html
 <!-- Mark content with data-cv-toggle attribute -->
@@ -24,35 +26,61 @@ A JavaScript library for creating contextual, adaptive web content. Perfect for 
 <div data-cv-toggle="beginner" data-cv-id="intro-guide"></div>
 ```
 
-### Simple Setup
+## Tabs
+
+Tabs are available via the custom elements `<cv-tabgroup>` and `<cv-tab>`. Tab groups synchronize across the page and can be surfaced in the widget when declared in the config.
+
+
+### Simple Setup (auto-init)
+
+Include the bundle and let the library auto-initialize from a config file:
 
 ```html
 <script src="https://unpkg.com/@customviews-js/customviews"></script>
 ```
 
-This auto-init script will:
+By default the auto-init script will:
+1. Load configuration (default path `/customviews.config.json`)
 1. Automatically load configuration from `/customviews.config.json`
 2. Initialize the core library
 3. Create and render the widget if enabled
 
-#### Configuration File
+## Configuration
 
-Create a `customviews.config.json` file in your site root:
+The config file uses a flat top-level structure. Key fields:
+
+Example `customviews.config.json`:
 
 ```json
 {
-  "core": {
-    "config": {
-      "allToggles": ["beginner", "advanced"],
-      "defaultState": {
-        "toggles": ["beginner"]
-      }
+  "config": {
+    "allToggles": ["mac", "linux", "windows"],
+    "defaultState": {
+      "toggles": ["mac", "linux", "windows"],
+      "tabs": { "fruit": "apple" }
     },
-    "assetsJsonPath": "/assets.json"
+    "tabGroups": [
+      {
+        "id": "fruit",
+        "label": "Fruit Selection",
+        "default": "apple",
+        "tabs": [
+          { "id": "apple", "label": "Apple" },
+          { "id": "orange", "label": "Orange" },
+          { "id": "pear", "label": "Pear" }
+        ]
+      }
+    ]
   },
+  "assetsJsonPath": "/assets/assets.json",
+  "baseUrl": "/customviews",
+  "showUrl": false,
   "widget": {
     "enabled": true,
     "position": "middle-left",
+    "showReset": false,
+    "title": "Customize your view here",
+    "description": "Toggle content sections and switch between different tab views.",
     "showWelcome": true
   }
 }
@@ -68,96 +96,17 @@ The auto-init script supports these data attributes:
 <script 
   src="https://unpkg.com/@customviews-js/customviews" 
   data-base-url="/my-site"
-  data-config-path="/configs/custom-views.json">
+  data-config-path="/configs/customviews.config.json">
 </script>
 ```
 
+
 ## Widget Features
 
-- **Floating Widget**: Rounded rectangle design with gear icon
-- **Six Positions**: top-left, top-right, bottom-left, bottom-right, middle-left, middle-right
-- **Welcome Modal**: Optional first-visit modal (localStorage cached)
-- **Theme Support**: Light and dark themes
-- **URL Sharing**: Generate shareable URLs with custom states
-
-## Core Initialization Options
-
-```typescript
-{
-  config?: Config;                 // Config object with allToggles and defaultState
-  configPath?: string;             // Path to JSON config file
-  assetsJsonPath?: string;         // Path to JSON assets file
-  baseURL?: string;                // Base URL prepended to all paths (e.g., '/customviews')
-  rootEl?: HTMLElement;            // Root element to apply custom views (default: document.body)
-}
-```
-
-**Notes**: 
-- Either `config` (literal config object) or `configPath` must be provided.
-- `baseURL` is automatically prepended to `configPath`, `assetsJsonPath`, and all asset `src` paths.
-- Absolute URLs (starting with `http://` or `https://`) are not modified.
-
-## Configuration File Format
-
-When using auto-initialization, the config file follows this structure:
-
-```typescript
-{
-  core: {
-    config?: any;                  // Core configuration object
-    configPath?: string;           // Path to the configuration file
-    assetsJsonPath?: string;       // Path to the assets JSON file
-    baseURL?: string;              // Base URL for all paths
-  };
-  
-  widget?: {
-    enabled?: boolean;             // Whether the widget is enabled
-    position?: string;             // Widget position
-    theme?: 'light' | 'dark';      // Widget theme
-    showReset?: boolean;           // Whether to show reset button
-    title?: string;                // Widget title
-    description?: string;          // Widget description text
-    showWelcome?: boolean;         // Whether to show welcome modal on first visit
-    welcomeTitle?: string;         // Welcome modal title
-    welcomeMessage?: string;       // Welcome modal message
-  };
-}
-```
-
-## Events
-
-### `customviews:ready` Event
-
-When using auto-initialization, a `customviews:ready` event is dispatched when CustomViews is fully initialized:
-
-```javascript
-document.addEventListener('customviews:ready', (event) => {
-  const { core, widget } = event.detail;
-  
-  // You can now access the core and widget instances
-  console.log('CustomViews initialized!');
-  
-  // Example: Programmatically change state
-  core.applyState({ toggles: ['advanced'] });
-});
-```
-
-### Global Instance Access
-
-When using auto-initialization, the core and widget instances are stored on the `window` object:
-
-```javascript
-// Access the core instance
-const core = window.customViewsInstance.core;
-
-// Access the widget instance (if enabled)
-const widget = window.customViewsInstance.widget;
-
-// Example: Programmatically change state
-core.applyState({ toggles: ['advanced'] });
-```
-
-## Widget Options
+- Floating widget with optional welcome modal and reset
+- Config-driven (enable/disable, position, theme, labels)
+- Shows toggles and tab groups declared in `config` for quick switching
+- Can persist state to URL for sharing
 
 ```typescript
 {
@@ -173,7 +122,9 @@ core.applyState({ toggles: ['advanced'] });
 }
 ```
 
-## Assets JSON Setup
+## Assets JSON
+
+Assets are still defined in a JSON file referenced by `assetsJsonPath`. Example snippets are unchanged — asset keys map to HTML, text, or images and are rendered into elements that have `data-cv-id` (or legacy `data-customviews-id`).
 
 The `assets.json` file defines reusable content that can be dynamically injected into your pages. Each asset is referenced by a unique key and can contain images, HTML, or text.
 * Note that `baseURL` defined during initialization is automatically prepended to all asset `src` paths.
@@ -200,11 +151,6 @@ The `assets.json` file defines reusable content that can be dynamically injected
 }
 ```
 
-### Asset Properties
-
-- **`src`**: Image URL (makes it an image asset), **`content`**: Text or HTML content (auto-detected)
-- **`alt`**: Alt text for images, **`className`**: CSS classes to apply, **`style`**: Inline CSS styles
-
 ### Usage in HTML
 
 ```html
@@ -214,6 +160,12 @@ The `assets.json` file defines reusable content that can be dynamically injected
 
 When the toggle is active, the asset will be automatically rendered into the element.
 
+
+## API & Integration Notes
+
+- Public globals: `window.CustomViews`, `window.CustomViewsWidget`, and `window.customViewsInstance` (contains `{ core, widget? }`) when auto-initialized.
+- Important events: `customviews:ready` (auto-init done) and `customviews:tab-change` (dispatched when a tab group selection changes).
+- URL state helpers: `URLStateManager.generateShareableURL` and `URLStateManager.parseURL` (used internally by the widget).
 
 ## License
 
