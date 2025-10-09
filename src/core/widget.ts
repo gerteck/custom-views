@@ -62,8 +62,8 @@ export class CustomViewsWidget {
       title: options.title || 'Custom Views',
       description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.',
       showWelcome: options.showWelcome ?? false,
-      welcomeTitle: options.welcomeTitle || 'Welcome to Custom Views!',
-      welcomeMessage: options.welcomeMessage || 'This website uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.',
+      welcomeTitle: options.welcomeTitle || 'Site Customization',
+      welcomeMessage: options.welcomeMessage || 'This site is powered by Custom Views. Use the widget on the side (⚙) to customize your experience. Your preferences will be saved and can be shared via URL.<br><br>Learn more at <a href="https://github.com/customviews-js/customviews" target="_blank">customviews GitHub</a>.',
       showTabGroups: options.showTabGroups ?? true
     };
     
@@ -440,7 +440,7 @@ export class CustomViewsWidget {
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-welcome-content">
-            <p>${this.options.welcomeMessage}</p>
+            <p style="text-align: justify;">${this.options.welcomeMessage}</p>
             
             <div class="cv-welcome-widget-preview">
               <div class="cv-welcome-widget-icon">⚙</div>
