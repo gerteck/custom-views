@@ -1,4 +1,5 @@
 import type { TabGroupConfig } from "../types/types";
+import { replaceIconShortcodes, ensureFontAwesomeInjected } from "./render";
 
 // Constants for selectors
 const TABGROUP_SELECTOR = 'cv-tabgroup';
@@ -106,6 +107,32 @@ export class TabManager {
     // Find all cv-tabgroup elements with nav="auto" or no nav attribute
     const tabGroups = rootEl.querySelectorAll(NAV_AUTO_SELECTOR);
     
+    // Check if any tab headers contain Font Awesome shortcodes
+    // Inject Font Awesome CSS only if needed
+    let hasFontAwesomeShortcodes = false;
+    tabGroups.forEach((groupEl) => {
+      const groupId = groupEl.getAttribute('id');
+      if (!groupId) return;
+
+      const tabElements = Array.from(groupEl.children).filter(
+        (child) => child.tagName.toLowerCase() === 'cv-tab'
+      );
+      tabElements.forEach((tabEl) => {
+        const tabId = tabEl.getAttribute('id');
+        if (!tabId) return;
+
+        const header = tabEl.getAttribute('header') || this.getTabLabel(tabId, groupId, cfgGroups) || tabId;
+        if (/:fa-[\w-]+:/.test(header)) {
+          hasFontAwesomeShortcodes = true;
+        }
+      });
+    });
+
+    // Inject Font Awesome only if shortcodes are found
+    if (hasFontAwesomeShortcodes) {
+      ensureFontAwesomeInjected();
+    }
+    
     tabGroups.forEach((groupEl) => {
       const groupId = groupEl.getAttribute('id');
       if (!groupId) return;
@@ -138,7 +165,8 @@ export class TabManager {
         
         const navLink = document.createElement('a');
         navLink.className = 'nav-link';
-        navLink.innerHTML = header;
+        // Replace icon shortcodes in header
+        navLink.innerHTML = replaceIconShortcodes(header);
         navLink.href = '#';
         navLink.setAttribute('data-tab-id', tabId);
         navLink.setAttribute('data-group-id', groupId);

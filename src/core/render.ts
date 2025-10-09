@@ -1,6 +1,26 @@
 import type { CustomViewAsset } from "types/types";
 import type { AssetsManager } from "core/assets-manager";
 
+/** --- Icon utilities --- */
+
+export function ensureFontAwesomeInjected() {
+  const isFontAwesomeLoaded = Array.from(document.styleSheets).some(
+    sheet => sheet.href && (sheet.href.includes('font-awesome') || sheet.href.includes('fontawesome'))
+  );
+  if (isFontAwesomeLoaded) return;
+
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+  link.setAttribute('data-customviews-fontawesome', 'true');
+  document.head.appendChild(link);
+}
+
+export function replaceIconShortcodes(text: string): string {
+  // Handle Font Awesome shortcodes
+  return text.replace(/:fa-([\w-]+):/g, (_, icon) => `<i class="fa fa-${icon}"></i>`);
+}
+
 /** --- Basic renderers --- */
 
 function renderImage(el: HTMLElement, asset: CustomViewAsset) {
