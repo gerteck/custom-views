@@ -30,7 +30,7 @@ export class TabManager {
       
       // Apply visibility to direct child cv-tab elements only (not nested ones)
       const tabElements = Array.from(groupEl.children).filter(
-        (child) => child.tagName.toLowerCase() === 'cv-tab'
+        (child) => child.tagName.toLowerCase() === TAB_SELECTOR
       );
       tabElements.forEach((tabEl) => {
         const tabId = tabEl.getAttribute('id');
@@ -73,7 +73,7 @@ export class TabManager {
 
     // 3. Fallback to first direct cv-tab child in DOM
     const firstTab = Array.from(groupEl.children).find(
-      (child) => child.tagName.toLowerCase() === 'cv-tab'
+      (child) => child.tagName.toLowerCase() === TAB_SELECTOR
     );
     if (firstTab) {
       return firstTab.getAttribute('id');
@@ -116,7 +116,7 @@ export class TabManager {
       
       // Get only direct child tabs (not nested ones)
       const tabElements = Array.from(groupEl.children).filter(
-        (child) => child.tagName.toLowerCase() === 'cv-tab'
+        (child) => child.tagName.toLowerCase() === TAB_SELECTOR
       );
       if (tabElements.length === 0) return;
 
@@ -138,7 +138,7 @@ export class TabManager {
         
         const navLink = document.createElement('a');
         navLink.className = 'nav-link';
-        navLink.textContent = header;
+        navLink.innerHTML = header;
         navLink.href = '#';
         navLink.setAttribute('data-tab-id', tabId);
         navLink.setAttribute('data-group-id', groupId);
