@@ -53,15 +53,19 @@ When the active toggle state includes `mac`, only the element with `data-cv-togg
 
 > Other attribute names are supported as well: `data-customviews-toggle` behaves the same as `data-cv-toggle`.
 
-## Variants (TODO - Not Implemented yet)
+## Variants 
 
 You can apply multiple toggles to a single element by separating categories with spaces.
-This allows content to appear under more than one active toggle.
+This allows content to appear as long as one toggle category is active.
 
 ```html
 <div data-cv-toggle="mac linux">
   This section appears for both macOS and Linux users.
 </div>
+
+<cv-toggle category="mac linux">
+  This section appears for both macOS and Linux users.
+</cv-toggle>
 ```
 
 ## Configuration 
@@ -92,7 +96,8 @@ To make toggles discoverable by the CustomViews widget, you must define them in 
 
 | Name | Type | Default | Description |
 |------|------|----------|-------------|
-| `data-cv-toggle` | string | **required** | Defines the category for the element. Example: `data-cv-toggle="mac"`. |
+| `data-cv-toggle` | string | **required** for data attribute usage | Defines the category for the element. Example: `data-cv-toggle="mac"`. |
+| `category` | string | **required** for `<cv-toggle>` | Defines the category for the cv-toggle element. Example: `category="mac"`. |
 | `data-cv-id` / `data-customviews-id` | string | - | Marks the element as an asset render target. When visible, matching assets from `assets.json` will be dynamically inserted. |
 
 

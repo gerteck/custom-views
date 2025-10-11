@@ -29,6 +29,15 @@ class CVTabgroup extends HTMLElement {
 }
 
 /**
+ * <cv-toggle> element - represents a toggleable content block
+ */
+class CVToggle extends HTMLElement {
+  connectedCallback() {
+    // Element is managed by Core
+  }
+}
+
+/**
  * Register custom elements
  */
 export function registerCustomElements(): void {
@@ -39,5 +48,9 @@ export function registerCustomElements(): void {
   
   if (!customElements.get('cv-tabgroup')) {
     customElements.define('cv-tabgroup', CVTabgroup);
+  }
+
+  if (!customElements.get('cv-toggle')) {
+    customElements.define('cv-toggle', CVToggle);
   }
 }

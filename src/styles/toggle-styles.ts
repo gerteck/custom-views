@@ -4,7 +4,7 @@
 
 export const TOGGLE_STYLES = `
 /* Core toggle visibility transitions */
-[data-cv-toggle], [data-customviews-toggle] {
+[data-cv-toggle], [data-customviews-toggle], cv-toggle {
   transition: opacity 150ms ease,
               transform 150ms ease,
               max-height 200ms ease,
