@@ -1,7 +1,6 @@
 import { CustomViews } from "../lib/custom-views";
 import { CustomViewsWidget } from "../core/widget";
 import { prependBaseUrl } from "../utils/url-utils";
-import { registerCustomElements } from "../core/custom-elements";
 
 /**
  * Initialize CustomViews from script tag attributes and config file
@@ -32,9 +31,6 @@ export default function initializeFromScript(): void {
       return;
     }
     window.__customViewsInitInProgress = true;
-    
-    // Register custom elements early
-    registerCustomElements();
     
     try {
       // Find the script tag
