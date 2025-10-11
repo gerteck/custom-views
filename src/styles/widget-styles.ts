@@ -287,7 +287,7 @@ export const WIDGET_STYLES = `
 .cv-widget-modal-close {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -297,10 +297,13 @@ export const WIDGET_STYLES = `
   justify-content: center;
   border-radius: 4px;
   color: #666;
+  line-height: 1;
+  transition: all 0.2s ease;
 }
 
 .cv-widget-modal-close:hover {
   background: #e9ecef;
+  color: #333;
 }
 
 .cv-widget-modal-content {
@@ -367,6 +370,7 @@ export const WIDGET_STYLES = `
 
 .cv-widget-theme-dark .cv-widget-modal-close:hover {
   background: #4a5568;
+  color: #e2e8f0;
 }
 
 .cv-widget-theme-dark .cv-widget-modal-actions {
@@ -385,6 +389,14 @@ export const WIDGET_STYLES = `
   color: #333;
   border-bottom: 1px solid #e9ecef;
   padding-bottom: 5px;
+}
+
+.cv-custom-state-form p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 24px;
+  text-align: justify;
 }
 
 .cv-custom-state-section {
@@ -533,6 +545,10 @@ export const WIDGET_STYLES = `
   border-color: #4a5568;
 }
 
+.cv-widget-theme-dark .cv-custom-state-form p {
+  color: #cbd5e0;
+}
+
 .cv-widget-theme-dark .cv-custom-state-section label {
   color: #a0aec0;
 }
@@ -561,6 +577,7 @@ export const WIDGET_STYLES = `
   line-height: 1.6;
   color: #555;
   margin-bottom: 24px;
+  text-align: justify;
 }
 
 .cv-welcome-widget-preview {

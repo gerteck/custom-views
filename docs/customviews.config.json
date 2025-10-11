@@ -30,8 +30,6 @@
     "title": "Customize your view here",
     "description": "Toggle content sections and switch between different tab views. All changes sync across the page and are saved in the URL for sharing.",
     "showWelcome": true,
-    "welcomeTitle": "Welcome to Custom Views!",
-    "welcomeMessage": "This documentation uses Custom Views to personalize your experience. Click the gear icon (⚙) on the side to show or hide different content sections based on your operating system or preferences. You can also switch between different tab groups to see synchronized content updates across the entire page!",
     "showTabGroups": true
   }
 }

@@ -62,8 +62,8 @@ export class CustomViewsWidget {
       title: options.title || 'Custom Views',
       description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.',
       showWelcome: options.showWelcome ?? false,
-      welcomeTitle: options.welcomeTitle || 'Welcome to Custom Views!',
-      welcomeMessage: options.welcomeMessage || 'This website uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.',
+      welcomeTitle: options.welcomeTitle || 'This website uses Custom Views',
+      welcomeMessage: options.welcomeMessage || 'This site uses Custom Views to let you personalize your experience. Use the widget on the side (⚙) to show or hide different content sections based on your preferences. Your selections will be saved and can be shared via URL.',
       showTabGroups: options.showTabGroups ?? true
     };
     
@@ -201,7 +201,7 @@ export class CustomViewsWidget {
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
           <h3>Customize View</h3>
-          <button class="cv-widget-modal-close" aria-label="Close modal">X</button>
+          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
