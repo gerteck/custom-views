@@ -150,23 +150,20 @@ export class CustomViewsCore {
     const finalToggles = this.visibilityManager.filterVisibleToggles(toggles);
 
     // Toggles hide or show relevant toggles
-    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle]").forEach(el => {
-      const category = (el as HTMLElement).dataset.cvToggle || (el as HTMLElement).dataset.customviewsToggle;
-      const shouldShow = !!category && finalToggles.includes(category);
+    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle], cv-toggle").forEach(el => {
+      const categories = this.getToggleCategories(el as HTMLElement);
+      const shouldShow = categories.some(cat => finalToggles.includes(cat));
       this.visibilityManager.applyElementVisibility(el as HTMLElement, shouldShow);
     });
 
     // Render toggles
-    for (const category of finalToggles) {
-      this.rootEl.querySelectorAll(`[data-cv-toggle="${category}"], [data-customviews-toggle="${category}"]`).forEach(el => {
-        // if it has an id, then we should render the asset into it
-        // Support both (data-cv-id) and (data-customviews-id) attributes
-        const toggleId = (el as HTMLElement).dataset.cvId || (el as HTMLElement).dataset.customviewsId;
-        if (toggleId) {
-          renderAssetInto(el as HTMLElement, toggleId, this.assetsManager);
-        }
-      });
-    }
+    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle], cv-toggle").forEach(el => {
+      const categories = this.getToggleCategories(el as HTMLElement);
+      const toggleId = (el as HTMLElement).dataset.cvId || (el as HTMLElement).dataset.customviewsId || (el as HTMLElement).getAttribute('data-cv-id') || (el as HTMLElement).getAttribute('data-customviews-id');
+      if (toggleId && categories.some(cat => finalToggles.includes(cat))) {
+        renderAssetInto(el as HTMLElement, toggleId, this.assetsManager);
+      }
+    });
 
     // Apply tab selections
     TabManager.applySelections(this.rootEl, state.tabs || {}, this.config.tabGroups);
@@ -176,6 +173,19 @@ export class CustomViewsCore {
 
     // Notify state change listeners (like widgets)
     this.notifyStateChangeListeners();
+  }
+
+  /**
+   * Get toggle categories from an element (supports both data attributes and cv-toggle elements)
+   */
+  private getToggleCategories(el: HTMLElement): string[] {
+    if (el.tagName.toLowerCase() === 'cv-toggle') {
+      const category = el.getAttribute('category');
+      return (category || '').split(/\s+/).filter(Boolean);
+    } else {
+      const data = el.dataset.cvToggle || el.dataset.customviewsToggle;
+      return (data || '').split(/\s+/).filter(Boolean);
+    }
   }
 
   /**
