@@ -4,7 +4,7 @@
 
 <header sticky>
   <navbar type="dark">
-    <a slot="brand" href="{{baseUrl}}/index.html" title="Home" class="navbar-brand">Your Logo</a>
+    <a slot="brand" href="{{baseUrl}}/index.html" title="Home" class="navbar-brand">Custom Views</a>
     <li slot="right">
       <form class="navbar-form">
         <searchbar :data="searchData" placeholder="Search" :on-hit="searchCallback" menu-align-right></searchbar>
@@ -20,17 +20,16 @@
     </div>
     <div class="nav-component slim-scroll">
       <site-nav>
-* [Introduction]({{ baseUrl }}/index.html)
-  * [Concepts]({{baseUrl}}/contents/archive/concepts.html)
-* User Guide
-  * [Setting Up]({{baseUrl}}/contents/userGuide/setup.html)
-  * [Toggles]({{baseUrl}}/contents/userGuide/toggles.html)
-  * [Tabs]({{baseUrl}}/contents/userGuide/tabs.html)
-* Developer Guide
+* Getting Started
+  * [Setting Up]({{baseUrl}}/contents/gettingStarted/setup.html)
+* [Components]({{baseUrl}}/contents/components/components.html)
+  * [Toggles]({{baseUrl}}/contents/components/toggles.html)
+  * [Tabs]({{baseUrl}}/contents/components/tabs.html)
+<!-- * Developer Guide
   * [Tabs]({{baseUrl}}/contents/devGuide/tabs.html)
 * [Demo]({{baseUrl}}/contents/demo/demo.html)
   * [CLI Mastery]({{baseUrl}}/contents/demo/cliMastery.html)
-  * [File Structures]({{baseUrl}}/contents/demo/fileStructure.html) 
+  * [File Structures]({{baseUrl}}/contents/demo/fileStructure.html)  -->
       </site-nav>
     </div>
   </nav>

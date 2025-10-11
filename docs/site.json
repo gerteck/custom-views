@@ -22,6 +22,9 @@
       "glob": ["**/index.md", "**/*.md"]
     }
   ],
+  "style": {
+    "codeTheme": "light"
+  },
   "plugins": [
     "customviews"
   ],
