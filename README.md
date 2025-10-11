@@ -1,7 +1,5 @@
 ## Custom Views
 
-v1.1.0
-
 [npm package link](https://www.npmjs.com/package/@customviews-js/customviews)
 
 _Custom Views_ allows developers and designers to define reusable content views that can be toggled, personalized, or adapted dynamically for different users and contexts. It is framework-agnostic, meaning it works with plain HTML, JavaScript, or alongside modern frameworks without imposing additional dependencies.
