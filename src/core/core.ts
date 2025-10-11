@@ -1,10 +1,10 @@
 import type { State, TabGroupConfig, Config } from "../types/types";
 import type { AssetsManager } from "./assets-manager";
-import { renderAssetInto } from "./render";
 import { PersistenceManager } from "./persistence";
 import { URLStateManager } from "./url-state-manager";
 import { VisibilityManager } from "./visibility-manager";
 import { TabManager } from "./tab-manager";
+import { ToggleManager } from "./toggle-manager";
 import { injectCoreStyles } from "../styles/styles";
 
 
@@ -149,21 +149,11 @@ export class CustomViewsCore {
     const toggles = state.toggles || [];
     const finalToggles = this.visibilityManager.filterVisibleToggles(toggles);
 
-    // Toggles hide or show relevant toggles
-    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle], cv-toggle").forEach(el => {
-      const categories = this.getToggleCategories(el as HTMLElement);
-      const shouldShow = categories.some(cat => finalToggles.includes(cat));
-      this.visibilityManager.applyElementVisibility(el as HTMLElement, shouldShow);
-    });
+    // Apply toggle visibility
+    ToggleManager.applyToggles(this.rootEl, finalToggles);
 
-    // Render toggles
-    this.rootEl.querySelectorAll("[data-cv-toggle], [data-customviews-toggle], cv-toggle").forEach(el => {
-      const categories = this.getToggleCategories(el as HTMLElement);
-      const toggleId = (el as HTMLElement).dataset.cvId || (el as HTMLElement).dataset.customviewsId || (el as HTMLElement).getAttribute('data-cv-id') || (el as HTMLElement).getAttribute('data-customviews-id');
-      if (toggleId && categories.some(cat => finalToggles.includes(cat))) {
-        renderAssetInto(el as HTMLElement, toggleId, this.assetsManager);
-      }
-    });
+    // Render assets into toggles
+    ToggleManager.renderAssets(this.rootEl, finalToggles, this.assetsManager);
 
     // Apply tab selections
     TabManager.applySelections(this.rootEl, state.tabs || {}, this.config.tabGroups);
@@ -173,19 +163,6 @@ export class CustomViewsCore {
 
     // Notify state change listeners (like widgets)
     this.notifyStateChangeListeners();
-  }
-
-  /**
-   * Get toggle categories from an element (supports both data attributes and cv-toggle elements)
-   */
-  private getToggleCategories(el: HTMLElement): string[] {
-    if (el.tagName.toLowerCase() === 'cv-toggle') {
-      const category = el.getAttribute('category');
-      return (category || '').split(/\s+/).filter(Boolean);
-    } else {
-      const data = el.dataset.cvToggle || el.dataset.customviewsToggle;
-      return (data || '').split(/\s+/).filter(Boolean);
-    }
   }
 
   /**
