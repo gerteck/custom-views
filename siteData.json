@@ -34,6 +34,45 @@
       "headingKeywords": {}
     },
     {
+      "src": "contents/components/components.md",
+      "title": "Components",
+      "headings": {
+        "components": "Components"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/components/tabs.md",
+      "title": "User Guide - Tabs",
+      "headings": {
+        "tabs": "Tabs",
+        "attributes-and-amp-options": "Attributes &amp; Options",
+        "cv-tabgroup-attributes": "&lt;cv-tabgroup&gt; Attributes",
+        "cv-tab-attributes": "&lt;cv-tab&gt; Attributes",
+        "configuration": "Configuration",
+        "configuration-2": "Configuration",
+        "config-file-options": "Config File Options"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/components/toggles.md",
+      "title": "CustomViews - Toggle Component",
+      "headings": {
+        "toggle": "Toggle",
+        "macos": "macOS",
+        "linux": "Linux",
+        "windows": "Windows",
+        "variants": "Variants",
+        "configuration": "Configuration",
+        "key-fields": "Key Fields",
+        "attributes-and-amp-options": "Attributes &amp; Options",
+        "visibility-resolution-order": "Visibility Resolution Order",
+        "troubleshooting": "Troubleshooting"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "contents/demo/cliMastery.md",
       "title": "Git CLI Mastery Across Operating Systems",
       "headings": {
@@ -94,52 +133,13 @@
       "headingKeywords": {}
     },
     {
-      "src": "contents/userGuide/setup.md",
-      "title": "User Guide - Setting up",
+      "src": "contents/gettingStarted/setup.md",
+      "title": "Installation",
       "headings": {
-        "using-the-customviews-plugin": "Using the CustomViews Plugin",
-        "1-include-the-script": "1. Include the script",
-        "2-create-customviews-config-json": "2. Create customviews.config.json",
-        "3-reference-and-use-a-custom-view-component": "3. Reference and use a custom view component",
-        "4-notes-and-troubleshooting": "4. Notes and troubleshooting"
-      },
-      "headingKeywords": {}
-    },
-    {
-      "src": "contents/userGuide/tabs.md",
-      "title": "User Guide - Tabs",
-      "headings": {
-        "tab-groups": "Tab Groups",
-        "basic-usage": "Basic Usage",
-        "code": "CODE:",
-        "output": "OUTPUT:",
-        "configuration": "Configuration",
-        "config-file-optional": "Config File (Optional)",
-        "options": "Options",
-        "cv-tabgroup-attributes": "&lt;cv-tabgroup&gt; Attributes",
-        "cv-tab-attributes": "&lt;cv-tab&gt; Attributes",
-        "config-file-options": "Config File Options",
-        "advanced-features": "Advanced Features",
-        "custom-headers-with-emojis": "Custom Headers with Emojis",
-        "no-navigation-mode": "No Navigation Mode",
-        "widget-integration": "Widget Integration",
-        "url-state-persistence": "URL State Persistence"
-      },
-      "headingKeywords": {}
-    },
-    {
-      "src": "contents/userGuide/toggles.md",
-      "title": "User Guide - Toggles",
-      "headings": {
-        "toggles": "Toggles",
-        "basic-usage": "Basic Usage",
-        "code": "CODE:",
-        "output": "OUTPUT:",
-        "configuration-required-for-widget-integration": "Configuration (required for widget integration)",
-        "attributes-and-options": "Attributes and Options",
-        "how-visibility-is-determined": "How visibility is determined",
-        "advanced-features": "Advanced Features",
-        "examples-and-patterns": "Examples and Patterns"
+        "quick-start-autoload-via-script": "Quick Start (Autoload via Script)",
+        "manual-initialization-optional": "Manual Initialization (Optional)",
+        "creating-customviews-config-json": "Creating customviews.config.json",
+        "key-fields": "Key Fields"
       },
       "headingKeywords": {}
     },
@@ -147,15 +147,7 @@
       "src": "index.md",
       "title": "Custom Views Library - Interactive Documentation & Demo",
       "headings": {
-        "introduction": "Introduction",
-        "interactive-demo": "Interactive Demo",
-        "demo-tab-groups-feature": "Demo: Tab Groups Feature",
-        "demo-of-toggles": "Demo of Toggles",
-        "macos-development": "🍎 macOS Development",
-        "linux-development": "🐧 Linux Development",
-        "windows-development": "🪟 Windows Development",
-        "why-use-custom-views": "Why Use Custom Views?",
-        "references": "References"
+        "introduction": "Introduction"
       },
       "headingKeywords": {}
     }
