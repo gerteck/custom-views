@@ -22,6 +22,7 @@
       <site-nav>
 * Getting Started
   * [Setting Up]({{baseUrl}}/contents/gettingStarted/setup.html)
+  * [Setting Up with MarkBind]({{baseUrl}}/contents/gettingStarted/setupWithMarkbind.html)
 * [Components]({{baseUrl}}/contents/components/components.html)
   * [Toggles]({{baseUrl}}/contents/components/toggles.html)
   * [Tabs]({{baseUrl}}/contents/components/tabs.html)
