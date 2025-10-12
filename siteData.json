@@ -144,6 +144,20 @@
       "headingKeywords": {}
     },
     {
+      "src": "contents/gettingStarted/setupWithMarkbind.md",
+      "title": "Installation (MarkBind Setup)",
+      "headings": {
+        "setting-up-customviews-in-a-markbind-site": "Setting up CustomViews in a MarkBind Site",
+        "1-create-the-plugin-file": "1. Create the Plugin File",
+        "2-register-the-plugin-in-site-json": "2. Register the Plugin in site.json",
+        "3-create-customviews-config-json": "3. Create customviews.config.json",
+        "4-verify-installation": "4. Verify Installation",
+        "example-usage-in-markbind-pages": "Example Usage in MarkBind Pages",
+        "learn-more": "Learn More"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "index.md",
       "title": "Custom Views Library - Interactive Documentation & Demo",
       "headings": {
