@@ -12,7 +12,7 @@ With Custom Views, you can:
 
 Whether you are building a static site, a dashboard, or a documentation portal, Custom Views gives you the tools to make your content interactive and adaptable while keeping things lightweight and simple.
 
-[:fa-brands-github: GitHub Link&nbsp; :fa-solid-arrow-up-right-from-square:](https://github.com/customviews-js/customviews)
+[Documentation and User Guide](https://customviews-js.github.io/customviews)
 
 ## Components
 

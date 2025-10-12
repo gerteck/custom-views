@@ -11,7 +11,7 @@ To get started quickly, add the following snippet to your site’s `<head>` or r
 
 ```html
 <!-- Load from CDN or your hosted bundle -->
-<script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.min.js"
+<script src="https://unpkg.com/@customviews-js/customviews"
         data-base-url="/customviews"
         data-config-path="/customviews.config.json"
         defer></script>
