@@ -38,8 +38,13 @@ export class CustomViews {
     const baseURL = opts.baseURL || '';
     if (opts.assetsJsonPath) {
       const assetsPath = prependBaseUrl(opts.assetsJsonPath, baseURL);
-      const assetsJson: Record<string, CustomViewAsset> = await (await fetch(assetsPath)).json();
-      assetsManager = new AssetsManager(assetsJson, baseURL);
+      try {
+        const assetsJson: Record<string, CustomViewAsset> = await (await fetch(assetsPath)).json();
+        assetsManager = new AssetsManager(assetsJson, baseURL);
+      } catch (error) {
+        console.error(`[CustomViews] Failed to load assets JSON from ${assetsPath}:`, error);
+        assetsManager = new AssetsManager({}, baseURL);
+      }
     } else {
       assetsManager = new AssetsManager({}, baseURL);
     }
