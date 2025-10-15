@@ -14,21 +14,23 @@ This allows you to declaratively toggle content visibility, manage tab groups, a
 
 ## 1. Create the Plugin File
 
-In your MarkBind project root, create a new folder named `/markbind/plugins/` if it doesn’t already exist.  
+In your MarkBind project root, create a new folder named `/_markbind/plugins/` if it doesn’t already exist.  
 Then, add a file named **`customviews.js`** inside it with the following content:
 
 ```js
 /**
  * CustomViews Plugin for MarkBind
  * Injects the CustomViews auto-init script into every page.
- * Configuration is loaded from {baseUrl}/customviews.config.json
- * Note that data-base-url is optional if site is served from the root.
+ * Configuration is loaded from /customviews.config.json
+ * Add data-base-url="/website-baseurl"
  */
-export function getScripts() {
+function getScripts() {
   return [
-    '<script src="https://unpkg.com/@customviews-js/customviews" data-base-url="{baseUrl}"></script>'
+    '<script src="https://unpkg.com/@customviews-js/customviews"></script>'
   ];
 };
+
+module.exports = { getScripts };
 ```
 
 This plugin automatically injects the CustomViews runtime into every generated page during the build process.
