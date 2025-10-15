@@ -19,18 +19,20 @@
 * [Demo](/customviews/contents/demo/demo.html)
   * [CLI Mastery](/customviews/contents/demo/cliMastery.html)
   * [File Structures](/customviews/contents/demo/fileStructure.html)  --><!--]--></div></div><!--]--><!--v-if--></nav> <div id="content-wrapper"><div data-v-ef898034><nav aria-label="breadcrumb" class="breadcrumb-divider" data-v-ef898034><ol class="breadcrumb" data-v-ef898034><li class="notlink breadcrumb-marker" data-v-ef898034> ››   </li><!--[--><!--]--></ol></nav></div> <h1 id="setting-up-customviews-in-a-markbind-site">Setting up CustomViews in a MarkBind Site<a class="fa fa-anchor" href="#setting-up-customviews-in-a-markbind-site" onclick="event.stopPropagation()"></a></h1> <p>CustomViews integrates seamlessly with <a href="https://markbind.org">MarkBind</a> via a simple plugin setup.<br>
-This allows you to declaratively toggle content visibility, manage tab groups, and personalize documentation — directly within your static site.</p> <hr> <h2 id="1-create-the-plugin-file">1. Create the Plugin File<a class="fa fa-anchor" href="#1-create-the-plugin-file" onclick="event.stopPropagation()"></a></h2> <p>In your MarkBind project root, create a new folder named <code class="hljs inline no-lang">/markbind/plugins/</code> if it doesn’t already exist.<br>
+This allows you to declaratively toggle content visibility, manage tab groups, and personalize documentation — directly within your static site.</p> <hr> <h2 id="1-create-the-plugin-file">1. Create the Plugin File<a class="fa fa-anchor" href="#1-create-the-plugin-file" onclick="event.stopPropagation()"></a></h2> <p>In your MarkBind project root, create a new folder named <code class="hljs inline no-lang">/_markbind/plugins/</code> if it doesn’t already exist.<br>
 Then, add a file named <strong><code class="hljs inline no-lang">customviews.js</code></strong> inside it with the following content:</p> <pre><code class="hljs js"><span><span class="hljs-comment">/**</span>
 </span><span><span class="hljs-comment"> * CustomViews Plugin for MarkBind</span>
 </span><span><span class="hljs-comment"> * Injects the CustomViews auto-init script into every page.</span>
-</span><span><span class="hljs-comment"> * Configuration is loaded from {baseUrl}/customviews.config.json</span>
-</span><span><span class="hljs-comment"> * Note that data-base-url is optional if site is served from the root.</span>
+</span><span><span class="hljs-comment"> * Configuration is loaded from /customviews.config.json</span>
+</span><span><span class="hljs-comment"> * Add data-base-url=&quot;/website-baseurl&quot;</span>
 </span><span><span class="hljs-comment"> */</span>
-</span><span><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getScripts</span>(<span class="hljs-params"></span>) </span>{
+</span><span><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getScripts</span>(<span class="hljs-params"></span>) </span>{
 </span><span>  <span class="hljs-keyword">return</span> [
-</span><span>    <span class="hljs-string">&#39;&lt;script src=&quot;https://unpkg.com/@customviews-js/customviews&quot; data-base-url=&quot;{baseUrl}&quot;&gt;&lt;/script&gt;&#39;</span>
+</span><span>    <span class="hljs-string">&#39;&lt;script src=&quot;https://unpkg.com/@customviews-js/customviews&quot;&gt;&lt;/script&gt;&#39;</span>
 </span><span>  ];
 </span><span>};
+</span><span>
+</span><span><span class="hljs-built_in">module</span>.exports = { getScripts };
 </span></code></pre><p>This plugin automatically injects the CustomViews runtime into every generated page during the build process.</p> <h2 id="2-register-the-plugin-in-site-json">2. Register the Plugin in site.json<a class="fa fa-anchor" href="#2-register-the-plugin-in-site-json" onclick="event.stopPropagation()"></a></h2> <p>In your project’s root <code class="hljs inline no-lang">site.json</code>, register the plugin by adding <code class="hljs inline no-lang">&quot;customviews&quot;</code> to the plugins list.</p> <pre><code class="hljs json"><span>{
 </span><span>  <span class="hljs-attr">&quot;plugins&quot;</span>: [
 </span><span>    <span class="hljs-string">&quot;customviews&quot;</span>
