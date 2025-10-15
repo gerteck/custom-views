@@ -53,12 +53,8 @@ Here's an example configuration:
   "assetsJsonPath": "/assets/assets.json",
   "baseURL": "/customviews",
   "widget": {
-    "enabled": true,
-    "position": "middle-left",
-    "showReset": true,
     "showWelcome": true
   },
-  "showUrl": true
 }
 ```
 

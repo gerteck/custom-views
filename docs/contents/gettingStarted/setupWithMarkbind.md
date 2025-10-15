@@ -78,12 +78,8 @@ At your project root, create a `customviews.config.json` file to define your tog
   "assetsJsonPath": "/assets/assets.json",
   "baseURL": "/customviews",
   "widget": {
-    "enabled": true,
-    "position": "middle-left",
-    "showReset": true,
     "showWelcome": true
   },
-  "showUrl": true
 }
 ```
 
