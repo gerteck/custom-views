@@ -15,4 +15,9 @@
     
 [Using Tabs :fa-solid-arrow-up-right-from-square:]({{baseUrl}}/contents/components/tabs.html)
   </card>
+  <card header="**Widget**">
+    The widget provides a floating interface for users to customize their view. <br><br>
+
+[Using the Widget :fa-solid-arrow-up-right-from-square:]({{baseUrl}}/contents/components/widget.html)
+  </card>
 </cardstack>

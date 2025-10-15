@@ -59,7 +59,7 @@ export class CustomViewsWidget {
       position: options.position || 'middle-left',
       theme: options.theme || 'light',
       showReset: options.showReset ?? true,
-      title: options.title || 'Custom Views',
+      title: options.title || 'Customize View',
       description: options.description || 'Toggle different content sections to customize your view. Changes are applied instantly and the URL will be updated for sharing.',
       showWelcome: options.showWelcome ?? false,
       welcomeTitle: options.welcomeTitle || 'Site Customization',
@@ -200,7 +200,7 @@ export class CustomViewsWidget {
     this.modal.innerHTML = `
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
-          <h3>Customize View</h3>
+          <h3>${this.options.title}</h3>
           <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
         </div>
         <div class="cv-widget-modal-content">

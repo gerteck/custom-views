@@ -24,9 +24,7 @@
   "baseUrl": "/customviews",
   "showUrl": false,
   "widget": {
-    "enabled": true,
     "position": "middle-left",
-    "showReset": false,
     "title": "Customize your view here",
     "description": "Toggle content sections and switch between different tab views. All changes sync across the page and are saved in the URL for sharing.",
     "showWelcome": true,

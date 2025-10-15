@@ -24,6 +24,7 @@
   * [Setting Up]({{baseUrl}}/contents/gettingStarted/setup.html)
   * [Setting Up with MarkBind]({{baseUrl}}/contents/gettingStarted/setupWithMarkbind.html)
 * [Components]({{baseUrl}}/contents/components/components.html)
+  * [Widget]({{baseUrl}}/contents/components/widget.html)
   * [Toggles]({{baseUrl}}/contents/components/toggles.html)
   * [Tabs]({{baseUrl}}/contents/components/tabs.html)
 <!-- * Developer Guide
