@@ -201,7 +201,7 @@ export class CustomViewsWidget {
       <div class="cv-widget-modal cv-custom-state-modal">
         <div class="cv-widget-modal-header">
           <h3>Customize View</h3>
-          <button class="cv-widget-modal-close" aria-label="Close modal">X</button>
+          <button class="cv-widget-modal-close" aria-label="Close modal">×</button>
         </div>
         <div class="cv-widget-modal-content">
           <div class="cv-custom-state-form">
