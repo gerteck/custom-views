@@ -161,8 +161,6 @@ By default, the first tab is shown.
 For more control (such as widget integration or default selections), configure them in your `customviews.config.json`.
 
 ```json
-
-```json
 {
   "config": {
     "defaultState": {

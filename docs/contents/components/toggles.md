@@ -1,7 +1,7 @@
 <frontmatter>
   title: CustomViews - Toggle Component
   layout: default.md
-  pageNav: 4
+  pageNav: 2
   pageNavTitle: "Topics"
 </frontmatter>
 
@@ -33,17 +33,17 @@ Toggles let you show or hide sections of a page based on a category (for example
 </variable>
 <variable name="output">
 <section data-cv-toggle="mac">
-    <h2>macOS</h2>
+    <h3>macOS</h3>
     <p>macOS-specific install steps...</p>
 </section>
 
 <section data-cv-toggle="linux">
-    <h2>Linux</h2>
+    <h3>Linux</h3>
     <p>Linux-specific install steps...</p>
 </section>
 
 <section data-cv-toggle="windows">
-    <h2>Windows</h2>
+    <h3>Windows</h3>
     <p>Windows-specific install steps...</p>
 </section>
 </variable>
