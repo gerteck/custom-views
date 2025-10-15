@@ -23,11 +23,12 @@ This allows you to declaratively toggle content visibility, manage tab groups, a
 Then, add a file named <strong><code class="hljs inline no-lang">customviews.js</code></strong> inside it with the following content:</p> <pre><code class="hljs js"><span><span class="hljs-comment">/**</span>
 </span><span><span class="hljs-comment"> * CustomViews Plugin for MarkBind</span>
 </span><span><span class="hljs-comment"> * Injects the CustomViews auto-init script into every page.</span>
-</span><span><span class="hljs-comment"> * Configuration is loaded from /customviews/customviews.config.json</span>
+</span><span><span class="hljs-comment"> * Configuration is loaded from {baseUrl}/customviews.config.json</span>
+</span><span><span class="hljs-comment"> * Note that data-base-url is optional if site is served from the root.</span>
 </span><span><span class="hljs-comment"> */</span>
 </span><span><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getScripts</span>(<span class="hljs-params"></span>) </span>{
 </span><span>  <span class="hljs-keyword">return</span> [
-</span><span>    <span class="hljs-string">&#39;&lt;script src=&quot;https://unpkg.com/@customviews-js/customviews&quot; data-base-url=&quot;/customviews&quot;&gt;&lt;/script&gt;&#39;</span>
+</span><span>    <span class="hljs-string">&#39;&lt;script src=&quot;https://unpkg.com/@customviews-js/customviews&quot; data-base-url=&quot;{baseUrl}&quot;&gt;&lt;/script&gt;&#39;</span>
 </span><span>  ];
 </span><span>};
 </span></code></pre><p>This plugin automatically injects the CustomViews runtime into every generated page during the build process.</p> <h2 id="2-register-the-plugin-in-site-json">2. Register the Plugin in site.json<a class="fa fa-anchor" href="#2-register-the-plugin-in-site-json" onclick="event.stopPropagation()"></a></h2> <p>In your project’s root <code class="hljs inline no-lang">site.json</code>, register the plugin by adding <code class="hljs inline no-lang">&quot;customviews&quot;</code> to the plugins list.</p> <pre><code class="hljs json"><span>{
@@ -93,5 +94,5 @@ Try toggling between views or switching tabs to confirm your setup is working.</
 <script>
   MarkBind.setupWithSearch()
 </script>
-    <script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.min.js" data-base-url="/customviews"></script>
+    <script src="https://unpkg.com/@customviews-js/customviews" data-base-url="/customviews"></script>
 </html>

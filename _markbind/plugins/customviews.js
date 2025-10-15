@@ -6,6 +6,6 @@
 // '<script src="../../../dist/custom-views.min.js" data-base-url="/customviews"></script>'
 export function getScripts() {
   return [
-    '<script src="https://unpkg.com/@customviews-js/customviews/dist/custom-views.min.js" data-base-url="/customviews"/>'
+    '<script src="https://unpkg.com/@customviews-js/customviews" data-base-url="/customviews"></script>'
   ];
 };
