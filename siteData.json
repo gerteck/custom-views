@@ -73,6 +73,21 @@
       "headingKeywords": {}
     },
     {
+      "src": "contents/components/widget.md",
+      "title": "CustomViews - Widget",
+      "headings": {
+        "widget": "Widget",
+        "custom-title": "Custom Title",
+        "welcome-modal": "Welcome Modal",
+        "custom-welcome-title": "Custom Welcome Title",
+        "configuration": "Configuration",
+        "widget-options": "Widget Options",
+        "programmatic-usage": "Programmatic Usage",
+        "integration-with-toggles-and-tabs": "Integration with Toggles and Tabs"
+      },
+      "headingKeywords": {}
+    },
+    {
       "src": "contents/demo/cliMastery.md",
       "title": "Git CLI Mastery Across Operating Systems",
       "headings": {
@@ -129,6 +144,27 @@
         "core-module": "Core Module",
         "tab-manager": "Tab Manager",
         "main-methods": "Main methods:"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "contents/gettingStarted/configuration.md",
+      "title": "Configuration Reference",
+      "headings": {
+        "configuration-file-customviews-config-json": "Configuration File (customviews.config.json)",
+        "basic-structure": "Basic Structure",
+        "configuration-options": "Configuration Options",
+        "core-configuration-config": "Core Configuration (config)",
+        "tab-group-configuration": "Tab Group Configuration",
+        "global-options": "Global Options",
+        "widget-configuration-widget": "Widget Configuration (widget)",
+        "script-tag-attributes": "Script Tag Attributes",
+        "html-attributes": "HTML Attributes",
+        "toggle-attributes": "Toggle Attributes",
+        "asset-insertion-attributes": "Asset Insertion Attributes",
+        "assets-configuration-assets-json": "Assets Configuration (assets.json)",
+        "asset-properties": "Asset Properties",
+        "programmatic-configuration": "Programmatic Configuration"
       },
       "headingKeywords": {}
     },
