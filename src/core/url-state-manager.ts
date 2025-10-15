@@ -79,14 +79,17 @@ export class URLStateManager {
   }
 
   /**
-   * Encode state into URL-safe string
+   * Encode state into URL-safe string (Toggles and Tabs only currently)
    */
   private static encodeState(state: State): string | null {
     try {
       // Create a compact representation
-      const compact: any = {
-        t: state.toggles
-      };
+      const compact: any = {};
+
+      // Add toggles if present and non-empty
+      if (state.toggles && state.toggles.length > 0) {
+        compact.t = state.toggles;
+      }
 
       // Add tab groups if present
       if (state.tabs && Object.keys(state.tabs).length > 0) {
@@ -114,7 +117,7 @@ export class URLStateManager {
   }
 
   /**
-   * Decode custom state from URL parameter
+   * Decode custom state from URL parameter (Toggles and Tabs only currently)
    */
   private static decodeState(encoded: string): State | null {
     try {
@@ -141,12 +144,15 @@ export class URLStateManager {
       if (!compact || typeof compact !== 'object') {
         throw new Error('Invalid compact state structure');
       }
+      
+      // Reconstruct State from compact format
 
+      // Reconstruct Toggles
       const state: State = {
         toggles: Array.isArray(compact.t) ? compact.t : []
       };
 
-      // Reconstruct tabs from compact format
+      // Reconstruct Tabs
       if (Array.isArray(compact.g)) {
         state.tabs = {};
         for (const [groupId, tabId] of compact.g) {
@@ -155,6 +161,8 @@ export class URLStateManager {
           }
         }
       }
+
+    
 
       return state;
     } catch (error) {

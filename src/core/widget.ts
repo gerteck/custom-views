@@ -317,7 +317,7 @@ export class CustomViewsWidget {
    */
   private getCurrentCustomStateFromModal(): State {
     if (!this.modal) {
-      return { toggles: [] };
+      return {};
     }
 
     // Collect toggle values
@@ -340,7 +340,11 @@ export class CustomViewsWidget {
       }
     });
 
-    return Object.keys(tabs).length > 0 ? { toggles, tabs } : { toggles };
+    const result: State = { toggles };
+    if (Object.keys(tabs).length > 0) {
+      result.tabs = tabs;
+    }
+    return result;
   }
 
   /**

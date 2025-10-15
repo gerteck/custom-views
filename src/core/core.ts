@@ -265,9 +265,8 @@ export class CustomViewsCore {
   }
 
   private cloneState(state?: State | null): State {
-    const toggles = state?.toggles ? [...state.toggles] : [];
-    const tabs = state?.tabs ? { ...state.tabs } : undefined;
-    return tabs ? { toggles, tabs } : { toggles };
+    if (!state) return { };
+    return JSON.parse(JSON.stringify(state));
   }
 
   private getTrackedStateSnapshot(): State {
@@ -279,7 +278,7 @@ export class CustomViewsCore {
       return this.cloneState(this.config.defaultState);
     }
 
-    return { toggles: [] };
+    return {};
   }
 
 }

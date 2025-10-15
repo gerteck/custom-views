@@ -23,7 +23,7 @@ export interface CustomViewAsset {
  */
 export interface State {
   /** List of toggle categories that should be displayed in this state */
-  toggles: ToggleId[];
+  toggles?: ToggleId[];
   /** Optional tab selections: groupId -> tabId */
   tabs?: Record<string, string>;
 }
