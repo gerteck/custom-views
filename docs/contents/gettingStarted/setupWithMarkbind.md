@@ -77,8 +77,7 @@ At your project root, create a `customviews.config.json` file to define your tog
       }
     ]
   },
-  "assetsJsonPath": "/assets/assets.json",
-  "baseURL": "/customviews",
+  "baseURL": "website-baseUrl",
   "widget": {
     "showWelcome": true
   },

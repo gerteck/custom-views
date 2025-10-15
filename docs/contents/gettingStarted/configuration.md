@@ -33,7 +33,6 @@ CustomViews is configured via a JSON file, typically named `customviews.config.j
       }
     ]
   },
-  "assetsJsonPath": "/assets/assets.json",
   "baseUrl": "/website-baseUrl",
   "showUrl": true,
   "widget": {

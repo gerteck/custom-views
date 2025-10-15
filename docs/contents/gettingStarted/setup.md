@@ -12,8 +12,8 @@ To get started quickly, add the following snippet to your site’s `<head>` or r
 ```html
 <!-- Load from CDN or your hosted bundle -->
 <script src="https://unpkg.com/@customviews-js/customviews"
-        data-base-url="/customviews"
-        data-config-path="/customviews.config.json"
+        data-base-url="/website-baseUrl"
+        data-config-path="/custom/customviewsconfigfilename.json"
         defer></script>
 ```
 
@@ -50,7 +50,6 @@ Here's an example configuration:
       }
     ]
   },
-  "assetsJsonPath": "/assets/assets.json",
   "baseURL": "/customviews",
   "widget": {
     "showWelcome": true
