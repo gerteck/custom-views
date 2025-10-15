@@ -22,7 +22,6 @@
   },
   "assetsJsonPath": "/assets/assets.json",
   "baseUrl": "/customviews",
-  "showUrl": false,
   "widget": {
     "position": "middle-left",
     "title": "Customize your view here",

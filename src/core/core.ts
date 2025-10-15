@@ -32,7 +32,7 @@ export class CustomViewsCore {
     this.rootEl = opt.rootEl || document.body;
     this.persistenceManager = new PersistenceManager();
     this.visibilityManager = new VisibilityManager();
-    this.showUrlEnabled = opt.showUrl ?? true;
+    this.showUrlEnabled = opt.showUrl ?? false;
     this.lastAppliedState = this.cloneState(this.config?.defaultState);
   }
 
