@@ -162,7 +162,9 @@ export class CustomViewsWidget {
       ? toggles.map(toggle => `
         <div class="cv-custom-state-toggle">
           <label>
-            <input type="checkbox" class="cv-custom-toggle-checkbox" data-toggle="${toggle}" />
+            <div class="cv-toggle-switch" data-toggle="${toggle}">
+              <div class="cv-toggle-handle"></div>
+            </div>
             ${this.formatToggleName(toggle)}
           </label>
         </div>
@@ -261,10 +263,11 @@ export class CustomViewsWidget {
       });
     }
 
-    // Listen to toggle checkboxes
-    const toggleCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
-    toggleCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', () => {
+    // Listen to toggle switches
+    const toggleSwitches = this.modal.querySelectorAll('.cv-toggle-switch') as NodeListOf<HTMLDivElement>;
+    toggleSwitches.forEach(toggleSwitch => {
+      toggleSwitch.addEventListener('click', () => {
+        toggleSwitch.classList.toggle('cv-toggle-active');
         const state = this.getCurrentCustomStateFromModal();
         this.core.applyState(state);
       });
@@ -322,10 +325,10 @@ export class CustomViewsWidget {
 
     // Collect toggle values
     const toggles: string[] = [];
-    const toggleCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
-    toggleCheckboxes.forEach(checkbox => {
-      const toggle = checkbox.dataset.toggle;
-      if (toggle && checkbox.checked) {
+    const toggleSwitches = this.modal.querySelectorAll('.cv-toggle-switch') as NodeListOf<HTMLDivElement>;
+    toggleSwitches.forEach(toggleSwitch => {
+      const toggle = toggleSwitch.dataset.toggle;
+      if (toggle && toggleSwitch.classList.contains('cv-toggle-active')) {
         toggles.push(toggle);
       }
     });
@@ -368,21 +371,17 @@ export class CustomViewsWidget {
     // Get currently active toggles (from custom state or default configuration)
     const activeToggles = this.core.getCurrentActiveToggles();
     
-    // First, uncheck all checkboxes
-    const allCheckboxes = this.modal.querySelectorAll('.cv-custom-toggle-checkbox') as NodeListOf<HTMLInputElement>;
-    allCheckboxes.forEach(checkbox => {
-      checkbox.checked = false;
-      checkbox.disabled = false;
-      checkbox.parentElement?.removeAttribute('aria-hidden');
+    // First, deactivate all toggle switches
+    const allToggleSwitches = this.modal.querySelectorAll('.cv-toggle-switch') as NodeListOf<HTMLDivElement>;
+    allToggleSwitches.forEach(toggleSwitch => {
+      toggleSwitch.classList.remove('cv-toggle-active');
     });
 
-    // Then check the ones that should be active
+    // Then activate the ones that should be active
     activeToggles.forEach(toggle => {
-      const checkbox = this.modal?.querySelector(`[data-toggle="${toggle}"]`) as HTMLInputElement;
-      if (checkbox) {
-        if (!checkbox.disabled) {
-          checkbox.checked = true;
-        }
+      const toggleSwitch = this.modal?.querySelector(`[data-toggle="${toggle}"]`) as HTMLDivElement;
+      if (toggleSwitch) {
+        toggleSwitch.classList.add('cv-toggle-active');
       }
     });
 

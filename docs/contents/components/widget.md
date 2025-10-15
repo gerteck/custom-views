@@ -53,21 +53,27 @@ The widget is enabled by default, and will appear if not explicitly disabled in 
 
 <div class="cv-custom-state-toggle">
 <label>
-<input type="checkbox" class="cv-custom-toggle-checkbox">
+<div class="cv-toggle-switch" data-toggle="toggle1">
+<div class="cv-toggle-handle"></div>
+</div>
 Toggle Category 1
 </label>
 </div>
 
 <div class="cv-custom-state-toggle">
 <label>
-<input type="checkbox" class="cv-custom-toggle-checkbox">
+<div class="cv-toggle-switch" data-toggle="toggle2">
+<div class="cv-toggle-handle"></div>
+</div>
 Toggle Category 2
 </label>
 </div>
 
 <div class="cv-custom-state-toggle">
 <label>
-<input type="checkbox" class="cv-custom-toggle-checkbox">
+<div class="cv-toggle-switch" data-toggle="toggle3">
+<div class="cv-toggle-handle"></div>
+</div>
 Toggle Category 3
 </label>
 </div>
@@ -99,7 +105,7 @@ Toggle Category 3
 </include>
 
 The widget opens a modal dialog where users can:
-- Toggle content sections on/off
+- Toggle content sections on/off using toggle switches
 - Select active tabs in tab groups
 - Reset to default view
 - Copy a shareable URL with their current selections

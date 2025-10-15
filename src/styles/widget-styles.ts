@@ -444,9 +444,61 @@ export const WIDGET_STYLES = `
   margin: 0;
 }
 
-.cv-custom-toggle-checkbox {
-  margin-right: 8px;
-  width: auto;
+.cv-toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 12px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.cv-toggle-switch:hover {
+  background: #bbb;
+}
+
+.cv-toggle-switch.cv-toggle-active {
+  background: #007bff;
+}
+
+.cv-toggle-switch.cv-toggle-active:hover {
+  background: #0056b3;
+}
+
+.cv-toggle-handle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cv-toggle-switch.cv-toggle-active .cv-toggle-handle {
+  transform: translateX(20px);
+}
+
+/* Dark theme toggle switch styles */
+.cv-widget-theme-dark .cv-toggle-switch {
+  background: #4a5568;
+}
+
+.cv-widget-theme-dark .cv-toggle-switch:hover {
+  background: #5a6578;
+}
+
+.cv-widget-theme-dark .cv-toggle-switch.cv-toggle-active {
+  background: #63b3ed;
+}
+
+.cv-widget-theme-dark .cv-toggle-switch.cv-toggle-active:hover {
+  background: #4299e1;
 }
 
 .cv-tab-groups {
