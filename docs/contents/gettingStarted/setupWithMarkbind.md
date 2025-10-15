@@ -21,11 +21,12 @@ Then, add a file named **`customviews.js`** inside it with the following content
 /**
  * CustomViews Plugin for MarkBind
  * Injects the CustomViews auto-init script into every page.
- * Configuration is loaded from {{baseUrl}}/customviews.config.json
+ * Configuration is loaded from {baseUrl}/customviews.config.json
+ * Note that data-base-url is optional if site is served from the root.
  */
 export function getScripts() {
   return [
-    '<script src="https://unpkg.com/@customviews-js/customviews" data-base-url="/customviews"></script>'
+    '<script src="https://unpkg.com/@customviews-js/customviews" data-base-url="{baseUrl}"></script>'
   ];
 };
 ```
