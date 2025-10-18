@@ -1,8 +1,12 @@
 # Changelog
 
-## [1.1.0] ---
+## [1.1.*] - 2025-10-12
 
-### QoL Improvements
+### Improvements
+* Enhanced script tag detection to properly handle scoped package URLs (`@customviews-js`)
+* Implemented ToggleManager for improved toggle visibility and asset rendering
+* Refactor widget welcome messages and styles for better clarity
+* Improve custom element registration timing during initialization
 * Set default auto-initialization: Just include script tag and config `/customviews.config.json` file at root.
   * Customize via `data-base-url`, `data-config-path` if separate baseURL or config file path.
 
