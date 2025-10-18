@@ -33,6 +33,26 @@ function getScripts() {
 module.exports = { getScripts };
 ```
 
+<box type="info">
+
+
+Note: Depending on your MarkBind JS environment, if you are operating in an ESM environment (e.g. there is a parent ESM `package.json` file), the plugin needs to be written in ESM format. If that is the case, try this the ESM format instead:
+
+```js
+function getScripts() {
+return [
+'<script src="../../../dist/custom-views.min.js"></script>'
+];
+}
+
+export { getScripts };
+```
+
+This is a current limitation of MarkBind which only operates in CJS formats, which may cause compatibility issues when operating in cross CJS and ESM environments. 
+
+</box>
+
+
 This plugin automatically injects the CustomViews runtime into every generated page during the build process.
 
 
