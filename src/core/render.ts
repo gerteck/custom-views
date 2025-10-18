@@ -17,8 +17,12 @@ export function ensureFontAwesomeInjected() {
 }
 
 export function replaceIconShortcodes(text: string): string {
-  // Handle Font Awesome shortcodes
-  return text.replace(/:fa-([\w-]+):/g, (_, icon) => `<i class="fa fa-${icon}"></i>`);
+  // Matches :fa-*, :fas-*, :fab-* etc.
+  return text.replace(/:(fa[b|s|r]?)-([\w-]+):/g, (_, style, icon) => {
+    // style = fa, fas, fab, far, etc.
+    // Default to "fa" if only "fa-" is given
+    return `<i class="${style} fa-${icon}"></i>`;
+  });
 }
 
 /** --- Basic renderers --- */

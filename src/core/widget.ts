@@ -2,6 +2,7 @@ import { injectWidgetStyles } from "../styles/widget-styles";
 import type { CustomViewsCore } from "./core";
 import type { State } from "../types/types";
 import { URLStateManager } from "./url-state-manager";
+import { replaceIconShortcodes, ensureFontAwesomeInjected } from "./render";
 
 export interface WidgetOptions {
   /** The CustomViews core instance to control */
@@ -175,15 +176,38 @@ export class CustomViewsWidget {
     const tabGroups = this.core.getTabGroups();
     let tabGroupsHTML = '';
     
+    // Check if any tab group or tab labels contain Font Awesome shortcodes
+    let hasFontAwesomeShortcodes = false;
+    if (this.options.showTabGroups && tabGroups && tabGroups.length > 0) {
+      for (const group of tabGroups) {
+        if (group.label && /:fa-[\w-]+:/.test(group.label)) {
+          hasFontAwesomeShortcodes = true;
+          break;
+        }
+        for (const tab of group.tabs) {
+          if (tab.label && /:fa-[\w-]+:/.test(tab.label)) {
+            hasFontAwesomeShortcodes = true;
+            break;
+          }
+        }
+        if (hasFontAwesomeShortcodes) break;
+      }
+    }
+    
+    // Inject Font Awesome only if shortcodes are found
+    if (hasFontAwesomeShortcodes) {
+      ensureFontAwesomeInjected();
+    }
+    
     if (this.options.showTabGroups && tabGroups && tabGroups.length > 0) {
       const tabGroupControls = tabGroups.map(group => {
         const options = group.tabs.map(tab => 
-          `<option value="${tab.id}">${tab.label || tab.id}</option>`
+          `<option value="${tab.id}">${replaceIconShortcodes(tab.label || tab.id)}</option>`
         ).join('');
         
         return `
           <div class="cv-tab-group-control">
-            <label for="tab-group-${group.id}">${group.label || group.id}</label>
+            <label for="tab-group-${group.id}">${replaceIconShortcodes(group.label || group.id)}</label>
             <select id="tab-group-${group.id}" class="cv-tab-group-select" data-group-id="${group.id}">
               ${options}
             </select>

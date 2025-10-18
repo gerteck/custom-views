@@ -108,16 +108,16 @@ Pears are sweet, bell-shaped fruits with a soft texture when ripe. They're high 
 </cv-tabgroup>
 
 <cv-tabgroup id="fruit" nav="auto">
-  <cv-tab id="apple" header="Apple Types">
+  <cv-tab id="apple" header="Apple Types :fab-windows:">
 
 Apple types include **Granny Smith** and the **Cosmic Crisp**.
 
   </cv-tab>
-  <cv-tab id="orange" header="Orange Types">
+  <cv-tab id="orange" header="Orange Types :fab-apple:">
 
 Orange types include the **Blood orange** and **Valencia orange**. 
   </cv-tab>
-  <cv-tab id="pear" header="Pear">
+  <cv-tab id="pear" header="Pear :fa-at:">
 
 Pear types include the **Asian pear** and the **European pear**
   </cv-tab>
